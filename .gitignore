@@ -1,2 +1,4 @@
 #add the files which we do not want to track on github
 *.pyc
+*.out
+*.html
