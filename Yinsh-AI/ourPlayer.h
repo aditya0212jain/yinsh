@@ -1,6 +1,7 @@
 #ifndef OURPLAYER_H
 #define	OURPLAYER_H
 
+#include"ourGame.h"
 
 class ourPlayer{
 private:
@@ -10,7 +11,13 @@ private:
 
 public:
   ourPlayer();
-
+  void play();
+  move placeRing();
+  move selectRing();
+  move moveRing();
+  move removeRowStart();
+  move removeRowEnd();
+  move removeRing();
 
 };
 

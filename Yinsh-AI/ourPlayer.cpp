@@ -1,5 +1,7 @@
 #include<iostream>
 #include"ourPlayer.h"
+#include"ourGame.h"
+
 
 using namespace std;
 
