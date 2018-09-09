@@ -8,3 +8,4 @@ ourGame::ourGame(int n){
     
   }
 }
+//Is this working?
