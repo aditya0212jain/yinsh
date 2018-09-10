@@ -111,3 +111,6 @@ Player 2 score will be: **1.017**
 Note) Incase a player suffers a TIMEOUT, he will automatically lose the gane and it will count as a (0-3) defeat towards the player and a (3-0) win for the opponent.
 
 
+###Gyan ka Srot
+https://repozitorij.uni-lj.si/Dokument.php?id=102834&dn=
+
