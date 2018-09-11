@@ -1,6 +1,8 @@
 #include"ourGame.h"
 
-#define
+#define pb push_back
+#define mp make_pair
+
 ourGame::ourGame(){
   currPlayer = 1; //Player 1 will start
   playerOneRingsOnBoard = 0; // Initially there are 0 player 1 rings on the board
@@ -45,8 +47,8 @@ pair<int,int> axialToRadialDatabase(int x, int y){
   return mp(hex,pos);
 }
 
-pair<int,int> radialToAxialDatabase(int hex, int pos){
   int x=0,y=0;
+  pair<int,int> radialToAxialDatabase(int hex, int pos){
   //Do the transformation
   return mp(x,y);
 }
