@@ -9,6 +9,7 @@ from jinja2 import Environment, FileSystemLoader
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
+#Main game implementation is in this 
 board_sizes = { 5 : 11, 6 : 13, 7 : 15 } # Rings : Board Size
 display_size = { 5 : 650, 6 : 750, 7 : 850 } # Rings : Pixels
 
@@ -17,10 +18,10 @@ TEMPLATE_ENVIRONMENT = Environment(
 	autoescape=False,
 	loader=FileSystemLoader(os.path.join(PATH, 'templates')),
 	trim_blocks=False)
- 
+
 def render_template(template_filename, context):
 	return TEMPLATE_ENVIRONMENT.get_template(template_filename).render(context)
- 
+
 def create_index_html(size, rings, rows):
 	fname = "Yinsh.html"
 	context = {
@@ -41,7 +42,7 @@ class Game:
 			self.display_size = display_size[n]
 		else:
 			raise AssertionError("Number of rings must be either 5, 6 or 7")
-		
+
 		# Setup Driver
 		create_index_html(self.display_size, n, self.board_size)
 		chrome_options = Options()
@@ -53,7 +54,7 @@ class Game:
 		self.driver.get("file:" + abs_path)
 		self.driver.set_window_size(width=self.display_size, height=(self.display_size+60))
 
-		self.spacing = float(self.display_size)/self.board_size 
+		self.spacing = float(self.display_size)/self.board_size
 		self.centerx = int(self.display_size)/2
 		self.centery = int(self.display_size)/2
 
@@ -211,11 +212,11 @@ class Game:
 		elif (move_type == 'X'): # Remove a ring
 			self.click_at(hexagon, position)
 		else:
-			string_invalid = True 
-	
+			string_invalid = True
+
 		valid = self.check_move_validity()
 		won = self.check_won()
-		
+
 		if(string_invalid == True or valid == False):
 			success = 0
 		elif(won == True):
@@ -282,6 +283,3 @@ if __name__ == "__main__":
 	game.execute_move("S 3 16 M 3 17")
 	### Enter Game Moves Here to Test
 	## Example: game.execute_move("P 2 0")
-	
-
-
