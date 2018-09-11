@@ -15,7 +15,7 @@ struct boardCell{
 }
 
 class ourGame{
-private:
+
   int currPlayer; //If our player is 1 then 1 else 2
   int playerOneRingsOnBoard; // Number of rings belonging to player 1
   int playerTwoRingsOnBoard; // Number of rings belonging to player 2
@@ -31,8 +31,6 @@ public:
   ourGame(int n);
   void execute_move(move m);
   bool check_validity(move m);
-  pair<int,int> axialToRadialDatabase(int x, int y); //Returns hex,position
-  pair<int,int> radialToAxialDatabase(int hex, int pos); //Returns x,y
 
 };
 
