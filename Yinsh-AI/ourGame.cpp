@@ -134,3 +134,29 @@ pair<int,int> getRadialFromAxial(int x, int y, int mid){
   //Do the transformation
   return mp(x,y);
 }
+
+void hexToCartesian(int a,int b,int x0,int y0){
+  int x,y;
+  if((b/a<=1){
+    x = x0+b;
+    y=y0+a;
+  }else if(b<=(2*a)&&b>a){
+    x=x0+a;
+    y=y0+(2*a)-b;
+  }else if(b<=(3*a)&&b>(2*a)){
+    x=x0+(3*a)-b;
+    y = y0-(b-(2*a));
+  }else if(b<=(4*a)&&b>(3*a)){
+    x = x0-(b-(3*a));
+    y = y0-a;
+  }else if(b<=(5*a)&&b>(4*a)){
+    x = x0-a;
+    y = y0-((5*a)-b);
+  }else if(b<(6*a)&&b>(5*a)){
+    x =x0 -((6*a)-b);
+    y=y0+(b-(5*a));
+  }
+
+
+
+}
