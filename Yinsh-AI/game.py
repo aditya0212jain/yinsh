@@ -9,7 +9,6 @@ from jinja2 import Environment, FileSystemLoader
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
-#Main game implementation is in this
 board_sizes = { 5 : 11, 6 : 13, 7 : 15 } # Rings : Board Size
 display_size = { 5 : 650, 6 : 750, 7 : 850 } # Rings : Pixels
 
@@ -73,9 +72,9 @@ class Game:
 	def click_at(self, hexagon, point) :
 		el = self.driver.find_elements_by_id("PieceLayer")
 		action = webdriver.common.action_chains.ActionChains(self.driver)
-	else :
 		if (hexagon == 0) :
 				action.move_to_element_with_offset(el[0], self.centerx, self.centery)
+		else :
 			if (point % hexagon == 0) :
 				pt_coord = self.get_corner_coord(point / hexagon, hexagon)
 				action.move_to_element_with_offset(el[0], pt_coord[0], pt_coord[1])
@@ -183,7 +182,6 @@ class Game:
 	# M - Move a ring
 	# R - Remove a row
 	# X - Remove a ring
-
 	## Grid Positions
 	# point in center is hexagon 0 and so on outwards
 	# topmost point of hexagon is point 0 and pt number increase clockwise with 6*hexring pts on each hexagon
@@ -282,4 +280,4 @@ if __name__ == "__main__":
 	game.execute_move("S 4 11 M 4 12")
 	game.execute_move("S 3 16 M 3 17")
 	### Enter Game Moves Here to Test
-	## Example: game.execute_move("P 2 0")
+## Example: game.execute_move("P 2 0")

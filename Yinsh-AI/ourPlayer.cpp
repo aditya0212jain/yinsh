@@ -21,6 +21,8 @@ ourPlayer::ourPlayer(int playerNumber){
   this->playerNumber =  playerNumber; //1-> Player 1, 2-> Player 2
   this->totalRings =  5; //This version only has to deal with 5 rings
   this->timeLeft =  120; //will be initialised with full time
+  cout << "WHELLLL";
+  this->game = new ourGame();
 }
 
 //These hexagon and position will be decided by Alpha-Beta pruning
@@ -28,22 +30,31 @@ struct move ourPlayer::placeRing(int x, int y){
   //Hexagon defines the hexagon in which we will place the new rings
   //position defines the position of that new ring in the hexagon
   move temp;//it will be automatically initialized by {"",0,0}
-  pair<int,int> p = getRadialFromAxial(x,y,11);//rows = 11 
+  pair<int,int> p = getRadialFromAxial(x,y,11);//rows = 11
+  //cout << p.first << " " << p.second << endl;
   temp.type = "P";
   temp.hex = p.first; // hexagon
   temp.pos = p.second; //position
+  cout << "DO I";
   rings.pb(mp(x,y));
+  cout << " Reach here?" << endl;
   struct boardCell tempboardCell; // Ring is placed, and not marker
   tempboardCell.player = this->playerNumber;
   tempboardCell.containsMarker = false;
   tempboardCell.containsRings = true;
+  tempboardCell.canBeUsed = true;
+  cout << "And here?" << endl;
+  cout << (game->board.size()) << endl;
+  cout << game->board[x][y].player << " ";
+  cout << "Definitely I don't reach here, Do I?" << endl;
   game->board[x][y]  = tempboardCell;
+  cout << game->board[x][y].player << endl;
   if(this->playerNumber==1){
     game->playerOneRingsOnBoard++;
   }
-  else
+  else{
     game->playerTwoRingsOnBoard++;
-
+  }
   return temp;
 }
 
@@ -96,4 +107,3 @@ struct move ourPlayer::removeRing(int index){
 
   return temp;
 }
-
