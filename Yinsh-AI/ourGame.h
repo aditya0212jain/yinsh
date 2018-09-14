@@ -36,7 +36,7 @@ public:
   void execute_move(move m);
   bool check_validity(move m);
   double computeHeuristicValue();
-
+  void copyTheBoard(ourGame* game);
 };
 
 #endif

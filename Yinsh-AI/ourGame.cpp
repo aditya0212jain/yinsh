@@ -44,6 +44,17 @@ double ourGame::computeHeuristicValue(){
     return valPlayer2 - valPlayer1;
 }
 
+void ourGame::copyTheBoard(ourGame* game){
+  currPlayer = game->currPlayer;
+  playerOneRingsOnBoard = game->playerOneRingsOnBoard;
+  playerTwoRingsOnBoard = game->playerTwoRingsOnBoard;
+  playerOneMarkersOnBoard = game->playerOneMarkersOnBoard;
+  playerTwoMarkersOnBoard = game->playerTwoMarkersOnBoard;
+
+  boardSize = game->boardSize; // For this part, it is 85
+  board = game->board;// index = (0,0)->0, others -> ((h)*(h+1))/2 + pos
+}
+
 
 
 

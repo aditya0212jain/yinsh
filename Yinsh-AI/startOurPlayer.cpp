@@ -20,4 +20,5 @@ using namespace std;
 int main(){
   int myPlayerNumber = 1;
   ourPlayer playah(myPlayerNumber);
+  return 0;
 }
