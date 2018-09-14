@@ -1,6 +1,10 @@
 #ifndef OURGAME_H
 #define	OURGAME_H
 #include <bits/stdc++.h>
+#include <string.h>
+#include<vector>
+#include "utils.h"
+
 struct move{
   string type="";
   int hex=0;
@@ -12,7 +16,7 @@ struct boardCell{
   //bool empty = true; //No marker or ring
   bool containsRings = false; // True if this position has a ring
   bool containsMarker = false; //True if this position contains a marker
-}
+};
 
 class ourGame{
 
@@ -23,11 +27,11 @@ class ourGame{
   int playerTwoMarkersOnBoard; //Number of markers of player 2 on board
 
   int boardSize; // For this part, it is 85
-  vector<vector<struct boardCell>> board;// index = (0,0)->0, others -> ((h)*(h+1))/2 + pos
+  vector<vector<boardCell>> board;// index = (0,0)->0, others -> ((h)*(h+1))/2 + pos
   //vector<pair<int,int>> axialToRadialDatabase; //  index = (0,0)->0, others -> ((h)*(h+1))/2 + pos, dataBaseIndex contains a pair which gives
 
 public:
-
+  ourGame();
   ourGame(int n);
   void execute_move(move m);
   bool check_validity(move m);

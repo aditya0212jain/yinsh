@@ -38,5 +38,5 @@ public:
 
 };
 
-//What's This??
+//What's This??-> used as the ending syntax for the if condition applied above for not including the header file more than once
 #endif
