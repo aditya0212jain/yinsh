@@ -18,10 +18,10 @@ using namespace std;
 
 //Using main function for testing our players, @Aditya see how to combine this with other clientX
 int main(){
-  int p_id,bs,ti;
+  int p_id,bs,ti;//bs->boardsize ,ti - time left, p_id -> id
   cin>>p_id>>bs>>ti;
   
-  int myPlayerNumber = 1;
-  ourPlayer playah(myPlayerNumber);
+  // int myPlayerNumber = 1;
+  ourPlayer playah(p_id+1);
   return 0;
 }
