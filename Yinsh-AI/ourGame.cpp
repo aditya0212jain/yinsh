@@ -61,7 +61,7 @@ ourGame::ourGame(){
     cout << endl;
   }
   */
-  cout << (board.size()) << " " << (board[0].size()) << endl;
+  //cout << (board.size()) << " " << (board[0].size()) << endl;
 }
 
 /*Big Question, how are we storing the board configuration*/
