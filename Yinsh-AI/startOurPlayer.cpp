@@ -18,6 +18,9 @@ using namespace std;
 
 //Using main function for testing our players, @Aditya see how to combine this with other clientX
 int main(){
+  int p_id,bs,ti;
+  cin>>p_id>>bs>>ti;
+  
   int myPlayerNumber = 1;
   ourPlayer playah(myPlayerNumber);
   return 0;
