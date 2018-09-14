@@ -1,5 +1,11 @@
 #include "utils.h"
 
+#define pb push_back
+#define mp make_pair
+#define PI 3.14159
+
+using namespace std;
+
 int getNearestInteger(double a){
     double eps = 0.001;
     int p = (int)a;
@@ -13,7 +19,7 @@ int getNearestInteger(double a){
 }
 
 
-pair<int,int> getRadialFromAxial(int x, int y, int mid){
+pair<int,int> getRadialFromAxial(int x, int y, int rows){
     int mid = (rows-1)/2;
     int poss = -1;
     int hexx = -1;
@@ -93,9 +99,9 @@ pair<int,int> getRadialFromAxial(int x, int y, int mid){
   return mp(x,y);
 }
 
-void hexToCartesian(int a,int b,int x0,int y0){
+pair<int,int> hexToCartesian(int a,int b,int x0,int y0){
   int x,y;
-  if((b/a<=1){
+  if(b/a<=1){
     x = x0+b;
     y=y0+a;
   }else if(b<=(2*a)&&b>a){
@@ -114,4 +120,6 @@ void hexToCartesian(int a,int b,int x0,int y0){
     x =x0 -((6*a)-b);
     y=y0+(b-(5*a));
   }
+
+  return mp(x0,y0);
 }

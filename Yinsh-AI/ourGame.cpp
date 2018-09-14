@@ -4,6 +4,8 @@
 #define mp make_pair
 #define PI 3.14159
 
+using namespace std;
+
 ourGame::ourGame(){
   currPlayer = 1; //Player 1 will start
   playerOneRingsOnBoard = 0; // Initially there are 0 player 1 rings on the board
@@ -14,7 +16,7 @@ ourGame::ourGame(){
   int rows = 11;
 
   for(int i=0;i<rows;i++){
-    boardCell tempBoardCell = {0,false,false};
+    boardCell tempBoardCell;// {0,false,false};
     vector<boardCell> boardRow;
     for(int j=0; j<rows; j++){
       boardRow.pb(tempBoardCell);

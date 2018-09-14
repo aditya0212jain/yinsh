@@ -1,9 +1,9 @@
 #ifndef OURGAME_H
 #define	OURGAME_H
-#include <bits/stdc++.h>
-#include <string.h>
-#include<vector>
+#include<bits/stdc++.h>
 #include "utils.h"
+
+using namespace std;
 
 struct move{
   string type="";
@@ -19,7 +19,7 @@ struct boardCell{
 };
 
 class ourGame{
-
+public:
   int currPlayer; //If our player is 1 then 1 else 2
   int playerOneRingsOnBoard; // Number of rings belonging to player 1
   int playerTwoRingsOnBoard; // Number of rings belonging to player 2
@@ -27,14 +27,15 @@ class ourGame{
   int playerTwoMarkersOnBoard; //Number of markers of player 2 on board
 
   int boardSize; // For this part, it is 85
-  vector<vector<boardCell>> board;// index = (0,0)->0, others -> ((h)*(h+1))/2 + pos
+  vector< vector<boardCell> > board;// index = (0,0)->0, others -> ((h)*(h+1))/2 + pos
   //vector<pair<int,int>> axialToRadialDatabase; //  index = (0,0)->0, others -> ((h)*(h+1))/2 + pos, dataBaseIndex contains a pair which gives
 
-public:
+
   ourGame();
   ourGame(int n);
   void execute_move(move m);
   bool check_validity(move m);
+  double computeHeuristicValue();
 
 };
 

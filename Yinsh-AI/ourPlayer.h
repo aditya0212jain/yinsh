@@ -22,19 +22,24 @@ public:
 
 };
 */
+
+using namespace std;
+
 class ourPlayer{
   int playerNumber;//Gives the playerNumber to our BOT
   int totalRings;//Number of rings that needs to be placed on the board
-  int TimeLeft;//timeLeft for playing (in secs)
+  int timeLeft;//timeLeft for playing (in secs)
   int myRingsRemoved;
-  vector <pair<int,int>> rings; // Length 5 vector which contains the position of the rings in the format (x,y)  (ie. axial Coordinates)
-  vector <pair<int,int>> markers; //Contains the position of the markers in (x,y) format (ie. axial coordinates)
+  vector < pair<int,int> > rings; // Length 5 vector which contains the position of the rings in the format (x,y)  (ie. axial Coordinates)
+  vector < pair<int,int> > markers; //Contains the position of the markers in (x,y) format (ie. axial coordinates)
+  ourGame* game;
 
 public:
   ourPlayer(int a);
   struct move placeRing(int a, int b); //Returns the move which needs to be printed
   struct move moveRing(int a, int b, int c); //Returns the move which should be printed
   int selectRing(); //gives the index of the ring which is selected for moving
+  move removeRing(int index);
 
 };
 
