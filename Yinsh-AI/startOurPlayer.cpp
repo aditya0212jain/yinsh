@@ -18,10 +18,12 @@ using namespace std;
 
 //Using main function for testing our players, @Aditya see how to combine this with other clientX
 int main(){
+<<<<<<< HEAD
   //int myPlayerNumber = 1;
   ourPlayer playah1(1);
   //ourGame Gamer;
   cout << "HUh" << endl;
   move firstMove = playah1.placeRing(5,5);
   playah1.game->printBoard();
+
 }

@@ -41,6 +41,7 @@ public:
   struct move moveRing(int a, int b, int c); //Returns the move which should be printed
   int selectRing(); //gives the index of the ring which is selected for moving
   move removeRing(int index);
+  void play();
 
 };
 

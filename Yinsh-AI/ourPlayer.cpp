@@ -16,12 +16,12 @@ using namespace std;
 //Assuming PLayer 0 moves first and PLayer 1 follows
 
 //Constructor
-ourPlayer::ourPlayer(int playerNumber){
+ourPlayer::ourPlayer(int playerNumber,int timeLeft){
   //cin>>player_no>>total_rings>>time_left;
   this->playerNumber =  playerNumber; //1-> Player 1, 2-> Player 2
   this->totalRings =  5; //This version only has to deal with 5 rings
-  this->timeLeft =  120; //will be initialised with full time
-  cout << "WHELLLL";
+  this->timeLeft =  timeLeft; //will be initialised with full time
+  this->myRingsRemoved = 0;//starting with 0 rings
   this->game = new ourGame();
 }
 
@@ -106,4 +106,22 @@ struct move ourPlayer::removeRing(int index){
     game->playerTwoRingsOnBoard--;
 
   return temp;
+}
+
+void ourPlayer::play(){
+  string opponentMove;
+  if(this->playerNumber==1){
+    move m = this->game->getMove(this->playerNumber);
+    this->game->execute_move(m);
+    cout<<toString(m);
+    //cin>>opponentMove;
+  }
+  cin>>opponentMove;
+  while(!this->game->ended()){
+    this->game->execute_move(toMove(opponentMove));
+    move m = this->game->getMove(this->playerNumber);
+    this->game->execute_move(m);
+    cout<<toString(m);
+    cin>>opponentMove;
+  }
 }
