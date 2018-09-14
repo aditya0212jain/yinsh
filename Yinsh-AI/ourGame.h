@@ -38,6 +38,7 @@ public:
   double computeHeuristicValue();
   void copyTheBoard(ourGame* game);
   move getMove(int p_id);
+  bool ended();
 };
 
 #endif
