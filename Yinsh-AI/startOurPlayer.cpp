@@ -20,6 +20,9 @@ using namespace std;
 int main(){
   //int myPlayerNumber = 1;
   ourPlayer playah(1,150);
+  ourPlayer nonPlayah = playah;
+  nonPlayah.game = new ourGame();
+
   //ourGame Gamer;
   // cout << "HUh" << endl;
   // playah.placeRing(1,2,1);
@@ -34,47 +37,65 @@ int main(){
   // //cout << (playah1.rings[0].first) << " " << (playah1.rings[0].second) << endl;
   // //playah1.removeRing(0);
   // playah.removeRow(1,2,1,7,6);
-  playah.game -> printBoard();
-  int count=0;
-  int player = 1;
+
+  /*Shayad in this way we can solve board ki BT*/
+  // playah.game -> printBoard();
+  // int count=0;
+  // int player = 1;
+  // string input;
+  // input = "P 4 0";
+  // playah.moveDecider(player,input);
+  // playah.game -> printBoard();
+  // *(nonPlayah.game) = *(playah.game);
+  //
+  // input = "S 4 0 M 3 0";
+  // playah.moveDecider(player,input);
+  // cout << "Playah Ka Board" << endl;
+  // playah.game->printBoard();
+  //
+  // cout << "nonPlayah ka Board" << endl;
+  // nonPlayah.game -> printBoard();
+  /*Board ki BT shayad ends here!!*/
+
+
   //pair<int,int> p = hexToCartesian(0,0,11);
   //cout << p.first << " " << p.second << endl;
-
-  while(true){
-    count++;
-    cout << "Player " << player << ", your move:" << endl;
-    string input;
-
-    if(count==1){
-      input = "P 4 0";
-      playah.moveDecider(player,input);
-      //cout << input << " " << input.length() << endl;
-      playah.game -> printBoard();
-      input = "S 4 0 M 3 0";
-      playah.moveDecider(player,input);
-      playah.game->printBoard();
-
-      input = "S 3 0 M 2 0";
-      playah.moveDecider(player,input);
-      playah.game->printBoard();
-
-      input = "S 2 0 M 1 0";
-      playah.moveDecider(player,input);
-      playah.game->printBoard();
-
-      input = "S 1 0 M 0 0";
-      playah.moveDecider(player,input);
-      playah.game->printBoard();
-    }
-    else{
-      getline(cin,input);
-      if(input.compare("exit")==0||input.compare("Exit")==0){
-        break;
-      }
-      playah.moveDecider(player,input);
-      playah.game -> printBoard();
-    }
-  }
+  //
+  // while(true){
+  //   count++;
+  //   cout << "Player " << player << ", your move:" << endl;
+  //   string input;
+  //
+  //   if(count==1){
+  //     input = "P 4 0";
+  //     playah.moveDecider(player,input);
+  //     //cout << input << " " << input.length() << endl;
+  //     playah.game -> printBoard();
+  //     input = "S 4 0 M 3 0";
+  //     playah.moveDecider(player,input);
+  //     playah.game->printBoard();
+  //
+  //     input = "S 3 0 M 2 0";
+  //     playah.moveDecider(player,input);
+  //     playah.game->printBoard();
+  //
+  //     input = "S 2 0 M 1 0";
+  //     playah.moveDecider(player,input);
+  //     playah.game->printBoard();
+  //
+  //     input = "S 1 0 M 0 0";
+  //     playah.moveDecider(player,input);
+  //     playah.game->printBoard();
+  //   }
+  //   else{
+  //     getline(cin,input);
+  //     if(input.compare("exit")==0||input.compare("Exit")==0){
+  //       break;
+  //     }
+  //     playah.moveDecider(player,input);
+  //     playah.game -> printBoard();
+  //   }
+  // }
 }
 
 // Moves to start

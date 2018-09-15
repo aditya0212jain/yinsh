@@ -36,16 +36,19 @@ class ourPlayer{
 
 public:
   ourGame* game;
-  ourPlayer(int a, int b);
-  void placeRing(int num, int a, int b); //Returns the move which needs to be printed
-  void moveRing(int num, int xs, int ys, int b, int c); //Returns the move which should be printed
+  ourPlayer(int a, int b, ourGame game);
+  void placeRing(int num, int a, int b, ourGame game); //Returns the move which needs to be printed
+  void moveRing(int num, int xs, int ys, int b, int c, ourGame game); //Returns the move which should be printed
   int selectRing(); //gives the index of the ring which is selected for moving
-  void removeRing(int num, int x, int y);
-  void removeRow(int num, int a, int b, int c, int d);
-  void moveDecider(int playerNo, string s);
-  vector<pair<pair<int,int>,pair<int,int> > > childHelper(int playerNo, int x, int y, int dirX, int yDir);
-  vector<pair<pair<int,int>,pair<int,int> > > child(int playerNo);
-
+  void removeRing(int num, int x, int y, ourGame game);
+  void removeRow(int num, int a, int b, int c, int d, ourGame game);
+  void moveDecider(int playerNo, string s, ourGame game);
+  vector<pair<pair<int,int>,pair<int,int> > > selectAndMoveHelper(int playerNo, int x, int y, int dirX, int yDir, ourGame game);
+  vector<pair<pair<int,int>,pair<int,int> > > selectAndMove(int playerNo, ourGame game);
+  string beforeMoveMarkerDeletionHelper(int playerNo, int x, int y, int dirX, int dirY, ourGame game);
+  vector<string> beforeMoveMarkerDeletion(int playerNo, ourGame game);
+  vector<string> selectAndMoveFinal(vector<pair<pair<int,int>,pair<int,int> > >, ourGame game);
+  vector<string> moveList(int playerNo, ourGame game);
   //void play();
 
 };

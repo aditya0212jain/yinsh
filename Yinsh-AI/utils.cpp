@@ -19,7 +19,7 @@ int getNearestInteger(double a){
 }
 
 
-pair<int,int> getRadialFromAxial(int x, int y, int rows){
+pair<int,int> cartesianToHex(int x, int y, int rows){
     int mid = (rows-1)/2;
     int poss = -1;
     int hexx = -1;

@@ -86,12 +86,13 @@ void ourGame::printBoard(){
     cout << endl;
   }
 }
+
 double ourGame::computeHeuristicValue(){
   //This function computes the heuristic for the player according to the current configuration of the boardSize
 
   double valPlayer1;
   //Compute for Player 1, ignore player 2 in this
-
+  
 
   double valPlayer2;
   //Compute for player 2, ignore player 1
@@ -101,3 +102,10 @@ double ourGame::computeHeuristicValue(){
   else
     return valPlayer2 - valPlayer1;
 }
+
+// void ourGame::miniMax(){
+//   int depth = 4;//Determines the depth of the trees till which we will see
+//   for(int i=0; i<depth; i++){
+//
+//   }
+// }
