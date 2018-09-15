@@ -79,6 +79,7 @@ pair<int,int> getRadialFromAxial(int x, int y, int rows){
         poss = posInt;
         hexx = hex;
     }
+    //cout << hex << " " << poss << endl;
     if(!(poss==-1 && hexx==-1)){
         //cout << "Cartesian (" <<x<<","<<y<<") is mapped to Radial ("<<hexx<<","<<poss<<")."<<endl;
         pair<int,int> ans = mp(hexx,poss);
@@ -93,15 +94,15 @@ pair<int,int> getRadialFromAxial(int x, int y, int rows){
 }
 
 
-  int x=0,y=0;
-  pair<int,int> radialToAxialDatabase(int hex, int pos){
-  //Do the transformation
-  return mp(x,y);
-}
-
-pair<int,int> hexToCartesian(int a,int b,int x0,int y0){
+pair<int,int> hexToCartesian(int a,int b,int rows){
+  int x0 = (rows-1)/2;
+  int y0 = (rows-1)/2;
   int x,y;
-  if(b/a<=1){
+  if(a==0){
+    x = x0;
+    y = y0;
+  }
+  else if(b/a<=1){
     x = x0+b;
     y=y0+a;
   }else if(b<=(2*a)&&b>a){
@@ -121,5 +122,5 @@ pair<int,int> hexToCartesian(int a,int b,int x0,int y0){
     y=y0+(b-(5*a));
   }
 
-  return mp(x0,y0);
+  return mp(x,y);
 }

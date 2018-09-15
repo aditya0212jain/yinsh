@@ -7,8 +7,8 @@ using namespace std;
 
 int getNearestInteger(double a);
 
-pair<int,int> getRadialFromAxial(int x, int y, int mid);
+pair<int,int> getRadialFromAxial(int x, int y, int rows);
 
-pair<int,int> hexToCartesian(int a,int b,int x0,int y0);
+pair<int,int> hexToCartesian(int a,int b,int rows);
 
 #endif
