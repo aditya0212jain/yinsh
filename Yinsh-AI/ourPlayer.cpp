@@ -10,9 +10,44 @@
 
 using namespace std;
 
+struct childSortNode{
+  ourGame gameNode;
+  lli value;
+}
+
 /*General Comments*/
 // I think we should use the approach of double rows naming and use the approach of hexagon naming just for input and output, as that is only stored in the game which is used by Yinsh.js
 /*GeneralComments over*/
+
+
+bool compareForMax(const childSortNode &a, const childSortNode &b)
+{
+    return a.value>b.value;
+}
+
+bool compareForMin(const childSortNode &a,const childSortNode &b){
+  return a.value<b.value;
+}
+
+
+vector<ourGame> ourPlayer::sortChildren(vector<ourGame> childNodes,bool forMax){
+  vector<childSortNode> v;
+  for(int i=0;i<childNodes.size();i++){
+    lli valueTemp = childNodes[i].computeHeuristicValue();
+    childSortNode temp;
+    temp.gameNode = childNodes[i];
+    temp.value = valueTemp;
+    v.push_back(temp);
+  }
+  if(forMax){
+    sort(v.begin(),v.end(),compareForMax);
+  }else{
+    sort(v.begin(),v.end(),compareForMin);
+  }
+  return v;
+}
+
+
 
 //Assuming PLayer 0 moves first and PLayer 1 follows
 
@@ -265,6 +300,7 @@ long long int ourPlayer::minimax(ourGame gameNode,int depth,bool isMax,lli alpha
     bestScore=-INFINITY;
     vector<ourGame> childs;
     childVector = gameNode.children();//assuming children function returns an vector of possible gameNodes
+    childVector = sortChildren(childVector,true);
     for(int i=0;i<childVector.size();i++){
       lli value = minimax(childVector[i],depth+1,false,alpha,beta);
       alpha = max(alpha,value);
@@ -281,6 +317,7 @@ long long int ourPlayer::minimax(ourGame gameNode,int depth,bool isMax,lli alpha
     bestScore=INFINITY;
     vector<ourGame> childVector;
     childVector = gameNode.children();//assuming children function returns an vector of possible gameNodes
+    childVector = sortChildren(childVector,false);
     for(int i=0;i<childVector.size();i++){
       lli value = minimax(childVector[i],depth+1,true,alpha,beta);
       beta = min(beta,value);
@@ -293,6 +330,7 @@ long long int ourPlayer::minimax(ourGame gameNode,int depth,bool isMax,lli alpha
   }
 
 }
+
 /*
 void ourPlayer::play(){
   string opponentMove;

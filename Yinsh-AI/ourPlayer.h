@@ -48,6 +48,7 @@ public:
   string minimax_decision(ourGame game);
   long long int minimax(ourGame gameNode,int depth,bool isMax,long long int alpha,long long int beta);
   long long int idMinimax(ourGame gameNode,int max_depth,double maxTime);
+  vector<ourGame> sortChildren(vector<ourGame> childNodes,bool forMax);
 
 };
 
