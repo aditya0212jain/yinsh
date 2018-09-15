@@ -224,6 +224,68 @@ void ourPlayer::moveDecider(int playerNo, string s){
     }
   }
 }
+
+vector<pair<pair<int,int>,pair<int,int> > > ourPlayer::childHelper(int playerNo, int x, int y, int dirX, int dirY){
+  //x,y -> current position of the ring
+  //dirX,dirY -> each can be 1,0,-1 denotes kaha check karna hai
+  vector<pair<pair<int,int>,pair<int,int> > > ans; //first is the current position of the ring, second is the position in which it can travel
+  int i,j;
+  pair<int,int> f = mp(x,y);
+  int oneMarker=0;
+  for(i=x,j=y;;i=i+dirX,j=j+dirY){
+    if(!(game->board[i][j].canBeUsed)){
+      return ans;
+    }
+    else if(game->board[i][j].containsRings){
+      return ans;
+    }
+    else if(game->board[i][j].containsMarker){
+        oneMarker=1;
+        ans.pb(mp(f,mp(i,j)));
+    }
+    else if(game->board[i][j].player==0){
+      if(oneMarker==1){
+        ans.pb(mp(f,mp(i,j)));
+        return ans;
+      }
+      else{
+        ans.pb(mp(f,mp(i,j)));
+      }
+    }
+  }
+}
+
+vector<pair<pair<int,int>,pair<int,int> > > ourPlayer::child(int playerNo){
+  vector<pair<pair<int,int>,pair<int,int> > > ans;
+  vector<pair<pair<int,int>,pair<int,int> > > temp;
+  // v.insert( v.end(), w.begin(), w.end());
+  for(int i=0; i<game->rows; i++){
+    for (int j=0; j<game->rows; j++){
+      if(game->board[i][j].containsRings){
+        if(game->board[i][j].player==playerNo){
+           temp = childHelper(playerNo,i,j,0,1);//Total 6 directions
+           ans.insert(ans.end(), temp.begin(), temp.end());
+
+           temp = childHelper(playerNo,i,j,0,-1);//Total 6 directions
+           ans.insert(ans.end(), temp.begin(), temp.end());
+
+           temp = childHelper(playerNo,i,j,1,1);//Total 6 directions
+           ans.insert(ans.end(), temp.begin(), temp.end());
+
+           temp = childHelper(playerNo,i,j,-1,-1);//Total 6 directions
+           ans.insert(ans.end(), temp.begin(), temp.end());
+
+           temp = childHelper(playerNo,i,j,1,0);//Total 6 directions
+           ans.insert(ans.end(), temp.begin(), temp.end());
+
+           temp = childHelper(playerNo,i,j,-1,0);//Total 6 directions
+           ans.insert(ans.end(), temp.begin(), temp.end());
+        }
+      }
+    }
+  }
+  return ans;
+}
 /*
 void ourPlayer::play(){
   string opponentMove;
