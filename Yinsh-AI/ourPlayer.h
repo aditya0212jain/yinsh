@@ -45,6 +45,10 @@ public:
   void moveDecider(int playerNo, string s);
   //void play();
 
+  string minimax_decision(ourGame game);
+  long long int minimax(ourGame gameNode,int depth,bool isMax,long long int alpha,long long int beta);
+  long long int idMinimax(ourGame gameNode,int max_depth,double maxTime);
+
 };
 
 //What's This??-> used as the ending syntax for the if condition applied above for not including the header file more than once

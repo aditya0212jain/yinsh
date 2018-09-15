@@ -6,6 +6,7 @@
 
 #define pb push_back
 #define mp make_pair
+#define lli long long int
 
 using namespace std;
 
@@ -223,6 +224,74 @@ void ourPlayer::moveDecider(int playerNo, string s){
       return;
     }
   }
+}
+
+/*
+*The iterative deepening version of minimax with 
+*some max time and depth alloted
+*/
+lli ourPlayer::idMinimax(ourGame gameNode,int max_depth,double maxTime){
+  int depth = 0;
+  double tempTime=0;
+  struct timespec start_time,move_time;
+  //start noting time
+  clock_gettime(CLOCK_REALTIME, &start_time);
+  lli bestScore=-INIFINITY;
+  for(depth=0;depth<=max_depth;depth++){
+    lli value = minimax(gameNode,depth,true,-INFINITY,INFINITY);
+    //compute time to solve for depth 
+    clock_gettime(CLOCK_REALTIME, &move_time);
+    double seconds = (double)((move_time.tv_sec+move_time.tv_nsec*1e-9) - (double)(start_time.tv_sec+start_time.tv_nsec*1e-9));
+    //return value if time exceeded
+    if(seconds>=maxTime){
+      return value;
+    }
+  }
+
+  return value;
+}
+
+
+//initialize with alpha = -INFINITY & beta = INFINITY
+long long int ourPlayer::minimax(ourGame gameNode,int depth,bool isMax,lli alpha,lli beta){
+  if(depth==0){
+    return gameNode.computeHeuristicValue();
+  }
+
+  lli bestScore;
+
+  //if our player's turn
+  if(isMax){
+    bestScore=-INFINITY;
+    vector<ourGame> childs;
+    childVector = gameNode.children();//assuming children function returns an vector of possible gameNodes
+    for(int i=0;i<childVector.size();i++){
+      lli value = minimax(childVector[i],depth+1,false,alpha,beta);
+      alpha = max(alpha,value);
+      bestScore = max(value,bestScore);
+      if(alpha>=beta){
+        return value;
+      }
+    }
+    return bestScore;
+  }
+
+  //if opponent's turn
+  if(!isMax){
+    bestScore=INFINITY;
+    vector<ourGame> childVector;
+    childVector = gameNode.children();//assuming children function returns an vector of possible gameNodes
+    for(int i=0;i<childVector.size();i++){
+      lli value = minimax(childVector[i],depth+1,true,alpha,beta);
+      beta = min(beta,value);
+      bestScore = min(value,bestScore);
+      if(alpha>=beta){
+        return value;
+      }
+    }
+    return bestScore;
+  }
+
 }
 /*
 void ourPlayer::play(){
