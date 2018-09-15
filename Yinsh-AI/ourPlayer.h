@@ -43,6 +43,9 @@ public:
   void removeRing(int num, int x, int y);
   void removeRow(int num, int a, int b, int c, int d);
   void moveDecider(int playerNo, string s);
+  vector<pair<pair<int,int>,pair<int,int> > > childHelper(int playerNo, int x, int y, int dirX, int yDir);
+  vector<pair<pair<int,int>,pair<int,int> > > child(int playerNo);
+
   //void play();
 
 };
