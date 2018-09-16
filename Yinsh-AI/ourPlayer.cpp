@@ -684,7 +684,7 @@ struct transitionMove ourPlayer::idMinimax(int max_depth,double maxTime){
       bestMove = tempMove;
     }
     // bestScore = max(bestScore,tempMove.value);
-    //compute time to solve for depth 
+    //compute time to solve for depth
     clock_gettime(CLOCK_REALTIME, &move_time);
     double seconds = (double)((move_time.tv_sec+move_time.tv_nsec*1e-9) - (double)(start_time.tv_sec+start_time.tv_nsec*1e-9));
     //return value if time exceeded
@@ -786,7 +786,7 @@ void ourPlayer::play(){
   //     while(true){
   //       int a = rand()%6;
   //       int b = rand()%(6*a);
-        
+
   //       pair<int,int> temp = hexToCartesian(a,b,11);
   //       cout<<"P "<<a<<" "<<b<<endl;
   //       if(this->game->board[temp.first][temp.second].canBeUsed&&this->game->board[temp.first][temp.second].player==0){
@@ -813,7 +813,7 @@ void ourPlayer::play(){
     transitionMove m = idMinimax(4,40);//max_depth,time
     cout<<m.move;
     moveDecider(this->playerNumber,m.move,this->game);
-    
+
     //getline(cin,opponentMove);
   }
   getline(cin,opponentMove);
