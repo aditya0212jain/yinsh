@@ -4,6 +4,7 @@
 #include"utils.h"
 #include <bits/stdc++.h> //Can we use this??
 #include<math.h>
+#include <random>
 
 #define pb push_back
 #define mp make_pair
@@ -675,7 +676,7 @@ struct transitionMove ourPlayer::idMinimax(int max_depth,double maxTime){
   clock_gettime(CLOCK_REALTIME, &start_time);
   struct transitionMove bestMove;
   bestMove.value=-INFINITY;
-  for(depth=0;depth<=max_depth;depth++){
+  for(depth=1;depth<=max_depth;depth++){
     struct transitionMove tempMove;
     tempMove = minimax(depth,true,-INFINITY,INFINITY);
     if(bestMove.value<=tempMove.value){
@@ -702,7 +703,7 @@ struct transitionMove ourPlayer::idMinimax(int max_depth,double maxTime){
 //initialize with alpha = -INFINITY & beta = INFINITY
 struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alpha,long long int beta){
 
-
+  //depth will never be zero
   if(depth==0){
     struct transitionMove ans;
     ans.move="Reached";
@@ -774,13 +775,37 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
 void ourPlayer::play(){
   string opponentMove;
   int opponent_player_number;
+  int count=0;
+  while(count!=5){
+    // if(this->playerNumber==2){
+    // getline(cin,opponentMove);
+    // moveDecider(2,opponentMove,this->game);
+    // }
+    if(this->playerNumber==1){
+      while(true){
+        int a = rand()%6;
+        int b = rand()%(6*a);
+        
+        pair<int,int> temp = hexToCartesian(a,b,11);
+        cout<<"P "<<a<<" "<<b<<endl;
+        if(this->game->board[temp.first][temp.second].canBeUsed&&this->game->board[temp.first][temp.second].player==0){
+          placeRing(1,temp.first,temp.second,this->game);
+          break;
+        }
+      }
+    }
+    getline(cin,opponentMove);
+    moveDecider(2,opponentMove,this->game);
+    count++;
+  }
   if(this->playerNumber==1){
     transitionMove m = idMinimax(4,40);//max_depth,time
-    moveDecider(this->playerNumber,m.move,this->game);
     cout<<m.move;
-    //cin>>opponentMove;
+    moveDecider(this->playerNumber,m.move,this->game);
+    
+    //getline(cin,opponentMove);
   }
-  cin>>opponentMove;
+  getline(cin,opponentMove);
   opponent_player_number = (this->playerNumber)%2;
   while(!this->game->ended()){
     moveDecider(opponent_player_number,opponentMove,this->game);
@@ -788,7 +813,7 @@ void ourPlayer::play(){
     transitionMove m = idMinimax(4,40);
     moveDecider(this->playerNumber,m.move,this->game);
     cout<<m.move;
-    cin>>opponentMove;
+    getline(cin,opponentMove);
   }
 }
 
