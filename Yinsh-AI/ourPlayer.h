@@ -70,7 +70,7 @@ public:
   unordered_map <string,transpositionNode> htMap;
   void play();
   string minimax_decision(ourGame game);
-  struct transitionMove minimax(int depth,bool isMax,long long int alpha,long long int beta);
+  struct transitionMove minimax(int depth,bool isMax,long long int alpha,long long int beta,int max_depth);
   struct transitionMove idMinimax(int max_depth,double maxTime);
   vector<string> sortChildren(vector<string> moves,bool forMax);
 
