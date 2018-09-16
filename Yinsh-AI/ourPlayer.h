@@ -3,6 +3,9 @@
 
 #include"ourGame.h"
 #include <bits/stdc++.h>
+#include <unordered_map>
+
+#define lli long long int
 /*
 class ourPlayer{
 private:
@@ -23,7 +26,13 @@ public:
 };
 */
 
+
 using namespace std;
+
+struct transpositionNode{
+  lli score;
+  lli max_minus_depth;
+};
 
 class ourPlayer{
   int playerNumber;//Gives the playerNumber to our BOT
@@ -53,6 +62,13 @@ public:
   vector<string> removeMarkerAndRing(int playerNo, ourGame* game);
 
   //void play();
+  unordered_map <string,transpositionNode> htMap;
+  //void play();
+
+  string minimax_decision(ourGame game);
+  long long int minimax(ourGame gameNode,int depth,bool isMax,long long int alpha,long long int beta);
+  long long int idMinimax(ourGame gameNode,int max_depth,double maxTime);
+  vector<ourGame> sortChildren(vector<ourGame> childNodes,bool forMax);
 
 };
 

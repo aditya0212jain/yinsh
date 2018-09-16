@@ -47,6 +47,7 @@ ourGame::ourGame(){
       }
     }
     board.pb(boardRow);
+
   }
   cout << "Board[10][10]: " << board[10][10].canBeUsed << endl;
 
@@ -87,22 +88,96 @@ void ourGame::printBoard(){
     cout << endl;
   }
 }
-
 double ourGame::computeHeuristicValue(){
   //This function computes the heuristic for the player according to the current configuration of the boardSize
 
-  double valPlayer1;
-  //Compute for Player 1, ignore player 2 in this
+  int player;//take it as input
+  int count=0;
+  vector<int> valuesForConsecutiveMarkers;
+  int myRingsInitial,opponentRingsInitial;
 
+// void ourGame::miniMax(){
+//   int depth = 4;//Determines the depth of the trees till which we will see
+//   for(int i=0; i<depth; i++){
+//
+//   }
+// }
 
-  double valPlayer2;
-  //Compute for player 2, ignore player 1
+  for(int i=0;i<12;i++){
+    valuesForConsecutiveMarkers.push_back(0);
+  }
 
-  if(currPlayer==1)
-    return valPlayer1 - valPlayer2;
-  else
-    return valPlayer2 - valPlayer1;
+  for(int i=0;i<rows;i++){
+    for(int j=0;j<rows;j++){
+      if(!board[i][j].canBeUsed){
+        if(count!=0){
+          valuesForConsecutiveMarkers[count]++;
+          count=0;
+        }
+      }else{
+        if(board[i][j].player!=player){
+          if(count!=0){
+            valuesForConsecutiveMarkers[count]++;
+            count=0;
+          }
+        }else{
+          if(board[i][j].containsMarker){
+            count++;
+          }else if(board[i][j].containsRings){
+            count+=0.5;
+          }
+        }
+      }
+    }
+  }
+
+  for(int j=0;j<rows;j++){
+    for(int i=0;i<rows;i++){
+      if(!board[i][j].canBeUsed){
+        if(count!=0){
+          valuesForConsecutiveMarkers[count]++;
+          count=0;
+        }
+      }else{
+        if(board[i][j].player!=player){
+          if(count!=0){
+            valuesForConsecutiveMarkers[count]++;
+            count=0;
+          }
+        }else{
+          if(board[i][j].containsMarker){
+            count++;
+          }else if(board[i][j].containsRings){
+            count+=0.5;
+          }
+        }
+      }
+    }
+  }
+
+  lli score=0;
+  int weight[] = {0,1,3,9,27,81,81,81,81,81,81,81};
+  for(int i=0;i<12;i++){
+    score+=weight[i]*valuesForConsecutiveMarkers[i];
+  }
+  if(player==1){
+    score+=10000*(myRingsInitial-this->playerOneRingsOnBoard);
+    score-=10000*(opponentRingsInitial-this->playerTwoRingsOnBoard);
+  }else{
+    score+=10000*(myRingsInitial-this->playerTwoRingsOnBoard);
+    score-=10000*(opponentRingsInitial-this->playerOneRingsOnBoard);
+  }
+
+  return score;
+
+  // if(player==1){
+  //   return this->playerOneMarkersOnBoard - this->playerTwoMarkersOnBoard;
+  // }else{
+  //   return this->playerTwoMarkersOnBoard - this->playerOneMarkersOnBoard;
+  // }
+
 }
+
 void ourGame::copyTheBoard(ourGame* game){
   currPlayer = game->currPlayer;
   playerOneRingsOnBoard = game->playerOneRingsOnBoard;
@@ -112,9 +187,9 @@ void ourGame::copyTheBoard(ourGame* game){
   boardSize = game->boardSize; // For this part, it is 85
   board = game->board;// index = (0,0)->0, others -> ((h)*(h+1))/2 + pos
 }
-// void ourGame::miniMax(){
-//   int depth = 4;//Determines the depth of the trees till which we will see
-//   for(int i=0; i<depth; i++){
-//
-//   }
-// }
+
+vector<ourGame> ourGame::children(){
+  vector<ourGame> ans;
+  return ans;
+
+}

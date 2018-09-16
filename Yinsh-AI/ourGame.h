@@ -3,6 +3,7 @@
 #include<bits/stdc++.h>
 #include "utils.h"
 
+#define lli long long int
 using namespace std;
 
 struct move{
@@ -33,11 +34,12 @@ public:
 
   ourGame();
   //ourGame(int n);
-  void execute_move(move m);
-  bool check_validity(move m);
+  void execute_move(struct move m);
+  bool check_validity(struct move m);
   double computeHeuristicValue();
   void printBoard();
   void copyTheBoard(ourGame* game);
+  vector<ourGame> children();
 };
 
 #endif

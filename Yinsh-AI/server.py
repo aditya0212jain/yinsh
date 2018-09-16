@@ -194,4 +194,4 @@ if __name__ == '__main__':
         if(local_Server.client_count < 2):
                 local_Server.SendInitError2Clients()
         else:
-                local_Server.playYinsh(args.n,args.time_limit,0,1)        
+                local_Server.playYinsh(args.n,args.time_limit,0,1)   

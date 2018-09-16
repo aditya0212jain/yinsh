@@ -3,15 +3,56 @@
 #include"ourGame.h"
 #include"utils.h"
 #include <bits/stdc++.h> //Can we use this??
+#include<math.h>
 
 #define pb push_back
 #define mp make_pair
+#define lli long long int
 
 using namespace std;
+
+struct childSortNode{
+  ourGame gameNode;
+  lli value;
+};
 
 /*General Comments*/
 // I think we should use the approach of double rows naming and use the approach of hexagon naming just for input and output, as that is only stored in the game which is used by Yinsh.js
 /*GeneralComments over*/
+
+
+bool compareForMax(const childSortNode &a, const childSortNode &b)
+{
+    return a.value>b.value;
+}
+
+bool compareForMin(const childSortNode &a,const childSortNode &b){
+  return a.value<b.value;
+}
+
+
+vector<ourGame> ourPlayer::sortChildren(vector<ourGame> childNodes,bool forMax){
+  vector<childSortNode> v;
+  for(int i=0;i<childNodes.size();i++){
+    lli valueTemp = childNodes[i].computeHeuristicValue();
+    childSortNode temp;
+    temp.gameNode = childNodes[i];
+    temp.value = valueTemp;
+    v.push_back(temp);
+  }
+  if(forMax){
+    sort(v.begin(),v.end(),compareForMax);
+  }else{
+    sort(v.begin(),v.end(),compareForMin);
+  }
+  vector<ourGame> ans;
+  for(int i=0;i<v.size();i++){
+    ans.push_back(v[i].gameNode);
+  }
+  return ans;
+}
+
+
 
 //Assuming PLayer 0 moves first and PLayer 1 follows
 
@@ -572,6 +613,82 @@ vector<string> ourPlayer::moveList(int playerNo, ourGame* game){
   return ans;
 }
 /*
+*The iterative deepening version of minimax with 
+*some max time and depth alloted
+*/
+lli ourPlayer::idMinimax(ourGame gameNode,int max_depth,double maxTime){
+  int depth = 0;
+  double tempTime=0;
+  struct timespec start_time,move_time;
+  htMap.clear();
+  
+  //start noting time
+  clock_gettime(CLOCK_REALTIME, &start_time);
+  lli bestScore=-INFINITY;
+  for(depth=0;depth<=max_depth;depth++){
+    lli value = minimax(gameNode,depth,true,-INFINITY,INFINITY);
+    bestScore = max(bestScore,value);
+    //compute time to solve for depth 
+    clock_gettime(CLOCK_REALTIME, &move_time);
+    double seconds = (double)((move_time.tv_sec+move_time.tv_nsec*1e-9) - (double)(start_time.tv_sec+start_time.tv_nsec*1e-9));
+    //return value if time exceeded
+    if(seconds>=maxTime){
+      htMap.clear();
+      return value;
+    }
+  }
+  htMap.clear();
+  return bestScore;
+}
+
+
+//initialize with alpha = -INFINITY & beta = INFINITY
+long long int ourPlayer::minimax(ourGame gameNode,int depth,bool isMax,lli alpha,lli beta){
+
+
+  if(depth==0){
+    return gameNode.computeHeuristicValue();
+  }
+
+  lli bestScore;
+
+  //if our player's turn
+  if(isMax){
+    bestScore=-INFINITY;
+    vector<ourGame> childVector;
+    childVector = gameNode.children();//assuming children function returns an vector of possible gameNodes
+    childVector = sortChildren(childVector,true);
+    for(int i=0;i<childVector.size();i++){
+      lli value = minimax(childVector[i],depth+1,false,alpha,beta);
+      alpha = max(alpha,value);
+      bestScore = max(value,bestScore);
+      if(alpha>=beta){
+        return value;
+      }
+    }
+    return bestScore;
+  }
+
+  //if opponent's turn
+  if(!isMax){
+    bestScore=INFINITY;
+    vector<ourGame> childVector;
+    childVector = gameNode.children();//assuming children function returns an vector of possible gameNodes
+    childVector = sortChildren(childVector,false);
+    for(int i=0;i<childVector.size();i++){
+      lli value = minimax(childVector[i],depth+1,true,alpha,beta);
+      beta = min(beta,value);
+      bestScore = min(value,bestScore);
+      if(alpha>=beta){
+        return value;
+      }
+    }
+    return bestScore;
+  }
+
+}
+
+/*
 void ourPlayer::play(){
   string opponentMove;
   if(this->playerNumber==1){
@@ -584,7 +701,7 @@ void ourPlayer::play(){
   while(!this->game->ended()){
     this->game->execute_move(toMove(opponentMove));
     move m = this->game->getMove(this->playerNumber);
-    this->game.execute_move(m);
+    this->game->execute_move(m);
     cout<<toString(m);
     cin>>opponentMove;
   }
