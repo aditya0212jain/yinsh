@@ -1,4 +1,5 @@
 #include"ourGame.h"
+#include "ourPlayer.h"
 
 #define pb push_back
 #define mp make_pair
@@ -49,7 +50,7 @@ ourGame::ourGame(){
     board.pb(boardRow);
 
   }
-  cout << "Board[10][10]: " << board[10][10].canBeUsed << endl;
+  //cout << "Board[0][5]: " << board[0][5].canBeUsed << endl;
 
   //First index corresponds to vertical and second to y=x waali type ka diagnol
 
@@ -188,11 +189,126 @@ void ourGame::copyTheBoard(ourGame* game){
   board = game->board;// index = (0,0)->0, others -> ((h)*(h+1))/2 + pos
 }
 
-vector<ourGame> ourGame::children(){
-  vector<ourGame> ans;
-  return ans;
-}
+// vector<ourGame> ourGame::children(){
+//   vector<ourGame> ans;
+//   return ans;
+// }
 
 bool ourGame::ended(){
   return false;//change this after 
+}
+void ourGame::moveUndo(int playerNo, string s){
+  ourPlayer temp(1,150);
+  int length = s.length();
+  //cout << "Length of input: " << length << endl;
+  int pointer = 0;
+  ourGame* game = this;
+  int rows = (game->rows);
+  //cout << rows << " Yeh toh number of rows hai!!" << endl;
+  //Here the coordinates are in hex and pos form
+  while(pointer<length){
+    if(s[pointer]=='R'){
+      int startX = s[pointer+3]-'0';
+      int startY = s[pointer+5]-'0';
+      int endX = s[pointer+10]-'0';
+      int endY = s[pointer+12]-'0';
+      pair<int,int> convertStart= hexToCartesian(startX, startY, rows);
+      pair<int,int> convertEnd = hexToCartesian(endX,endY,rows);
+      addRow(playerNo, convertStart.first, convertStart.second, convertEnd.first, convertEnd.second);
+      pointer += 14;
+    }
+    else if(s[pointer]=='X'){
+      cout << "Did I come here?" << endl;
+      int x = s[pointer+2]-'0';
+      int y = s[pointer+4]-'0';
+      pair<int,int> coor = hexToCartesian(x,y,rows);
+      //cout << coor.first << " " << coor.second << endl;
+      temp.placeRing(playerNo,coor.first,coor.second, game);
+      pointer += 6;
+    }
+    else if(s[pointer]=='S'){
+      int xStart = s[pointer+2]-'0';
+      int yStart = s[pointer+4]-'0';
+      int x = s[pointer+8]-'0';
+      int y = s[pointer+10]-'0';
+      pair<int,int> convertStart= hexToCartesian(xStart, yStart, rows);
+      pair<int,int> convertEnd = hexToCartesian(x,y,rows);
+      //cout << convertStart.first << " " << convertStart.second << endl;
+      //cout << convertEnd.first << " " << convertEnd.second << endl;
+      temp.moveRing(playerNo,convertEnd.first, convertEnd.second, convertStart.first, convertStart.second, game);
+      removeMarker(playerNo,convertEnd.first,convertEnd.second);
+      pointer += 12;
+    }
+    else if(s[pointer]=='P'){
+      int x = s[pointer+2]-'0';
+      int y = s[pointer+4]-'0';
+      pair<int,int> coor = hexToCartesian(x,y,rows);
+      temp.removeRing(playerNo,coor.first,coor.second, game);
+      pointer += 6;
+    }
+    else{
+      cout << "Move is incorrect!!" << endl;
+      return;
+    }
+  }
+}
+
+void ourGame::addRow(int playerNo, int startX, int startY, int endX, int endY){
+  int movementX = endX - startX;
+  int movementY = endY - startY;
+  // cout << movementX << " " << movementY << endl;
+  if(movementX==0){
+    //Vertical move
+    int mov = movementY/abs(movementY);
+    for(int i = min(startY,endY); i<=max(endY,startY); i++){
+      boardCell tempBoardCell;
+      tempBoardCell.player = playerNo;
+      tempBoardCell.containsMarker = true;
+      tempBoardCell.containsRings = false;
+      tempBoardCell.canBeUsed = true;
+      board[startX][i] = tempBoardCell;
+    }
+  }
+  else if(movementY==0){
+    //Vertical move
+    int mov = movementX/abs(movementX);
+    for(int i = min(startX,endX); i<=max(endX,startX); i++){
+      boardCell tempBoardCell;
+      tempBoardCell.player = playerNo;
+      tempBoardCell.containsMarker = true;
+      tempBoardCell.containsRings = false;
+      tempBoardCell.canBeUsed = true;
+      board[i][startY] = tempBoardCell;
+    }
+  }
+  else if(movementX==movementY){
+    int mov = movementX/abs(movementX);
+    int i,j;
+    for(i = min(startX,endX),j=min(endY,startY); i<=max(startX,endX),j<=max(endY,startY); i++,j++){
+      boardCell tempBoardCell;
+      tempBoardCell.player = playerNo;
+      tempBoardCell.containsMarker = true;
+      tempBoardCell.containsRings = false;
+      tempBoardCell.canBeUsed = true;
+      board[i][j] = tempBoardCell;
+    }
+  }
+  else{
+    cout << "Galat chal rahe ho, sahi Karo!!!" << endl;
+  }
+  if(/*this->playerNumber*/playerNo==1){
+    playerOneMarkersOnBoard = playerOneMarkersOnBoard+5;
+  }
+  else{
+    playerTwoMarkersOnBoard = playerTwoMarkersOnBoard+5;
+  }
+}
+
+void ourGame::removeMarker(int playerNo, int x, int y){
+  boardCell tempBoardCell;
+  tempBoardCell.player = 0;
+  tempBoardCell.containsMarker = false;
+  tempBoardCell.containsRings = false;
+  tempBoardCell.canBeUsed = true;
+  board[x][y] = tempBoardCell;
 }

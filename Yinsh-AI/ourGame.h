@@ -40,7 +40,9 @@ public:
   void printBoard();
   bool ended();
   void copyTheBoard(ourGame* game);
-  vector<ourGame> children();
+  void moveUndo(int playerNo, string s);
+  void addRow(int a, int b, int c, int d, int e);
+  void removeMarker(int playerNo, int x, int y);
 };
 
 #endif

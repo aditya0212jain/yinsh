@@ -7,7 +7,7 @@
 using namespace std;
 
 int getNearestInteger(double a){
-    double eps = 0.001;
+    double eps = 0.3;
     int p = (int)a;
     int q = (int)a +1;
     // cout << "p=" << p << " " << "q=" << q << endl;
@@ -69,6 +69,7 @@ pair<int,int> cartesianToHex(int x, int y, int rows){
                 pos = angle/theta;
             }
             posInt = getNearestInteger(pos);
+            //cout << pos << endl;
             //cout << "Theta="<<theta << " " << "Angle=" << angle << endl;
             //cout << pos << " " << endl;
             //cout << ((int)pos+1) << endl;
@@ -102,7 +103,7 @@ pair<int,int> hexToCartesian(int a,int b,int rows){
     x = x0;
     y = y0;
   }
-  else if(b/a<=1){
+  else if(b<=a){
     x = x0+b;
     y=y0+a;
   }else if(b<=(2*a)&&b>a){
