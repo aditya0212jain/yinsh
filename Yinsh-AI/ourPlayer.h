@@ -51,7 +51,7 @@ public:
   vector<string> moveList(int playerNo, ourGame* game);
   vector<string> removeRingFinal(int playerNo, ourGame* game);
   vector<string> removeMarkerAndRing(int playerNo, ourGame* game);
-
+  vector<string> allDeletions(int playerNo, ourGame* game);
   //void play();
 
 };

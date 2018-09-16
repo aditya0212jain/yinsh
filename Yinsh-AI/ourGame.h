@@ -38,6 +38,9 @@ public:
   double computeHeuristicValue();
   void printBoard();
   void copyTheBoard(ourGame* game);
+  void moveUndo(int playerNo, string s);
+  void addRow(int a, int b, int c, int d, int e);
+  void removeMarker(int playerNo, int x, int y);
 };
 
 #endif
