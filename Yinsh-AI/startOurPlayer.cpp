@@ -20,38 +20,39 @@ using namespace std;
 int main(){
   //int myPlayerNumber = 1;
   ourPlayer playah(1,150);
+  playah.play();
   //ourPlayer nonPlayah = playah;
   //nonPlayah.game = new ourGame();
-  string input;
+  // string input;
 
-  input = "P 1 3";
+  // input = "P 1 3";
 
-  playah.moveDecider(1,input,playah.game);
-  playah.game -> printBoard();
-  input = "S 1 3 P 0 0";
-  // playah.moveDecider(1, input, (playah.game));
-  // input = "S 0 0 P 1 0";
-  // playah.moveDecider(1, input, (playah.game));
-  // input = "S 1 0 P 2 0";
-  // playah.moveDecider(1, input, (playah.game));
-  // input = "S 2 0 P 3 0";
-  // playah.moveDecider(1, input, (playah.game));
-  // input = "S 3 0 P 4 0";
-  // playah.moveDecider(1, input, (playah.game));
-  //
-  //
-  // input = "P 1 4";
-  // playah.moveDecider(1, input, (playah.game));
+  // playah.moveDecider(1,input,playah.game);
   // playah.game -> printBoard();
-  //
-  // input = "RS 1 3 RE 3 0 X 1 4 S 4 0 M 5 6";
-  playah.moveDecider(1, input, playah.game);
+  // input = "S 1 3 P 0 0";
+  // // playah.moveDecider(1, input, (playah.game));
+  // // input = "S 0 0 P 1 0";
+  // // playah.moveDecider(1, input, (playah.game));
+  // // input = "S 1 0 P 2 0";
+  // // playah.moveDecider(1, input, (playah.game));
+  // // input = "S 2 0 P 3 0";
+  // // playah.moveDecider(1, input, (playah.game));
+  // // input = "S 3 0 P 4 0";
+  // // playah.moveDecider(1, input, (playah.game));
+  // //
+  // //
+  // // input = "P 1 4";
+  // // playah.moveDecider(1, input, (playah.game));
+  // // playah.game -> printBoard();
+  // //
+  // // input = "RS 1 3 RE 3 0 X 1 4 S 4 0 M 5 6";
+  // playah.moveDecider(1, input, playah.game);
 
-  cout << endl << endl ;
-  playah.game -> printBoard();
-  cout << endl << endl;
-  playah.game -> moveUndo(1,input);
-  playah.game -> printBoard();
+  // cout << endl << endl ;
+  // playah.game -> printBoard();
+  // cout << endl << endl;
+  // playah.game -> moveUndo(1,input);
+  // playah.game -> printBoard();
 
   // vector<string> ans = playah.moveList(1,playah.game);
   // cout << ans.size() << endl;
