@@ -280,8 +280,4 @@ if __name__ == "__main__":
 	game.execute_move("S 4 11 M 4 12")
 	game.execute_move("S 3 16 M 3 17")
 	### Enter Game Moves Here to Test
-<<<<<<< HEAD
 ## Example: game.execute_move("P 2 0")
-=======
-	## Example: game.execute_move("P 2 0")
->>>>>>> aditya

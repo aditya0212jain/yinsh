@@ -21,33 +21,41 @@ struct childSortNode{
 /*GeneralComments over*/
 
 
-bool compareForMax(const childSortNode &a, const childSortNode &b)
+bool compareForMax(const transitionMove &a, const transitionMove &b)
 {
     return a.value>b.value;
 }
 
-bool compareForMin(const childSortNode &a,const childSortNode &b){
+bool compareForMin(const transitionMove &a,const transitionMove &b){
   return a.value<b.value;
 }
 
 
-vector<ourGame> ourPlayer::sortChildren(vector<ourGame> childNodes,bool forMax){
-  vector<childSortNode> v;
-  for(int i=0;i<childNodes.size();i++){
-    lli valueTemp = childNodes[i].computeHeuristicValue();
-    childSortNode temp;
-    temp.gameNode = childNodes[i];
+vector<string> ourPlayer::sortChildren(vector<string> moves,bool forMax){
+  vector<transitionMove> v;
+  int playerNumber;
+  if(forMax){
+    playerNumber = this->playerNumber;
+  }else{
+    playerNumber = (this->playerNumber==1) ? 2:1;
+  }
+  for(int i=0;i<moves.size();i++){
+    moveDecider(playerNumber,moves[i],this->game);
+    lli valueTemp = this->game->computeHeuristicValue();
+    transitionMove temp;
+    temp.move = moves[i];
     temp.value = valueTemp;
     v.push_back(temp);
+    this->game->undoMove(playerNumber,moves[i]);
   }
   if(forMax){
     sort(v.begin(),v.end(),compareForMax);
   }else{
     sort(v.begin(),v.end(),compareForMin);
   }
-  vector<ourGame> ans;
+  vector<string> ans;
   for(int i=0;i<v.size();i++){
-    ans.push_back(v[i].gameNode);
+    ans.push_back(v[i].move);
   }
   return ans;
 }
@@ -616,7 +624,7 @@ vector<string> ourPlayer::moveList(int playerNo, ourGame* game){
 *The iterative deepening version of minimax with 
 *some max time and depth alloted
 */
-lli ourPlayer::idMinimax(ourGame gameNode,int max_depth,double maxTime){
+struct transitionMove ourPlayer::idMinimax(int max_depth,double maxTime){
   int depth = 0;
   double tempTime=0;
   struct timespec start_time,move_time;
@@ -624,89 +632,125 @@ lli ourPlayer::idMinimax(ourGame gameNode,int max_depth,double maxTime){
   
   //start noting time
   clock_gettime(CLOCK_REALTIME, &start_time);
-  lli bestScore=-INFINITY;
+  struct transitionMove bestMove;
+  bestMove.value=-INFINITY;
   for(depth=0;depth<=max_depth;depth++){
-    lli value = minimax(gameNode,depth,true,-INFINITY,INFINITY);
-    bestScore = max(bestScore,value);
+    struct transitionMove tempMove;
+    tempMove = minimax(depth,true,-INFINITY,INFINITY);
+    if(bestMove.value<=tempMove.value){
+      bestMove = tempMove;
+    }
+    // bestScore = max(bestScore,tempMove.value);
     //compute time to solve for depth 
     clock_gettime(CLOCK_REALTIME, &move_time);
     double seconds = (double)((move_time.tv_sec+move_time.tv_nsec*1e-9) - (double)(start_time.tv_sec+start_time.tv_nsec*1e-9));
     //return value if time exceeded
     if(seconds>=maxTime){
       htMap.clear();
-      return value;
+      return bestMove;
     }
   }
   htMap.clear();
-  return bestScore;
+  return bestMove;
 }
 
-
+/*
+*Implementing this assuming undo function is already made
+*undoMove(ourGame game)
+*/
 //initialize with alpha = -INFINITY & beta = INFINITY
-long long int ourPlayer::minimax(ourGame gameNode,int depth,bool isMax,lli alpha,lli beta){
+struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alpha,long long int beta){
 
 
   if(depth==0){
-    return gameNode.computeHeuristicValue();
+    struct transitionMove ans;
+    ans.move="Reached";
+    ans.value=this->game->computeHeuristicValue();
+    return ans;
   }
 
-  lli bestScore;
+  transitionMove bestMove;
 
   //if our player's turn
   if(isMax){
-    bestScore=-INFINITY;
-    vector<ourGame> childVector;
-    childVector = gameNode.children();//assuming children function returns an vector of possible gameNodes
-    childVector = sortChildren(childVector,true);
-    for(int i=0;i<childVector.size();i++){
-      lli value = minimax(childVector[i],depth+1,false,alpha,beta);
-      alpha = max(alpha,value);
-      bestScore = max(value,bestScore);
+    bestMove.value=-INFINITY;
+    vector<string> possible_moves;
+    possible_moves = moveList(this->playerNumber,this->game);
+    // childVector = gameNode.children();//assuming children function returns an vector of possible gameNodes
+    possible_moves = sortChildren(possible_moves,true);
+    for(int i=0;i<possible_moves.size();i++){
+      moveDecider(this->playerNumber,possible_moves[i],this->game);
+      transitionMove tempMove = minimax(depth+1,false,alpha,beta);
+      if(alpha<=tempMove.value){
+        alpha = tempMove.value;
+      }
+      // alpha = max(alpha,value);
+      if(bestMove.value<=tempMove.value){
+        bestMove = tempMove;
+        bestMove.move = possible_moves[i];
+      }
+      // bestScore = max(value,bestScore);
+      moveUndo(this->playerNumber,possible_moves[i]);
       if(alpha>=beta){
-        return value;
+        tempMove.move = possible_moves[i];
+        return tempMove;
       }
     }
-    return bestScore;
+    return bestMove;
   }
 
   //if opponent's turn
   if(!isMax){
-    bestScore=INFINITY;
-    vector<ourGame> childVector;
-    childVector = gameNode.children();//assuming children function returns an vector of possible gameNodes
-    childVector = sortChildren(childVector,false);
-    for(int i=0;i<childVector.size();i++){
-      lli value = minimax(childVector[i],depth+1,true,alpha,beta);
-      beta = min(beta,value);
-      bestScore = min(value,bestScore);
+    int opponent_player_number;
+    opponent_player_number = (this->playerNumber==1) ? 2 : 1;
+    bestMove.value = INFINITY;
+    vector<string> possible_moves;
+    possible_moves = moveList(opponent_player_number,this->game);//assuming children function returns an vector of possible gameNodes
+    possible_moves = sortChildren(possible_moves,false);
+    for(int i=0;i<possible_moves.size();i++){
+      moveDecider(opponent_player_number,possible_moves[i],this->game);
+      transitionMove tempMove= minimax(depth+1,true,alpha,beta);
+      // beta = min(beta,value);
+      if(beta>=tempMove.value){
+        beta = tempMove.value;
+      }
+      if(bestMove.value>=tempMove.value){
+        bestMove = tempMove;
+        bestMove.move = possible_moves[i];
+      }
+      moveUndo(opponent_player_number,possible_moves[i]);
       if(alpha>=beta){
-        return value;
+        tempMove.move = possible_moves[i];
+        return tempMove;
       }
     }
-    return bestScore;
+    return bestMove;
   }
 
 }
 
-/*
+
 void ourPlayer::play(){
   string opponentMove;
+  int opponent_player_number;
   if(this->playerNumber==1){
-    move m = this->game->getMove(this->playerNumber);
-    this->game->execute_move(m);
-    cout<<toString(m);
+    string m = minimax_decision(*this->game);
+    moveDecider(this->playerNumber,m,this->game);
+    cout<<m;
     //cin>>opponentMove;
   }
   cin>>opponentMove;
+  opponent_player_number = (this->playerNumber)%2;
   while(!this->game->ended()){
-    this->game->execute_move(toMove(opponentMove));
-    move m = this->game->getMove(this->playerNumber);
-    this->game->execute_move(m);
-    cout<<toString(m);
+    moveDecider(opponent_player_number,opponentMove,this->game);
+    // this->game->execute_move(toMove(opponentMove));
+    string m = minimax_decision(*game);
+    moveDecider(this->playerNumber,m,this->game);
+    cout<<m;
     cin>>opponentMove;
   }
 }
-*/
+
 /*
 vector<string> ans;
 vector<string> beforeDeletion = markerDeletion(playerNo, game);

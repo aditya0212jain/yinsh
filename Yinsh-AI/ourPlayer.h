@@ -34,6 +34,11 @@ struct transpositionNode{
   lli max_minus_depth;
 };
 
+struct transitionMove{
+  string move;
+  long long int value;
+};
+
 class ourPlayer{
   int playerNumber;//Gives the playerNumber to our BOT
   int totalRings;//Number of rings that needs to be placed on the board
@@ -63,12 +68,11 @@ public:
 
   //void play();
   unordered_map <string,transpositionNode> htMap;
-  //void play();
-
+  void play();
   string minimax_decision(ourGame game);
-  long long int minimax(ourGame gameNode,int depth,bool isMax,long long int alpha,long long int beta);
-  long long int idMinimax(ourGame gameNode,int max_depth,double maxTime);
-  vector<ourGame> sortChildren(vector<ourGame> childNodes,bool forMax);
+  struct transitionMove minimax(int depth,bool isMax,long long int alpha,long long int beta);
+  struct transitionMove idMinimax(int max_depth,double maxTime);
+  vector<string> sortChildren(vector<string> moves,bool forMax);
 
 };
 

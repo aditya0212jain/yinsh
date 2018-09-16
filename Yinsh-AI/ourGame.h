@@ -38,6 +38,7 @@ public:
   bool check_validity(struct move m);
   double computeHeuristicValue();
   void printBoard();
+  bool ended();
   void copyTheBoard(ourGame* game);
   vector<ourGame> children();
 };

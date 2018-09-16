@@ -191,5 +191,8 @@ void ourGame::copyTheBoard(ourGame* game){
 vector<ourGame> ourGame::children(){
   vector<ourGame> ans;
   return ans;
+}
 
+bool ourGame::ended(){
+  return false;//change this after 
 }
