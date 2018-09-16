@@ -678,6 +678,7 @@ struct transitionMove ourPlayer::idMinimax(int max_depth,double maxTime){
   bestMove.value=-INFINITY;
   for(depth=1;depth<=max_depth;depth++){
     struct transitionMove tempMove;
+    cout<<"depth: "<<depth<<endl;
     tempMove = minimax(depth,true,-INFINITY,INFINITY);
     if(bestMove.value<=tempMove.value){
       bestMove = tempMove;
@@ -776,28 +777,38 @@ void ourPlayer::play(){
   string opponentMove;
   int opponent_player_number;
   int count=0;
-  while(count!=5){
-    // if(this->playerNumber==2){
-    // getline(cin,opponentMove);
-    // moveDecider(2,opponentMove,this->game);
-    // }
-    if(this->playerNumber==1){
-      while(true){
-        int a = rand()%6;
-        int b = rand()%(6*a);
+  // while(count!=5){
+  //   // if(this->playerNumber==2){
+  //   // getline(cin,opponentMove);
+  //   // moveDecider(2,opponentMove,this->game);
+  //   // }
+  //   if(this->playerNumber==1){
+  //     while(true){
+  //       int a = rand()%6;
+  //       int b = rand()%(6*a);
         
-        pair<int,int> temp = hexToCartesian(a,b,11);
-        cout<<"P "<<a<<" "<<b<<endl;
-        if(this->game->board[temp.first][temp.second].canBeUsed&&this->game->board[temp.first][temp.second].player==0){
-          placeRing(1,temp.first,temp.second,this->game);
-          break;
-        }
-      }
-    }
-    getline(cin,opponentMove);
-    moveDecider(2,opponentMove,this->game);
-    count++;
-  }
+  //       pair<int,int> temp = hexToCartesian(a,b,11);
+  //       cout<<"P "<<a<<" "<<b<<endl;
+  //       if(this->game->board[temp.first][temp.second].canBeUsed&&this->game->board[temp.first][temp.second].player==0){
+  //         placeRing(1,temp.first,temp.second,this->game);
+  //         break;
+  //       }
+  //     }
+  //   }
+  //   getline(cin,opponentMove);
+  //   moveDecider(2,opponentMove,this->game);
+  //   count++;
+  // }
+  moveDecider(1,"P 1 4",this->game);
+  moveDecider(2,"P 0 0",this->game);
+  moveDecider(1,"P 3 7",this->game);
+  moveDecider(2,"P 2 2",this->game);
+  moveDecider(1,"P 4 5",this->game);
+  moveDecider(2,"P 2 4",this->game);
+  moveDecider(1,"P 2 7",this->game);
+  moveDecider(2,"P 4 12",this->game);
+  moveDecider(1,"P 4 4",this->game);
+  moveDecider(2,"P 3 0",this->game);
   if(this->playerNumber==1){
     transitionMove m = idMinimax(4,40);//max_depth,time
     cout<<m.move;
