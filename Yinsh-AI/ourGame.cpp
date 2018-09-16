@@ -27,7 +27,7 @@ ourGame::ourGame(){
       }
     }
     else if(i==rows-1){
-      for(int j=rows-4; j<rows; j++){
+      for(int j=rows-5; j<rows-1; j++){
         boardRow[j].canBeUsed = true;
       }
     }
@@ -47,8 +47,9 @@ ourGame::ourGame(){
       }
     }
     board.pb(boardRow);
-
   }
+  cout << "Board[10][10]: " << board[10][10].canBeUsed << endl;
+
   //First index corresponds to vertical and second to y=x waali type ka diagnol
 
   //Checking the board configuration
@@ -92,7 +93,7 @@ double ourGame::computeHeuristicValue(){
 
   double valPlayer1;
   //Compute for Player 1, ignore player 2 in this
-  
+
 
   double valPlayer2;
   //Compute for player 2, ignore player 1
@@ -102,7 +103,15 @@ double ourGame::computeHeuristicValue(){
   else
     return valPlayer2 - valPlayer1;
 }
-
+void ourGame::copyTheBoard(ourGame* game){
+  currPlayer = game->currPlayer;
+  playerOneRingsOnBoard = game->playerOneRingsOnBoard;
+  playerTwoRingsOnBoard = game->playerTwoRingsOnBoard;
+  playerOneMarkersOnBoard = game->playerOneMarkersOnBoard;
+  playerTwoMarkersOnBoard = game->playerTwoMarkersOnBoard;
+  boardSize = game->boardSize; // For this part, it is 85
+  board = game->board;// index = (0,0)->0, others -> ((h)*(h+1))/2 + pos
+}
 // void ourGame::miniMax(){
 //   int depth = 4;//Determines the depth of the trees till which we will see
 //   for(int i=0; i<depth; i++){

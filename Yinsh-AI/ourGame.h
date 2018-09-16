@@ -32,11 +32,12 @@ public:
 
 
   ourGame();
-  ourGame(int n);
+  //ourGame(int n);
   void execute_move(move m);
   bool check_validity(move m);
   double computeHeuristicValue();
   void printBoard();
+  void copyTheBoard(ourGame* game);
 };
 
 #endif

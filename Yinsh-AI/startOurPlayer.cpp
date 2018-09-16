@@ -20,13 +20,23 @@ using namespace std;
 int main(){
   //int myPlayerNumber = 1;
   ourPlayer playah(1,150);
-  ourPlayer nonPlayah = playah;
-  nonPlayah.game = new ourGame();
+  //ourPlayer nonPlayah = playah;
+  //nonPlayah.game = new ourGame();
+
+  string input = "P 0 0";
+  playah.moveDecider(1, input, (playah.game));
+  playah.game -> printBoard();
+  vector<string> ans = playah.selectAndMoveFinal(1,playah.game);
+  cout << ans.size() << endl;
+
+  for(int i=0; i<ans.size(); i++)
+    cout << ans[i] << endl;
+
 
   //ourGame Gamer;
   // cout << "HUh" << endl;
   // playah.placeRing(1,2,1);
-  // playah.game->printBoard();
+  //playah.game->printBoard();
   // move tempMove;
   // playah.moveRing(1,2,1,3,2);
   // playah.moveRing(1,3,2,4,3);
