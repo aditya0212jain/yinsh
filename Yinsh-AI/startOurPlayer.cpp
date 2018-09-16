@@ -55,11 +55,11 @@ int main(){
 
   // vector<string> ans = playah.moveList(1,playah.game);
   // cout << ans.size() << endl;
-  // // pair<int,int>p = hexToCartesian(5,6,11);
-  // // cout << p.first << " " << p.second << endl;
-  // // pair<int,int> q = cartesianToHex(p.first,p.second,11);
-  // // cout << "YOLO ";
-  // // cout << q.first << " " << q.second << endl;
+  pair<int,int>p = hexToCartesian(2,5,11);
+  cout << p.first << " " << p.second << endl;
+  pair<int,int> q = cartesianToHex(p.first,p.second,11);
+  cout << "YOLO ";
+  cout << q.first << " " << q.second << endl;
   // for(int i=0; i<ans.size(); i++)
   //   cout << ans[i] << endl;
 
