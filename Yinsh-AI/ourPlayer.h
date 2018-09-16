@@ -3,6 +3,8 @@
 
 #include"ourGame.h"
 #include <bits/stdc++.h>
+
+#define lli long long int
 /*
 class ourPlayer{
 private:
@@ -23,7 +25,13 @@ public:
 };
 */
 
+
 using namespace std;
+
+struct transpositionNode{
+  lli score;
+  lli max_minus_depth;
+}
 
 class ourPlayer{
   int playerNumber;//Gives the playerNumber to our BOT
@@ -37,6 +45,7 @@ class ourPlayer{
 public:
   ourGame* game;
   ourPlayer(int a, int b);
+  unordered_map <string,transpositionNode> htMap;
   void placeRing(int num, int a, int b); //Returns the move which needs to be printed
   void moveRing(int num, int xs, int ys, int b, int c); //Returns the move which should be printed
   int selectRing(); //gives the index of the ring which is selected for moving

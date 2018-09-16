@@ -269,6 +269,8 @@ lli ourPlayer::idMinimax(ourGame gameNode,int max_depth,double maxTime){
   int depth = 0;
   double tempTime=0;
   struct timespec start_time,move_time;
+  htMap.clear();
+  
   //start noting time
   clock_gettime(CLOCK_REALTIME, &start_time);
   lli bestScore=-INIFINITY;
@@ -279,16 +281,19 @@ lli ourPlayer::idMinimax(ourGame gameNode,int max_depth,double maxTime){
     double seconds = (double)((move_time.tv_sec+move_time.tv_nsec*1e-9) - (double)(start_time.tv_sec+start_time.tv_nsec*1e-9));
     //return value if time exceeded
     if(seconds>=maxTime){
+      htMap.clear();
       return value;
     }
   }
-
+  htMap.clear();
   return value;
 }
 
 
 //initialize with alpha = -INFINITY & beta = INFINITY
 long long int ourPlayer::minimax(ourGame gameNode,int depth,bool isMax,lli alpha,lli beta){
+
+
   if(depth==0){
     return gameNode.computeHeuristicValue();
   }
