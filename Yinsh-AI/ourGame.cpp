@@ -191,6 +191,7 @@ void ourGame::copyTheBoard(ourGame* game){
 bool ourGame::ended(){
   return false;//change this after
 }
+
 void ourGame::moveUndo(int playerNo, string s){
   ourPlayer temp(1,150);
   int length = s.length();
@@ -201,7 +202,8 @@ void ourGame::moveUndo(int playerNo, string s){
   //cout << rows << " Yeh toh number of rows hai!!" << endl;
   //Here the coordinates are in hex and pos form
   vector<string> p = split(s,' ');
-  int pointer = p.size();
+  int pointer = p.size()-1;
+
 
   while(pointer>=0){
     if(p[pointer].compare("RS")==0){

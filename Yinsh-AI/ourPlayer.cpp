@@ -462,6 +462,9 @@ string ourPlayer::markerDeletionHelper(int playerNo, int x, int y, int dirX, int
       if(game->board[i][j].player==playerNo){
         markerCount++;
       }
+      else{
+        break;
+      }
       if(markerCount==5){
         pair<int,int> initial = cartesianToHex(x,y,rows);
         pair<int,int> finall = cartesianToHex(i,j,rows);
@@ -490,7 +493,9 @@ string ourPlayer::markerDeletionHelper(int playerNo, int x, int y, int dirX, int
         break;
       }
     }
-    else break;
+    else{ 
+      break;
+    }
   }
   // cout << "MarkerCount=" << markerCount << endl;
   return temp;
@@ -546,6 +551,10 @@ vector<string> ourPlayer::markerDeletion(int playerNo, ourGame* game){
       // cout << endl;
     }
   }
+  // cout <<"-----------------------------" << endl;
+  // for(int i=0; i<ans.size(); i++)
+    // cout << ans[i] << endl;
+  // cout << "++++++++++++++++++++++++++" << endl;
   return ans;
 }
 
@@ -621,10 +630,13 @@ vector<string> ourPlayer::removeMarkerAndRing(int playerNo, ourGame* game){
   vector<string> ans;
   // cout << "Do I come Here?" << endl;
   vector<string> first = markerDeletion(playerNo, game);
+
   // cout << "And Here?" << endl;
   string temp;
+  // cout << "removeMarkerAndRing STARTS!!" << endl;
   for(int i=0; i<first.size(); i++){
     string removeMarkerOne = first[i];
+    // cout << first[i] << endl;
     ourGame* firstGame = new ourGame();
     firstGame->copyTheBoard(game);
     moveDecider(playerNo,removeMarkerOne,firstGame);
@@ -634,6 +646,7 @@ vector<string> ourPlayer::removeMarkerAndRing(int playerNo, ourGame* game){
       ans.pb(t);
     }
   }
+  // cout << "removeMarkerAndRing ENDS!" << endl;
   return ans;
 }
 
@@ -649,6 +662,7 @@ vector<string> ourPlayer::allDeletions(int playerNo, ourGame* game){
       for(int i=0; i<firstDeletion.size(); i++){
         string firstMove = firstDeletion[i];
         // move = firstMove;
+        cout << firstMove << endl;
         ourGame* firstGame = new ourGame();
         firstGame->copyTheBoard(game);
         moveDecider(playerNo,firstMove,firstGame);
@@ -708,13 +722,11 @@ vector<string> ourPlayer::moveList(int playerNo, ourGame* game){
     // cout<<fr.size()<<endl;
     int frSize = fr.size();
     if(fr.size()==0){
-      // cout << "NO MOVE LEFT" << endl;
+      cout << "NO MOVE LEFT" << endl;
     }
     else{
       // cout << "IDHAR" << endl;
-      // for(int i=0;i<fr.size();i++){
-      //   cout<<"i: "<< i<<" Move: "<<fr[i]<<endl;
-      // }
+
       // cout << "frSize: " << frSize << endl;
 
       for(int i=0; i<frSize; i++){
