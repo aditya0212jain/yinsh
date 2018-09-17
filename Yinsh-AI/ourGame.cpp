@@ -89,20 +89,14 @@ void ourGame::printBoard(){
     cout << endl;
   }
 }
-double ourGame::computeHeuristicValue(){
+
+double ourGame::computeHeuristicValue(int player){
   //This function computes the heuristic for the player according to the current configuration of the boardSize
 
-  int player;//take it as input
+  // int player;//take it as input
   int count=0;
   vector<int> valuesForConsecutiveMarkers;
-  int myRingsInitial,opponentRingsInitial;
-
-// void ourGame::miniMax(){
-//   int depth = 4;//Determines the depth of the trees till which we will see
-//   for(int i=0; i<depth; i++){
-//
-//   }
-// }
+  int myRingsInitial=5,opponentRingsInitial=5;
 
   for(int i=0;i<12;i++){
     valuesForConsecutiveMarkers.push_back(0);
@@ -195,7 +189,7 @@ void ourGame::copyTheBoard(ourGame* game){
 // }
 
 bool ourGame::ended(){
-  return false;//change this after 
+  return false;//change this after
 }
 void ourGame::moveUndo(int playerNo, string s){
   ourPlayer temp(1,150);
@@ -206,45 +200,46 @@ void ourGame::moveUndo(int playerNo, string s){
   int rows = (game->rows);
   //cout << rows << " Yeh toh number of rows hai!!" << endl;
   //Here the coordinates are in hex and pos form
-  while(pointer<length){
-    if(s[pointer]=='R'){
-      int startX = s[pointer+3]-'0';
-      int startY = s[pointer+5]-'0';
-      int endX = s[pointer+10]-'0';
-      int endY = s[pointer+12]-'0';
+  vector<string> p = split(s,' ');
+  while(pointer<p.size()){
+    if(s[pointer]=="RS"){
+      int startX = stoi(p[pointer+1]);
+      int startY = stoi(p[pointer+2]);
+      int endX = stoi(p[pointer+4]);
+      int endY = stoi(p[pointer+5]);
       pair<int,int> convertStart= hexToCartesian(startX, startY, rows);
       pair<int,int> convertEnd = hexToCartesian(endX,endY,rows);
       addRow(playerNo, convertStart.first, convertStart.second, convertEnd.first, convertEnd.second);
-      pointer += 14;
+      pointer += 6;
     }
     else if(s[pointer]=='X'){
-      cout << "Did I come here?" << endl;
-      int x = s[pointer+2]-'0';
-      int y = s[pointer+4]-'0';
+      // cout << "Did I come here?" << endl;
+      int x = stoi(p[pointer+1]);
+      int y = stoi(p[pointer+2]);
       pair<int,int> coor = hexToCartesian(x,y,rows);
       //cout << coor.first << " " << coor.second << endl;
       temp.placeRing(playerNo,coor.first,coor.second, game);
-      pointer += 6;
+      pointer += 3;
     }
     else if(s[pointer]=='S'){
-      int xStart = s[pointer+2]-'0';
-      int yStart = s[pointer+4]-'0';
-      int x = s[pointer+8]-'0';
-      int y = s[pointer+10]-'0';
+      int xStart = stoi(p[pointer+1]);
+      int yStart = stoi(p[pointer+2]);
+      int x = stoi(p[pointer+4]);
+      int y = stoi(p[pointer+5]);
       pair<int,int> convertStart= hexToCartesian(xStart, yStart, rows);
       pair<int,int> convertEnd = hexToCartesian(x,y,rows);
       //cout << convertStart.first << " " << convertStart.second << endl;
       //cout << convertEnd.first << " " << convertEnd.second << endl;
       temp.moveRing(playerNo,convertEnd.first, convertEnd.second, convertStart.first, convertStart.second, game);
       removeMarker(playerNo,convertEnd.first,convertEnd.second);
-      pointer += 12;
+      pointer += 6;
     }
     else if(s[pointer]=='P'){
-      int x = s[pointer+2]-'0';
-      int y = s[pointer+4]-'0';
+      int x = stoi(p[pointer+1]);
+      int y = stoi(p[pointer+2]);
       pair<int,int> coor = hexToCartesian(x,y,rows);
       temp.removeRing(playerNo,coor.first,coor.second, game);
-      pointer += 6;
+      pointer += 3;
     }
     else{
       cout << "Move is incorrect!!" << endl;
