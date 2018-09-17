@@ -1038,7 +1038,7 @@ void ourPlayer::play(){
 
   // this->game->printBoard();
   if(this->playerNumber==1){
-    transitionMove m = idMinimax(3,40);//max_depth,time
+    transitionMove m = idMinimax(2,40);//max_depth,time
     // cout<<"o1"<<endl;
     cout<<m.move<<endl;
     // this->game->printBoard();
@@ -1051,7 +1051,7 @@ void ourPlayer::play(){
   while(!this->game->ended()){
     moveDecider(opponent_player_number,opponentMove,this->game);
     // this->game->printBoard();
-    transitionMove m = idMinimax(3,40);
+    transitionMove m = idMinimax(2,40);
     cout<<m.move<<endl;
     moveDecider(this->playerNumber,m.move,this->game);
     // this->game->printBoard();

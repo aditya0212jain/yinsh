@@ -195,13 +195,15 @@ void ourGame::moveUndo(int playerNo, string s){
   ourPlayer temp(1,150);
   int length = s.length();
   //cout << "Length of input: " << length << endl;
-  int pointer = 0;
+
   ourGame* game = this;
   int rows = (game->rows);
   //cout << rows << " Yeh toh number of rows hai!!" << endl;
   //Here the coordinates are in hex and pos form
   vector<string> p = split(s,' ');
-  while(pointer<p.size()){
+  int pointer = p.size()-1;
+
+  while(pointer>=0){
     if(p[pointer].compare("RS")==0){
       int startX = stoi(p[pointer+1]);
       int startY = stoi(p[pointer+2]);
@@ -210,7 +212,7 @@ void ourGame::moveUndo(int playerNo, string s){
       pair<int,int> convertStart= hexToCartesian(startX, startY, rows);
       pair<int,int> convertEnd = hexToCartesian(endX,endY,rows);
       addRow(playerNo, convertStart.first, convertStart.second, convertEnd.first, convertEnd.second);
-      pointer += 6;
+      // pointer += 6;
     }
     else if(p[pointer].compare("X")==0){
       // cout << "Did I come here?" << endl;
@@ -219,7 +221,7 @@ void ourGame::moveUndo(int playerNo, string s){
       pair<int,int> coor = hexToCartesian(x,y,rows);
       //cout << coor.first << " " << coor.second << endl;
       temp.placeRing(playerNo,coor.first,coor.second, game);
-      pointer += 3;
+      // pointer += 3;
     }
     else if(p[pointer].compare("S")==0){
       int xStart = stoi(p[pointer+1]);
@@ -232,19 +234,17 @@ void ourGame::moveUndo(int playerNo, string s){
       //cout << convertEnd.first << " " << convertEnd.second << endl;
       temp.moveRing(playerNo,convertEnd.first, convertEnd.second, convertStart.first, convertStart.second, game);
       removeMarker(playerNo,convertEnd.first,convertEnd.second);
-      pointer += 6;
+      // pointer += 6;
     }
     else if(p[pointer].compare("P")==0){
       int x = stoi(p[pointer+1]);
       int y = stoi(p[pointer+2]);
       pair<int,int> coor = hexToCartesian(x,y,rows);
       temp.removeRing(playerNo,coor.first,coor.second, game);
-      pointer += 3;
+      // pointer += 3;
     }
-    else{
-      cout << "Move is incorrect!!" << endl;
-      return;
-    }
+    pointer--;
+    // printBoard();cout << endl;
   }
 }
 
