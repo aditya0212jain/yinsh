@@ -128,7 +128,7 @@ void ourPlayer::moveRing(int playerNo,int xStart, int yStart, int x, int y, ourG
 
   pair<int,int> newMarkerPosition = mp(xStart,yStart);
   if(!(game->board[xStart][yStart]).containsRings){
-    // cout << "Galat Chaal chali hai Aapne!" << endl;
+    cout << "Kaise kar lete hai aap!" << endl;
     return ;
   }
   //rings[index] = mp(x,y);
@@ -147,6 +147,7 @@ void ourPlayer::moveRing(int playerNo,int xStart, int yStart, int x, int y, ourG
   tempBoardCellMarker.canBeUsed = true;
 
   game->board[newMarkerPosition.first][newMarkerPosition.second] = tempBoardCellMarker;
+  inverseMarker(playerNo,xStart,yStart,x,y,game);
   if(/*this->playerNumber*/playerNo==1)
     game->playerOneMarkersOnBoard++;
   else
@@ -229,6 +230,76 @@ void ourPlayer::removeRow(int playerNo, int startX, int startY, int endX, int en
     game->playerTwoMarkersOnBoard = game->playerTwoMarkersOnBoard-5;
   }
 }
+
+void ourPlayer::inverseMarker(int playerNo, int startX, int startY, int endX, int endY, ourGame* game){
+  int movementX = endX - startX;
+  int movementY = endY - startY;
+  // cout << movementX << " " << movementY << endl;
+  if(movementX==0){
+    //Vertical move
+    int mov = movementY/abs(movementY);
+    for(int i = min(startY,endY)+1; i<=max(endY,startY)-1; i++){
+      boardCell tempBoardCell = game->board[startX][i];
+      // tempBoardCell.player = 0;
+      if(tempBoardCell.player!=0){
+        tempBoardCell.player = 3 - tempBoardCell.player;
+      }
+      if(tempBoardCell.player==1){
+        game->playerOneMarkersOnBoard++;
+        game->playerTwoMarkersOnBoard--;
+      }
+      else{
+        game->playerTwoMarkersOnBoard++;
+        game->playerOneMarkersOnBoard--;
+      }
+      game->board[startX][i] = tempBoardCell;
+    }
+  }
+  else if(movementY==0){
+    //Vertical move
+    int mov = movementX/abs(movementX);
+    for(int i = min(startX,endX)+1; i<=max(endX,startX)-1; i++){
+      boardCell tempBoardCell = game->board[i][startY];
+      // tempBoardCell.player = 0;
+      if(tempBoardCell.player!=0){
+        tempBoardCell.player = 3 - tempBoardCell.player;
+      }
+      if(tempBoardCell.player==1){
+        game->playerOneMarkersOnBoard++;
+        game->playerTwoMarkersOnBoard--;
+      }
+      else{
+        game->playerTwoMarkersOnBoard++;
+        game->playerOneMarkersOnBoard--;
+      }
+      game->board[i][startY] = tempBoardCell;
+    }
+  }
+  else if(movementX==movementY){
+    int mov = movementX/abs(movementX);
+    int i,j;
+    for(i = min(startX,endX)+1,j=min(endY,startY)+1; i<=max(startX,endX)-1,j<=max(endY,startY)-1; i++,j++){
+      boardCell tempBoardCell = game->board[i][j];
+      // tempBoardCell.player = 0;
+      if(tempBoardCell.player!=0){
+        tempBoardCell.player = 3 - tempBoardCell.player;
+      }
+      if(tempBoardCell.player==1){
+        game->playerOneMarkersOnBoard++;
+        game->playerTwoMarkersOnBoard--;
+      }
+      else{
+        game->playerTwoMarkersOnBoard++;
+        game->playerOneMarkersOnBoard--;
+      }
+      game->board[i][j] = tempBoardCell;
+    }
+  }
+  else{
+    cout << "Galat chal rahe ho, sahi Karo" << endl;
+  }
+}
+
 
 void ourPlayer::moveDecider(int playerNo, string s, ourGame* game){
   int length = s.length();
@@ -694,7 +765,7 @@ struct transitionMove ourPlayer::idMinimax(int max_depth,double maxTime){
 
     cout<<"depth: "<<depth<<endl;
     tempMove = minimax(0,true,-INFINITY,INFINITY,depth);
-    this->game->printBoard();
+    // this->game->printBoard();
     // cout<<"tempMove: "<<tempMove.move<<" "<<tempMove.value<<endl;
     // cout<<"yes"<<endl;
     if(bestMove.value<=tempMove.value){
@@ -736,7 +807,7 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
     // cout<<"yup1"<<endl;
     bestMove.value=-INFINITY;
     vector<string> possible_moves;
-    this->game->printBoard();
+    // this->game->printBoard();
     // cout<<"fuck it"<<endl;
     possible_moves = moveList(this->playerNumber,this->game);
     // childVector = gameNode.children();//assuming children function returns an vector of possible gameNodes
@@ -844,30 +915,30 @@ void ourPlayer::play(){
   // }
   // cout<<"fuck this"<<endl;
   moveDecider(1,"P 1 4",this->game);
-  // cout<<"P 1 4"<<endl;
-  // getline(cin,opponentMove);
-  // moveDecider(2,opponentMove,this->game);
-  moveDecider(2,"P 0 0",this->game);
+  cout<<"P 1 4"<<endl;
+  getline(cin,opponentMove);
+  moveDecider(2,opponentMove,this->game);
+  // moveDecider(2,"P 0 0",this->game);
   moveDecider(1,"P 3 7",this->game);
-  // cout<<"P 3 7"<<endl;
-  // getline(cin,opponentMove);
-  // moveDecider(2,opponentMove,this->game);
-  moveDecider(2,"P 2 2",this->game);
+  cout<<"P 3 7"<<endl;
+  getline(cin,opponentMove);
+  moveDecider(2,opponentMove,this->game);
+  // moveDecider(2,"P 2 2",this->game);
   moveDecider(1,"P 4 5",this->game);
-  // cout<<"P 4 5"<<endl;
-  // getline(cin,opponentMove);
-  // moveDecider(2,opponentMove,this->game);
-  moveDecider(2,"P 2 4",this->game);
+  cout<<"P 4 5"<<endl;
+  getline(cin,opponentMove);
+  moveDecider(2,opponentMove,this->game);
+  // moveDecider(2,"P 2 4",this->game);
   moveDecider(1,"P 2 7",this->game);
-  // cout<<"P 2 7"<<endl;
-  // getline(cin,opponentMove);
-  // moveDecider(2,opponentMove,this->game);
-  moveDecider(2,"P 4 12",this->game);
+  cout<<"P 2 7"<<endl;
+  getline(cin,opponentMove);
+  moveDecider(2,opponentMove,this->game);
+  // moveDecider(2,"P 4 12",this->game);
   moveDecider(1,"P 4 4",this->game);
-  // cout<<"P 4 4"<<endl;
-  // getline(cin,opponentMove);
-  // moveDecider(2,opponentMove,this->game);
-  moveDecider(2,"P 3 0",this->game);
+  cout<<"P 4 4"<<endl;
+  getline(cin,opponentMove);
+  moveDecider(2,opponentMove,this->game);
+  // moveDecider(2,"P 3 0",this->game);
   // cout<<"this is it"<<endl;
 
   // this->game->printBoard();
@@ -875,21 +946,21 @@ void ourPlayer::play(){
     transitionMove m = idMinimax(1,40);//max_depth,time
     //cout<<"o1"<<endl;
     cout<<m.move<<endl;
-    this->game->printBoard();
+    // this->game->printBoard();
     moveDecider(this->playerNumber,m.move,this->game);
-    this->game->printBoard();
+    // this->game->printBoard();
     //getline(cin,opponentMove);
   }
   getline(cin,opponentMove);
   opponent_player_number = (this->playerNumber==1) ? 2:1;
   while(!this->game->ended()){
     moveDecider(opponent_player_number,opponentMove,this->game);
-    this->game->printBoard();
+    // this->game->printBoard();
     // this->game->execute_move(toMove(opponentMove));
     transitionMove m = idMinimax(1,40);
     cout<<m.move<<endl;
     moveDecider(this->playerNumber,m.move,this->game);
-    this->game->printBoard();
+    // this->game->printBoard();
 
     getline(cin,opponentMove);
   }

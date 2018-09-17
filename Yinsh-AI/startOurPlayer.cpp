@@ -23,12 +23,12 @@ int main(){
   string firstobject;
   // getline(cin,firstobject);
   ourPlayer playah(1,150);
-  playah.play();
+  // playah.play();
   //ourPlayer nonPlayah = playah;
   //nonPlayah.game = new ourGame();
   string input;
-  playah.moveDecider(1,"P 4 12",playah.game);
-  playah.game -> printBoard();cout << endl;
+  // playah.moveDecider(1,"P 4 12",playah.game);
+  // playah.game -> printBoard();cout << endl;
   // playah.moveDecider(2,"P 0 0",playah.game);
   // // playah.game -> printBoard();cout << endl;
   // playah.moveDecider(1,"P 3 7",playah.game);
@@ -56,8 +56,7 @@ int main(){
   // //playah.game->moveUndo(2,"S 0 0 M 1 0");
   // playah.game->moveUndo(1,"S 2 7 M 4 13");
   // playah.game->printBoard();cout << endl;
-  // // input = "P 1 3";
-  //
+  // input = "P 1 3";
   // playah.moveDecider(1,input,playah.game);
   // playah.game -> printBoard();
   // input = "S 1 3 P 0 0";
@@ -74,6 +73,9 @@ int main(){
   // // //
   // input = "P 1 4";
   // playah.moveDecider(1, input, (playah.game));
+  // input = "S 1 4 M 1 1";
+  // playah.game->printBoard();
+  // playah.moveDecider(1, input,playah.game);
   // playah.game -> printBoard();
   // //
   // input = "RS 1 3 RE 3 0 X 1 4 S 4 0 M 5 6";
@@ -90,12 +92,12 @@ int main(){
   // pair<int,int>p = cartesianToHex(6,9,11);
   // cout << "YAHA " ;
   // cout << p.first << " " << p.second << endl;
-  // pair<int,int> q = hexToCartesian(1,4,11);
-  // cout << "YOLO ";
-  // cout << q.first << " " << q.second << endl;
-  // pair<int,int> q = hexToCartesian(3,7,11);
-  // cout << "YOLO ";
-  // cout << q.first << " " << q.second << endl;
+  pair<int,int> q = hexToCartesian(5,6,11);
+  cout << "YOLO ";
+  cout << q.first << " " << q.second << endl;
+  pair<int,int> r = hexToCartesian(5,7,11);
+  cout << "YOLO ";
+  cout << r.first << " " << r.second << endl;
   // pair<int,int> q = hexToCartesian(4,5,11);
   // cout << "YOLO ";
   // cout << q.first << " " << q.second << endl;
