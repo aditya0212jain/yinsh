@@ -51,32 +51,41 @@ int main(){
   // playah.game -> printBoard();cout << endl;
   playah.moveDecider(2,"P 1 3",playah.game);
   // playah.game -> printBoard();cout << endl;
-  playah.moveDecider(1,"P 2 1",playah.game);
+  playah.moveDecider(1,"P 2 7",playah.game);
   // playah.game -> printBoard();cout << endl;
   playah.moveDecider(2,"P 1 0",playah.game);
   // playah.game -> printBoard();cout << endl;
-  playah.moveDecider(1,"P 2 3",playah.game);
+  playah.moveDecider(1,"P 2 6",playah.game);
   // playah.game -> printBoard();cout << endl;
   playah.moveDecider(2,"P 1 2",playah.game);
   // playah.game -> printBoard();cout << endl;
-  playah.moveDecider(1,"P 2 9",playah.game);
+  playah.moveDecider(1,"P 2 2",playah.game);
   // playah.game -> printBoard();cout << endl;
   playah.moveDecider(2,"P 1 4",playah.game);
 
+  playah.moveDecider(1,"S 2 6 M 3 9", playah.game);
+  playah.moveDecider(2,"S 1 2 M 2 4", playah.game);
+
   playah.moveDecider(1,"S 0 0 M 1 1", playah.game);
-  playah.moveDecider(2,"S 1 5 M 3 17", playah.game);
+  playah.moveDecider(2,"S 2 4 M 3 10", playah.game);
 
-  playah.moveDecider(1,"S 1 1 M 2 2", playah.game);
-  playah.moveDecider(2,"S 1 2 M 2 10", playah.game);
+  playah.moveDecider(1,"S 2 8 M 3 12", playah.game);
+  playah.moveDecider(2,"S 1 0 M 2 1", playah.game);
 
-  playah.moveDecider(1,"S 2 3 M 3 5", playah.game);
-  playah.moveDecider(2,"S 1 3 M 2 7", playah.game);
+  playah.moveDecider(1,"S 2 7 M 3 11", playah.game);
+  playah.moveDecider(2,"S 1 5 M 3 13", playah.game);
 
-  playah.moveDecider(1,"S 3 5 M 4 7", playah.game);
-  playah.moveDecider(2,"S 1 17 M 2 0", playah.game);
+  playah.moveDecider(1,"S 1 1 M 2 5", playah.game);
+  playah.moveDecider(2,"S 1 3 M 2 3", playah.game);
 
-  playah.moveDecider(1,"S 4 7 M 4 6", playah.game);
-  // playah.moveDecider(2,"S 1 0 M 5 9", playah.game);
+  playah.moveDecider(1,"S 2 5 M 3 8", playah.game);
+  playah.moveDecider(2,"S 2 1 M 2 0", playah.game);
+
+  playah.moveDecider(1,"S 3 8 M 4 10", playah.game);
+  playah.moveDecider(2,"S 3 13 M 2 9", playah.game);
+
+  playah.moveDecider(1,"S 4 10 M 4 18", playah.game);
+  // playah.moveDecider(2,"S 1 3 M 2 3", playah.game);
 
   playah.game -> printBoard();
 
@@ -135,19 +144,28 @@ int main(){
   // playah.moveDecider(1, input, (playah.game));
   // playah.game -> printBoard();
   vector<string> del = playah.moveList(playerNo,playah.game);
+  ourGame tempGame;
+  tempGame.copyTheBoard(playah.game);
   cout << del.size() << endl;
   for(int i=0; i<del.size(); i++){
-    cout << del[i] << endl;
-    // playah.moveDecider(playerNo, del[i],playah.game);
-    // cout << i << endl;
-    // playah.game->moveUndo(playerNo,del[i]);
+    cout << i << " " << del[i] << endl;
+    playah.moveDecider(playerNo, del[i],playah.game);
+    cout << i << endl;
+    playah.game->moveUndo(playerNo,del[i]);
+    if(!tempGame.equalsTo(playah.game)){
+      cout << i << " Haar gaye" << endl;
+    }
     // cout << "Mai Yaha AAYA?" << endl;
   }
+
   // cout << del.size() << endl;
-  // string mov = del[40];
+  // string mov = del[5];
   // cout << mov << endl;
+  // playah.game->printBoard();cout << endl;
   // playah.moveDecider(playerNo,mov,playah.game);
-  // playah.game->printBoard();
+  // // playah.game->printBoard();
+  // playah.game->moveUndo(playerNo,mov);
+  //playah.game->printBoard();
   // vector<string> t = playah.allDeletions(playerNo,playah.game);
   // cout << t.size() << endl;
   // for(int i=0; i<del.size(); i++){
