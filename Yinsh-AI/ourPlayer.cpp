@@ -700,30 +700,30 @@ vector<string> ourPlayer::moveList(int playerNo, ourGame* game){
   //Returns a list of moves
   vector<string> ans;
   vector<string> firstRound = allDeletions(playerNo, game);
-  cout << "Do I Reach here?" << endl;
+  // cout << "Do I Reach here?" << endl;
   if(firstRound.size()==0){
     //Nothing to delete
     vector<string> fr = selectAndMoveFinal(playerNo, game);
-    cout<<"And here?"<<endl;
-    cout<<fr.size()<<endl;
+    // cout<<"And here?"<<endl;
+    // cout<<fr.size()<<endl;
     int frSize = fr.size();
     if(fr.size()==0){
-      cout << "NO MOVE LEFT" << endl;
+      // cout << "NO MOVE LEFT" << endl;
     }
     else{
-      cout << "IDHAR" << endl;
+      // cout << "IDHAR" << endl;
       // for(int i=0;i<fr.size();i++){
       //   cout<<"i: "<< i<<" Move: "<<fr[i]<<endl;
       // }
-      cout << "frSize: " << frSize << endl;
+      // cout << "frSize: " << frSize << endl;
 
       for(int i=0; i<frSize; i++){
         // cout << "Yahoo" << endl;
-        cout<<"i: "<<i;
+        // cout<<"i: "<<i;
         // ourGame* afterFirstMove = new ourGame();
         // afterFirstMove->copyTheBoard(game);
         string firstMove = fr[i];
-        cout<<" "<<firstMove<<endl;
+        // cout<<" "<<firstMove<<endl;
         moveDecider(playerNo, firstMove, game);
         // cout<<" 02";
         // cout<<"i: "<<i<<" "<<firstMove<<endl;
@@ -731,8 +731,11 @@ vector<string> ourPlayer::moveList(int playerNo, ourGame* game){
         // cout<<afterFirstMove->board[8][8].player<<endl;
         
         vector<string> dr = allDeletions(playerNo, game);
-        // cout<<" o3";
+        // cout << "MoveUndo" << endl;
         game->moveUndo(playerNo,firstMove);
+        // cout << "Done and Dusted!" << endl;
+        // cout << "drSize:" << dr.size() << endl;
+        // cout << i << endl;
         // cout<<" "<<dr.size()<<endl;
         if(dr.size()==0){
           //Nothing to delete
@@ -740,10 +743,12 @@ vector<string> ourPlayer::moveList(int playerNo, ourGame* game){
           ans.pb(firstMove);
         }
         else{
+          // cout << "drSize: " << dr.size() << endl;
           for(int j=0; j<dr.size(); j++){
-            string temp = firstMove + " " + dr[i];
+            string temp = firstMove + " " + dr[j];
             ans.pb(temp);
           }
+          // cout << "Do I!!!!!!!!!!!!" << endl;
         }
       }
     }
@@ -1033,7 +1038,7 @@ void ourPlayer::play(){
 
   // this->game->printBoard();
   if(this->playerNumber==1){
-    transitionMove m = idMinimax(2,40);//max_depth,time
+    transitionMove m = idMinimax(3,40);//max_depth,time
     // cout<<"o1"<<endl;
     cout<<m.move<<endl;
     // this->game->printBoard();
@@ -1046,7 +1051,7 @@ void ourPlayer::play(){
   while(!this->game->ended()){
     moveDecider(opponent_player_number,opponentMove,this->game);
     // this->game->printBoard();
-    transitionMove m = idMinimax(2,40);
+    transitionMove m = idMinimax(3,40);
     cout<<m.move<<endl;
     moveDecider(this->playerNumber,m.move,this->game);
     // this->game->printBoard();
