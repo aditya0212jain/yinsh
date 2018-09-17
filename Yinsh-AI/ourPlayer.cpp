@@ -22,8 +22,7 @@ struct childSortNode{
 /*GeneralComments over*/
 
 
-bool compareForMax(const transitionMove &a, const transitionMove &b)
-{
+bool compareForMax(const transitionMove &a, const transitionMove &b){
     return a.value>b.value;
 }
 
@@ -47,6 +46,10 @@ vector<string> ourPlayer::sortChildren(vector<string> moves,bool forMax){
     ourGame xgame;
     xgame.copyTheBoard(this->game);
     moveDecider(playerNumber,moves[i],this->game);
+    // if(i==0){
+    //   cout << "Printing Board:::" << endl;
+    //   this->game->printBoard();
+    // }
     lli valueTemp = this->game->computeHeuristicValue(this->playerNumber);
     transitionMove temp;
     temp.move = moves[i];
@@ -243,44 +246,46 @@ void ourPlayer::moveDecider(int playerNo, string s, ourGame* game){
   int rows = (game->rows);
   //cout << rows << " Yeh toh number of rows hai!!" << endl;
   //Here the coordinates are in hex and pos form
-  while(pointer<length){
-    if(s[pointer]=='R'){
-      int startX = s[pointer+3]-'0';
-      int startY = s[pointer+5]-'0';
-      int endX = s[pointer+10]-'0';
-      int endY = s[pointer+12]-'0';
+  vector<string> p = split(s,' ');
+
+  while(pointer<p.size()){
+    if(p[pointer].compare("RS")==0){
+      int startX = stoi(p[pointer+1]);
+      int startY = stoi(p[pointer+2]);
+      int endX = stoi(p[pointer+4]);
+      int endY = stoi(p[pointer+5]);
       pair<int,int> convertStart= hexToCartesian(startX, startY, rows);
       pair<int,int> convertEnd = hexToCartesian(endX,endY,rows);
       removeRow(playerNo, convertStart.first, convertStart.second, convertEnd.first, convertEnd.second, game);
-      pointer += 14;
+      pointer += 6;
     }
-    else if(s[pointer]=='P'){
+    else if(p[pointer].compare("P")==0){
       // cout << "Did I come here?" << endl;
-      int x = s[pointer+2]-'0';
-      int y = s[pointer+4]-'0';
+      int x = stoi(p[pointer+1]);
+      int y = stoi(p[pointer+2]);
       pair<int,int> coor = hexToCartesian(x,y,rows);
       //cout << coor.first << " " << coor.second << endl;
       placeRing(playerNo,coor.first,coor.second, game);
-      pointer += 6;
+      pointer += 3;
     }
-    else if(s[pointer]=='S'){
-      int xStart = s[pointer+2]-'0';
-      int yStart = s[pointer+4]-'0';
-      int x = s[pointer+8]-'0';
-      int y = s[pointer+10]-'0';
+    else if(p[pointer].compare("S")==0){
+      int xStart = stoi(p[pointer+1]);
+      int yStart = stoi(p[pointer+2]);
+      int x = stoi(p[pointer+4]);
+      int y = stoi(p[pointer+5]);
       pair<int,int> convertStart= hexToCartesian(xStart, yStart, rows);
       pair<int,int> convertEnd = hexToCartesian(x,y,rows);
       //cout << convertStart.first << " " << convertStart.second << endl;
       //cout << convertEnd.first << " " << convertEnd.second << endl;
       moveRing(playerNo,convertStart.first, convertStart.second, convertEnd.first, convertEnd.second, game);
-      pointer += 12;
+      pointer += 6;
     }
-    else if(s[pointer]=='X'){
-      int x = s[pointer+2]-'0';
-      int y = s[pointer+4]-'0';
+    else if(p[pointer].compare("X")==0){
+      int x = stoi(p[pointer+1]);
+      int y = stoi(p[pointer+2]);
       pair<int,int> coor = hexToCartesian(x,y,rows);
       removeRing(playerNo,coor.first,coor.second, game);
-      pointer += 6;
+      pointer += 3;
     }
     else{
       cout << "Move is incorrect!!" << endl;
@@ -304,9 +309,6 @@ vector<pair<pair<int,int>,pair<int,int> > > ourPlayer::selectAndMoveHelper(int p
     else if(!(game->board[i][j].canBeUsed)){
       //cout << ans.size() << endl;
       // cout << "At this value I came here: " << i << " " << j << endl;
-      if(i==0 && j==5){
-        // cout << "b" << endl;
-      }
       return ans;
     }
     else if(game->board[i][j].containsRings){
@@ -711,7 +713,7 @@ struct transitionMove ourPlayer::idMinimax(int max_depth,double maxTime){
       bestMove = tempMove;
     }
     // bestScore = max(bestScore,tempMove.value);
-    //compute time to solve for depth 
+    //compute time to solve for depth
     clock_gettime(CLOCK_REALTIME, &move_time);
     double seconds = (double)((move_time.tv_sec+move_time.tv_nsec*1e-9) - (double)(start_time.tv_sec+start_time.tv_nsec*1e-9));
     //return value if time exceeded
@@ -746,11 +748,12 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
 
   //if our player's turn
   if(isMax){
-    cout<<"yup1"<<endl;
+    // cout<<"yup1"<<endl;
     bestMove.value=-INFINITY;
     vector<string> possible_moves;
     // this->game->printBoard();
     this->game->printBoard();
+    cout<<"fuck it"<<endl;
     possible_moves = moveList(this->playerNumber,this->game);
     // childVector = gameNode.children();//assuming children function returns an vector of possible gameNodes
     // if(possible_moves.size()==0){
@@ -760,10 +763,14 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
     //       // cout<<"returning value:"<<ans.value<<endl;
     //       return ans;
     // }
+<<<<<<< HEAD
     cout<<"possible moves count in max:"<<possible_moves.size()<<endl;
     cout<<"sorting"<<endl;
     ourGame gameTemp;
       gameTemp.copyTheBoard(this->game);
+=======
+    // cout<<"possible moves count in max:"<<possible_moves.size()<<endl;
+>>>>>>> c7f6b17ff4684cce79f8c37ac6f5850cf68f68db
     possible_moves = sortChildren(possible_moves,true);
     cout<<"CHECK BOARDS BELOW"<<endl;
     this->game->printBoard();
@@ -850,9 +857,9 @@ void ourPlayer::play(){
   //     while(true){
   //       int a = rand()%6;
   //       int b = rand()%(6*a);
-        
+
   //       pair<int,int> temp = hexToCartesian(a,b,11);
-        
+
   //       if(this->game->board[temp.first][temp.second].canBeUsed&&this->game->board[temp.first][temp.second].player==0){
   //         cout<<"P "<<a<<" "<<b<<endl;
   //         placeRing(1,temp.first,temp.second,this->game);
@@ -891,11 +898,15 @@ void ourPlayer::play(){
   // moveDecider(2,opponentMove,this->game);
   moveDecider(2,"P 3 0",this->game);
   // cout<<"this is it"<<endl;
-  
+
   // this->game->printBoard();
   if(this->playerNumber==1){
     transitionMove m = idMinimax(1,40);//max_depth,time
+<<<<<<< HEAD
     // cout<<"o1"<<endl;
+=======
+    //cout<<"o1"<<endl;
+>>>>>>> c7f6b17ff4684cce79f8c37ac6f5850cf68f68db
     cout<<m.move<<endl;
     this->game->printBoard();
     moveDecider(this->playerNumber,m.move,this->game);
@@ -907,11 +918,15 @@ void ourPlayer::play(){
   while(!this->game->ended()){
     moveDecider(opponent_player_number,opponentMove,this->game);
     this->game->printBoard();
+<<<<<<< HEAD
+=======
+    // this->game->execute_move(toMove(opponentMove));
+>>>>>>> c7f6b17ff4684cce79f8c37ac6f5850cf68f68db
     transitionMove m = idMinimax(1,40);
     cout<<m.move<<endl;
     moveDecider(this->playerNumber,m.move,this->game);
     this->game->printBoard();
-    
+
     getline(cin,opponentMove);
   }
 }
