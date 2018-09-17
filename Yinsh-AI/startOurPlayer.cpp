@@ -18,7 +18,7 @@ using namespace std;
 
 //Using main function for testing our players, @Aditya see how to combine this with other clientX
 int main(){
-  // srand ( time(NULL) );
+  srand ( time(NULL) );
   //int myPlayerNumber = 1;
   int p_id,bs,tl;
   string inp;
@@ -55,29 +55,63 @@ int main(){
   //ourPlayer nonPlayah = playah;
   //nonPlayah.game = new ourGame();
   string input;
-  // playah.moveDecider(1,"P 4 12",playah.game);
+
+  // int playerNo=1;
+  // while(true){
+  //   getline(cin,input);
+  //   playah.moveDecider(playerNo,input, playah.game);
+  //   playerNo = 3-playerNo;
+  //   playah.game-> printBoard();
+  //   cout << endl;
+  // }
+  playah.moveDecider(1,"P 1 4",playah.game);
+  playah.game -> printBoard();cout << endl;
+  playah.moveDecider(2,"P 0 0",playah.game);
   // playah.game -> printBoard();cout << endl;
-  // playah.moveDecider(2,"P 0 0",playah.game);
-  // // playah.game -> printBoard();cout << endl;
-  // playah.moveDecider(1,"P 3 7",playah.game);
-  // // playah.game -> printBoard();cout << endl;
-  // playah.moveDecider(2,"P 2 2",playah.game);
-  // // playah.game -> printBoard();cout << endl;
-  // playah.moveDecider(1,"P 4 5",playah.game);
-  // // playah.game -> printBoard();cout << endl;
-  // playah.moveDecider(2,"P 2 4",playah.game);
-  // // playah.game -> printBoard();cout << endl;
-  // playah.moveDecider(1,"P 2 7",playah.game);
-  // // playah.game -> printBoard();cout << endl;
-  // playah.moveDecider(2,"P 4 12",playah.game);
-  // // playah.game -> printBoard();cout << endl;
-  // playah.moveDecider(1,"P 4 4",playah.game);
-  // // playah.game -> printBoard();cout << endl;
-  // playah.moveDecider(2,"P 3 0",playah.game);
-  // // playah.game -> printBoard();cout << endl;
+  playah.moveDecider(1,"P 3 7",playah.game);
+  // playah.game -> printBoard();cout << endl;
+  playah.moveDecider(2,"P 1 5",playah.game);
+  // playah.game -> printBoard();cout << endl;
+  playah.moveDecider(1,"P 4 5",playah.game);
+  // playah.game -> printBoard();cout << endl;
+  playah.moveDecider(2,"P 1 3",playah.game);
+  // playah.game -> printBoard();cout << endl;
+  playah.moveDecider(1,"P 2 7",playah.game);
+  // playah.game -> printBoard();cout << endl;
+  playah.moveDecider(2,"P 1 0",playah.game);
+  // playah.game -> printBoard();cout << endl;
+  playah.moveDecider(1,"P 4 4",playah.game);
+  // playah.game -> printBoard();cout << endl;
+  playah.moveDecider(2,"P 5 6",playah.game);
+
+  playah.moveDecider(1,"S 4 5 M 3 3",playah.game);
+  // playah.moveDecider(2,"S 5 6 M 3 4", playah.game);
   //
+  // playah.game->printBoard();
   //
-  //
+  int playerNo = 2;
+  // vector<string> ans = playah.selectAndMoveFinal(playerNo,playah.game);
+  // cout << "Answer Size: " << ans.size() << endl;
+  // int rows=11;
+  // for(int i=0; i<rows; i++){
+  //   for(int j=0; j<rows; j++){
+  //     if(playah.game->board[i][j].player==playerNo && playah.game->board[i][j].containsRings){
+  //       pair<int,int> p = cartesianToHex(i,j,rows);
+  //       cout << p.first << " " << p.second << endl;
+  //     }
+  //   }
+  // }
+  // for(int i=0; i<ans.size(); i++){
+  //   string mov = ans[i];
+  //   //cout << mov << endl;
+  //   playah.moveDecider(playerNo, mov, playah.game);
+  //   //playah.game->printBoard();
+  //   vector<string> dr = playah.allDeletions(playerNo,playah.game);
+  //   cout << endl;
+  //   playah.game->moveUndo(playerNo,mov);
+  // }
+  // vector<string> allMoves = playah.moveList(playerNo,playah.game);
+
   // playah.moveDecider(1, "S 2 7 M 4 13", playah.game);
   // //playah.moveDecider(2,"S 0 0 M 1 0", playah.game);
   // playah.game -> printBoard();cout << endl;
@@ -97,10 +131,26 @@ int main(){
   // playah.moveDecider(1, input, (playah.game));
   // input = "S 3 0 P 4 0";
   // playah.moveDecider(1, input, (playah.game));
-  // // //
-  // // //
+  // // // //
+  // // // //
   // input = "P 1 4";
   // playah.moveDecider(1, input, (playah.game));
+  playah.game -> printBoard();
+  vector<string> del = playah.selectAndMoveFinal(playerNo,playah.game);
+  cout << del.size() << endl;
+  string mov = del[40];
+  cout << mov << endl;
+  playah.moveDecider(playerNo,mov,playah.game);
+  playah.game->printBoard();
+  vector<string> t = playah.allDeletions(playerNo,playah.game);
+  cout << t.size() << endl;
+  // for(int i=0; i<del.size(); i++){
+  //   // cout << del[i] << endl;
+  //   cout << i << endl;
+  //   playah.moveDecider(playerNo,del[i],playah.game);
+  //   vector<string> t = playah.allDeletions(playerNo,playah.game);
+  //   playah.game->moveUndo(playerNo,del[i]);
+  // }
   // input = "S 1 4 M 1 1";
   // playah.game->printBoard();
   // playah.moveDecider(1, input,playah.game);
@@ -120,12 +170,12 @@ int main(){
   // pair<int,int>p = cartesianToHex(6,9,11);
   // cout << "YAHA " ;
   // cout << p.first << " " << p.second << endl;
-  pair<int,int> q = hexToCartesian(5,6,11);
-  cout << "YOLO ";
-  cout << q.first << " " << q.second << endl;
-  pair<int,int> r = hexToCartesian(5,7,11);
-  cout << "YOLO ";
-  cout << r.first << " " << r.second << endl;
+  // pair<int,int> q = hexToCartesian(5,6,11);
+  // cout << "YOLO ";
+  // cout << q.first << " " << q.second << endl;
+  // pair<int,int> r = hexToCartesian(5,7,11);
+  // cout << "YOLO ";
+  // cout << r.first << " " << r.second << endl;
   // pair<int,int> q = hexToCartesian(4,5,11);
   // cout << "YOLO ";
   // cout << q.first << " " << q.second << endl;
