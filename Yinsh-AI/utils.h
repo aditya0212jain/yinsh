@@ -11,4 +11,6 @@ pair<int,int> cartesianToHex(int x, int y, int rows);
 
 pair<int,int> hexToCartesian(int a,int b,int rows);
 
+vector<string> split(string str, char delimiter);
+
 #endif
