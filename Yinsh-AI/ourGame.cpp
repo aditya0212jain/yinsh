@@ -89,13 +89,13 @@ void ourGame::printBoard(){
     cout << endl;
   }
 }
-double ourGame::computeHeuristicValue(){
+double ourGame::computeHeuristicValue(int player){
   //This function computes the heuristic for the player according to the current configuration of the boardSize
 
-  int player;//take it as input
+  // int player;//take it as input
   int count=0;
   vector<int> valuesForConsecutiveMarkers;
-  int myRingsInitial,opponentRingsInitial;
+  int myRingsInitial=5,opponentRingsInitial=5;
 
 // void ourGame::miniMax(){
 //   int depth = 4;//Determines the depth of the trees till which we will see

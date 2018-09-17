@@ -36,7 +36,7 @@ public:
   //ourGame(int n);
   void execute_move(struct move m);
   bool check_validity(struct move m);
-  double computeHeuristicValue();
+  double computeHeuristicValue(int player);
   void printBoard();
   bool ended();
   void copyTheBoard(ourGame* game);

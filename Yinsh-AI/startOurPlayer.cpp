@@ -19,6 +19,9 @@ using namespace std;
 //Using main function for testing our players, @Aditya see how to combine this with other clientX
 int main(){
   //int myPlayerNumber = 1;
+  int p_id,bs,tl;
+  string firstobject;
+  // getline(cin,firstobject);
   ourPlayer playah(1,150);
   playah.play();
   //ourPlayer nonPlayah = playah;
