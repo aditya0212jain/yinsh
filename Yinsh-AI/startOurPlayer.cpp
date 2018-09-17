@@ -23,7 +23,7 @@ int main(){
   string firstobject;
   // getline(cin,firstobject);
   ourPlayer playah(1,150);
-  // playah.play();
+  playah.play();
   //ourPlayer nonPlayah = playah;
   //nonPlayah.game = new ourGame();
   string input;
