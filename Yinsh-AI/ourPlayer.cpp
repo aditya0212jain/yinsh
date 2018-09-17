@@ -40,7 +40,12 @@ vector<string> ourPlayer::sortChildren(vector<string> moves,bool forMax){
   }else{
     playerNumber = (this->playerNumber==1) ? 2:1;
   }
+  cout<<"in sorting , playerNumber "<<playerNumber<<" moves size:"<<moves.size()<<endl;
+  ourGame gameTemp;
+  gameTemp.copyTheBoard(this->game);
   for(int i=0;i<moves.size();i++){
+    ourGame xgame;
+    xgame.copyTheBoard(this->game);
     moveDecider(playerNumber,moves[i],this->game);
     lli valueTemp = this->game->computeHeuristicValue(this->playerNumber);
     transitionMove temp;
@@ -48,7 +53,16 @@ vector<string> ourPlayer::sortChildren(vector<string> moves,bool forMax){
     temp.value = valueTemp;
     v.push_back(temp);
     this->game->moveUndo(playerNumber,moves[i]);
+    if(!xgame.equalsTo(this->game)){
+      cout<<"Not equal"<<endl;
+      cout<<moves[i]<<" i:"<<i<<endl;
+    }
   }
+  cout<<"--------------------------- In sorting CHECK BOARDS BELOW"<<endl;
+    this->game->printBoard();
+    cout<<"below is gameTemp"<<endl;;
+    gameTemp.printBoard();
+    cout<<" Equal or not: "<<gameTemp.equalsTo(this->game)<<endl;
   if(forMax){
     sort(v.begin(),v.end(),compareForMax);
   }else{
@@ -452,7 +466,7 @@ vector<string> ourPlayer::selectAndMoveFinal(int playerNo, ourGame* game){
   vector<pair<pair<int,int>, pair<int,int> > > list = selectAndMove(playerNo, game);
   string temp="";
   int rows = game->rows;
-  cout << list.size() << endl;
+  // cout << list.size() << endl;
   
   for(int i=0; i<list.size(); i++){
     int s1 = list[i].first.first;
@@ -684,10 +698,13 @@ struct transitionMove ourPlayer::idMinimax(int max_depth,double maxTime){
   struct transitionMove tempMove;
   bestMove.value=-INFINITY;
   for(depth=1;depth<=max_depth;depth++){
-    
     cout<<"depth: "<<depth<<endl;
+    ourGame gameTemp;
+    gameTemp.copyTheBoard(this->game);
     tempMove = minimax(0,true,-INFINITY,INFINITY,depth);
     this->game->printBoard();
+    cout<<"below is gameTemp"<<endl;;
+    gameTemp.printBoard();
     cout<<"tempMove: "<<tempMove.move<<" "<<tempMove.value<<endl;
     // cout<<"yes"<<endl;
     if(bestMove.value<=tempMove.value){
@@ -718,7 +735,10 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
   if(depth==max_depth){
     struct transitionMove ans;
     ans.move="Reached";
+    
     ans.value=this->game->computeHeuristicValue(this->playerNumber);
+    
+    
     return ans;
   }
 
@@ -729,8 +749,8 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
     cout<<"yup1"<<endl;
     bestMove.value=-INFINITY;
     vector<string> possible_moves;
+    // this->game->printBoard();
     this->game->printBoard();
-    cout<<"fuck it"<<endl;
     possible_moves = moveList(this->playerNumber,this->game);
     // childVector = gameNode.children();//assuming children function returns an vector of possible gameNodes
     // if(possible_moves.size()==0){
@@ -741,9 +761,17 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
     //       return ans;
     // }
     cout<<"possible moves count in max:"<<possible_moves.size()<<endl;
+    cout<<"sorting"<<endl;
+    ourGame gameTemp;
+      gameTemp.copyTheBoard(this->game);
     possible_moves = sortChildren(possible_moves,true);
-
+    cout<<"CHECK BOARDS BELOW"<<endl;
+    this->game->printBoard();
+    cout<<"below is gameTemp"<<endl;;
+    gameTemp.printBoard();
+    cout<<"Sorting done"<<endl;
     for(int i=0;i<possible_moves.size();i++){
+      
       moveDecider(this->playerNumber,possible_moves[i],this->game);
       transitionMove tempMove = minimax(depth+1,false,alpha,beta,max_depth);
       if(alpha<=tempMove.value){
@@ -757,6 +785,7 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
       // bestScore = max(value,bestScore);
       // cout<<"undo starting"<<endl;
       this->game->moveUndo(this->playerNumber,possible_moves[i]);
+          
       // cout<<"undo done"<<endl;
       if(alpha>=beta){
         tempMove.move = possible_moves[i];
@@ -773,7 +802,7 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
     opponent_player_number = (this->playerNumber==1) ? 2 : 1;
     bestMove.value = INFINITY;
     vector<string> possible_moves;
-    possible_moves = moveList(opponent_player_number,this->game);//assuming children function returns an vector of possible gameNodes
+    possible_moves = moveList(opponent_player_number,this->game);
     // if(possible_moves.size()==0){
     //       struct transitionMove ans;
     //       ans.move="Reached";
@@ -781,7 +810,7 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
     //       // cout<<"returning value:"<<ans.value<<endl;
     //       return ans;
     // }
-    cout<<"possible moves count in min:"<<possible_moves.size()<<endl;
+    // cout<<"possible moves count in min:"<<possible_moves.size()<<endl;
     possible_moves = sortChildren(possible_moves,false);
     for(int i=0;i<possible_moves.size();i++){
       moveDecider(opponent_player_number,possible_moves[i],this->game);
@@ -865,7 +894,7 @@ void ourPlayer::play(){
   
   // this->game->printBoard();
   if(this->playerNumber==1){
-    transitionMove m = idMinimax(2,40);//max_depth,time
+    transitionMove m = idMinimax(1,40);//max_depth,time
     // cout<<"o1"<<endl;
     cout<<m.move<<endl;
     this->game->printBoard();
@@ -878,7 +907,7 @@ void ourPlayer::play(){
   while(!this->game->ended()){
     moveDecider(opponent_player_number,opponentMove,this->game);
     this->game->printBoard();
-    transitionMove m = idMinimax(2,40);
+    transitionMove m = idMinimax(1,40);
     cout<<m.move<<endl;
     moveDecider(this->playerNumber,m.move,this->game);
     this->game->printBoard();
