@@ -23,26 +23,36 @@ int main(){
   playah.play();
   //ourPlayer nonPlayah = playah;
   //nonPlayah.game = new ourGame();
-  // string input;
-
+  string input;
+  playah.moveDecider(1,"P 1 4",playah.game);
+  playah.moveDecider(2,"P 0 0",playah.game);
+  playah.moveDecider(1,"P 3 7",playah.game);
+  playah.moveDecider(2,"P 2 2",playah.game);
+  playah.moveDecider(1,"P 4 5",playah.game);
+  playah.moveDecider(2,"P 2 4",playah.game);
+  playah.moveDecider(1,"P 2 7",playah.game);
+  playah.moveDecider(2,"P 4 12",playah.game);
+  playah.moveDecider(1,"P 4 4",playah.game);
+  playah.moveDecider(2,"P 3 0",playah.game);
+  playah.game -> printBoard();
   // input = "P 1 3";
-
+  //
   // playah.moveDecider(1,input,playah.game);
   // playah.game -> printBoard();
   // input = "S 1 3 P 0 0";
-  // // playah.moveDecider(1, input, (playah.game));
-  // // input = "S 0 0 P 1 0";
-  // // playah.moveDecider(1, input, (playah.game));
-  // // input = "S 1 0 P 2 0";
-  // // playah.moveDecider(1, input, (playah.game));
-  // // input = "S 2 0 P 3 0";
-  // // playah.moveDecider(1, input, (playah.game));
-  // // input = "S 3 0 P 4 0";
-  // // playah.moveDecider(1, input, (playah.game));
-  // //
-  // //
-  // // input = "P 1 4";
-  // // playah.moveDecider(1, input, (playah.game));
+  // playah.moveDecider(1, input, (playah.game));
+  // input = "S 0 0 P 1 0";
+  // playah.moveDecider(1, input, (playah.game));
+  // input = "S 1 0 P 2 0";
+  // playah.moveDecider(1, input, (playah.game));
+  // input = "S 2 0 P 3 0";
+  // playah.moveDecider(1, input, (playah.game));
+  // input = "S 3 0 P 4 0";
+  // playah.moveDecider(1, input, (playah.game));
+  // // //
+  // // //
+  // input = "P 1 4";
+  // playah.moveDecider(1, input, (playah.game));
   // // playah.game -> printBoard();
   // //
   // // input = "RS 1 3 RE 3 0 X 1 4 S 4 0 M 5 6";
@@ -54,15 +64,17 @@ int main(){
   // playah.game -> moveUndo(1,input);
   // playah.game -> printBoard();
 
-  // vector<string> ans = playah.moveList(1,playah.game);
-  // cout << ans.size() << endl;
-  pair<int,int>p = hexToCartesian(2,5,11);
-  cout << p.first << " " << p.second << endl;
-  pair<int,int> q = cartesianToHex(p.first,p.second,11);
-  cout << "YOLO ";
-  cout << q.first << " " << q.second << endl;
-  // for(int i=0; i<ans.size(); i++)
-  //   cout << ans[i] << endl;
+  vector<string> ans = playah.moveList(1,playah.game);
+  cout << ans.size() << endl;
+  // pair<int,int>p = hexToCartesian(2,5,11);
+  // cout << p.first << " " << p.second << endl;
+  // pair<int,int> q = cartesianToHex(p.first,p.second,11);
+  // cout << "YOLO ";
+  // cout << q.first << " " << q.second << endl;
+  for(int i=0; i<10; i++){
+    cout << ans[i] << endl;
+    playah.game->printBoard();
+  }
 
 
   //ourGame Gamer;
