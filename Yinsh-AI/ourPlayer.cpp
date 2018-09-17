@@ -138,7 +138,7 @@ void ourPlayer::moveRing(int playerNo,int xStart, int yStart, int x, int y, ourG
 
   pair<int,int> newMarkerPosition = mp(xStart,yStart);
   if(!(game->board[xStart][yStart]).containsRings){
-    // cout << "Galat Chaal chali hai Aapne!" << endl;
+    cout << "Kaise kar lete hai aap!" << endl;
     return ;
   }
   //rings[index] = mp(x,y);
@@ -157,6 +157,7 @@ void ourPlayer::moveRing(int playerNo,int xStart, int yStart, int x, int y, ourG
   tempBoardCellMarker.canBeUsed = true;
 
   game->board[newMarkerPosition.first][newMarkerPosition.second] = tempBoardCellMarker;
+  inverseMarker(playerNo,xStart,yStart,x,y,game);
   if(/*this->playerNumber*/playerNo==1)
     game->playerOneMarkersOnBoard++;
   else
@@ -239,6 +240,76 @@ void ourPlayer::removeRow(int playerNo, int startX, int startY, int endX, int en
     game->playerTwoMarkersOnBoard = game->playerTwoMarkersOnBoard-5;
   }
 }
+
+void ourPlayer::inverseMarker(int playerNo, int startX, int startY, int endX, int endY, ourGame* game){
+  int movementX = endX - startX;
+  int movementY = endY - startY;
+  // cout << movementX << " " << movementY << endl;
+  if(movementX==0){
+    //Vertical move
+    int mov = movementY/abs(movementY);
+    for(int i = min(startY,endY)+1; i<=max(endY,startY)-1; i++){
+      boardCell tempBoardCell = game->board[startX][i];
+      // tempBoardCell.player = 0;
+      if(tempBoardCell.player!=0){
+        tempBoardCell.player = 3 - tempBoardCell.player;
+      }
+      if(tempBoardCell.player==1){
+        game->playerOneMarkersOnBoard++;
+        game->playerTwoMarkersOnBoard--;
+      }
+      else{
+        game->playerTwoMarkersOnBoard++;
+        game->playerOneMarkersOnBoard--;
+      }
+      game->board[startX][i] = tempBoardCell;
+    }
+  }
+  else if(movementY==0){
+    //Vertical move
+    int mov = movementX/abs(movementX);
+    for(int i = min(startX,endX)+1; i<=max(endX,startX)-1; i++){
+      boardCell tempBoardCell = game->board[i][startY];
+      // tempBoardCell.player = 0;
+      if(tempBoardCell.player!=0){
+        tempBoardCell.player = 3 - tempBoardCell.player;
+      }
+      if(tempBoardCell.player==1){
+        game->playerOneMarkersOnBoard++;
+        game->playerTwoMarkersOnBoard--;
+      }
+      else{
+        game->playerTwoMarkersOnBoard++;
+        game->playerOneMarkersOnBoard--;
+      }
+      game->board[i][startY] = tempBoardCell;
+    }
+  }
+  else if(movementX==movementY){
+    int mov = movementX/abs(movementX);
+    int i,j;
+    for(i = min(startX,endX)+1,j=min(endY,startY)+1; i<=max(startX,endX)-1,j<=max(endY,startY)-1; i++,j++){
+      boardCell tempBoardCell = game->board[i][j];
+      // tempBoardCell.player = 0;
+      if(tempBoardCell.player!=0){
+        tempBoardCell.player = 3 - tempBoardCell.player;
+      }
+      if(tempBoardCell.player==1){
+        game->playerOneMarkersOnBoard++;
+        game->playerTwoMarkersOnBoard--;
+      }
+      else{
+        game->playerTwoMarkersOnBoard++;
+        game->playerOneMarkersOnBoard--;
+      }
+      game->board[i][j] = tempBoardCell;
+    }
+  }
+  else{
+    cout << "Galat chal rahe ho, sahi Karo" << endl;
+  }
+}
+
 
 void ourPlayer::moveDecider(int playerNo, string s, ourGame* game){
   int length = s.length();
@@ -470,7 +541,7 @@ vector<string> ourPlayer::selectAndMoveFinal(int playerNo, ourGame* game){
   string temp="";
   int rows = game->rows;
   // cout << list.size() << endl;
-  
+
   for(int i=0; i<list.size(); i++){
     int s1 = list[i].first.first;
     int s2 = list[i].first.second;
@@ -717,9 +788,7 @@ struct transitionMove ourPlayer::idMinimax(int max_depth,double maxTime){
     // gameTemp.copyTheBoard(this->game);
     tempMove = minimax(0,true,-INFINITY,INFINITY,depth);
     // this->game->printBoard();
-    // cout<<"below is gameTemp"<<endl;;
-    // gameTemp.printBoard();
-    cout<<"tempMove: "<<tempMove.move<<" "<<tempMove.value<<endl;
+    // cout<<"tempMove: "<<tempMove.move<<" "<<tempMove.value<<endl;
     // cout<<"yes"<<endl;
     if(bestMove.value<=tempMove.value){
       bestMove = tempMove;
@@ -750,10 +819,10 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
   if(depth==max_depth){
     struct transitionMove ans;
     ans.move="Reached";
-    
+
     ans.value=this->game->computeHeuristicValue(this->playerNumber);
-    
-    
+
+
     return ans;
   }
 
@@ -764,7 +833,6 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
     cout<<"max"<<endl;
     bestMove.value=-INFINITY;
     vector<string> possible_moves;
-    // this->game->printBoard();
     // this->game->printBoard();
     // cout<<"fuck it"<<endl;
     possible_moves = moveList(this->playerNumber,this->game);
@@ -802,7 +870,7 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
       // bestScore = max(value,bestScore);
       // cout<<"undo starting"<<endl;
       this->game->moveUndo(this->playerNumber,possible_moves[i]);
-          
+
       // cout<<"undo done"<<endl;
       if(alpha>=beta){
         tempMove.move = possible_moves[i];

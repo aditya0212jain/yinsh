@@ -67,6 +67,7 @@ public:
   vector<string> removeMarkerAndRing(int playerNo, ourGame* game);
   vector<string> allDeletions(int playerNo, ourGame* game);
   //void play();
+  void inverseMarker(int playerNo, int xStart, int yStart, int endX, int endY, ourGame* game);
   unordered_map <string,transpositionNode> htMap;
   void play();
   string minimax_decision(ourGame game);
