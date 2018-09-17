@@ -6,6 +6,18 @@
 
 using namespace std;
 
+vector<string> split(string str, char delimiter) {
+  vector<string> internal;
+  stringstream ss(str); // Turn the string into a stream.
+  string tok;
+ 
+  while(getline(ss, tok, delimiter)) {
+    internal.push_back(tok);
+  }
+ 
+  return internal;
+}
+
 int getNearestInteger(double a){
     double eps = 0.3;
     int p = (int)a;
