@@ -307,3 +307,23 @@ void ourGame::removeMarker(int playerNo, int x, int y){
   tempBoardCell.canBeUsed = true;
   board[x][y] = tempBoardCell;
 }
+
+bool ourGame::equalsTo(ourGame *game){
+  for(int i=0;i<board.size();i++){
+    for(int j=0;j<board[i].size();j++){
+      boardCell t1 = board[i][j];
+      boardCell t2 = game->board[i][j];
+      // if(i==6&&j==9){
+      //   cout<<"t1 "<<t1.player<<" "<<t1.containsMarker<<" "<<t1.containsRings<<" "<<t1.canBeUsed<<endl;
+      //   cout<<"t2 "<<t2.player<<" "<<t2.containsMarker<<" "<<t2.containsRings<<" "<<t2.canBeUsed<<endl;
+      // }
+      if(t1.player!=t2.player){
+        cout<<"Found mismatch "<<i<<" ,"<<j<<endl;
+        return false;
+      }
+      // if(t1.containsMarker)
+    }
+  }
+return true;
+
+}
