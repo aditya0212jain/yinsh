@@ -240,7 +240,7 @@ void ourPlayer::moveDecider(int playerNo, string s, ourGame* game){
   vector<string> p = split(s,' ');
 
   while(pointer<p.size()){
-    if(p[pointer]=="RS"){
+    if(p[pointer].compare("RS")==0){
       int startX = stoi(p[pointer+1]);
       int startY = stoi(p[pointer+2]);
       int endX = stoi(p[pointer+4]);
@@ -250,7 +250,7 @@ void ourPlayer::moveDecider(int playerNo, string s, ourGame* game){
       removeRow(playerNo, convertStart.first, convertStart.second, convertEnd.first, convertEnd.second, game);
       pointer += 6;
     }
-    else if(s[pointer]=='P'){
+    else if(p[pointer].compare("P")==0){
       // cout << "Did I come here?" << endl;
       int x = stoi(p[pointer+1]);
       int y = stoi(p[pointer+2]);
@@ -259,7 +259,7 @@ void ourPlayer::moveDecider(int playerNo, string s, ourGame* game){
       placeRing(playerNo,coor.first,coor.second, game);
       pointer += 3;
     }
-    else if(s[pointer]=='S'){
+    else if(p[pointer].compare("S")==0){
       int xStart = stoi(p[pointer+1]);
       int yStart = stoi(p[pointer+2]);
       int x = stoi(p[pointer+4]);
@@ -271,7 +271,7 @@ void ourPlayer::moveDecider(int playerNo, string s, ourGame* game){
       moveRing(playerNo,convertStart.first, convertStart.second, convertEnd.first, convertEnd.second, game);
       pointer += 6;
     }
-    else if(s[pointer]=='X'){
+    else if(p[pointer].compare("X")==0){
       int x = stoi(p[pointer+1]);
       int y = stoi(p[pointer+2]);
       pair<int,int> coor = hexToCartesian(x,y,rows);
