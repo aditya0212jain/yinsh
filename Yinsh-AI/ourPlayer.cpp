@@ -79,8 +79,6 @@ vector<string> ourPlayer::sortChildren(vector<string> moves,bool forMax){
   return ans;
 }
 
-
-
 //Assuming PLayer 0 moves first and PLayer 1 follows
 
 //Constructor
@@ -138,7 +136,7 @@ void ourPlayer::moveRing(int playerNo,int xStart, int yStart, int x, int y, ourG
 
   pair<int,int> newMarkerPosition = mp(xStart,yStart);
   if(!(game->board[xStart][yStart]).containsRings){
-    cout << "Kaise kar lete hai aap!" << endl;
+    //cout << "Kaise kar lete hai aap!" << endl;
     return ;
   }
   //rings[index] = mp(x,y);
@@ -310,7 +308,6 @@ void ourPlayer::inverseMarker(int playerNo, int startX, int startY, int endX, in
   }
 }
 
-
 void ourPlayer::moveDecider(int playerNo, string s, ourGame* game){
   int length = s.length();
   //cout << "Length of input: " << length << endl;
@@ -452,10 +449,15 @@ vector<pair<pair<int,int>,pair<int,int> > > ourPlayer::selectAndMove(int playerN
 string ourPlayer::markerDeletionHelper(int playerNo, int x, int y, int dirX, int dirY,ourGame* game){
   //vetor<string> ans;
   string temp="";
+  // cout << "Board[10][10]:" << game->board[10][10].canBeUsed << endl;
   int markerCount=0;
   int i,j;
   int rows = game->rows;
   for(i=x,j=y;;i=i+dirX,j=j+dirY){
+    if(i<0 || j<0 || i>=rows || j>=rows){
+      break;
+    }
+    // cout << "i=" << i << " j=" << j << endl;
     if(game->board[i][j].containsMarker && game->board[i][j].canBeUsed){
       if(game->board[i][j].player==playerNo){
         markerCount++;
@@ -490,6 +492,7 @@ string ourPlayer::markerDeletionHelper(int playerNo, int x, int y, int dirX, int
     }
     else break;
   }
+  // cout << "MarkerCount=" << markerCount << endl;
   return temp;
 }
 
@@ -497,39 +500,50 @@ vector<string> ourPlayer::markerDeletion(int playerNo, ourGame* game){
   int rows = game->rows;
   vector<string> ans;
   string temp = "";
+  // cout << "playerNo=" << playerNo << endl;
   for(int i=0; i<rows; i++){
     for(int j=0; j<rows; j++){
+      // cout << i << " " << j << " " ;
       if(game->board[i][j].containsMarker && game->board[i][j].canBeUsed && game->board[i][j].player ==playerNo){
+        // cout << "i=" << i << " j=" << j << endl;
         temp = markerDeletionHelper(playerNo,i,j,0,1,game);//Total 6 directions
         if(temp.length()!=0){
           ans.pb(temp);
         }
-
+        // cout << "a" << endl;
+        // cout << ans.size() << " ";
         temp = markerDeletionHelper(playerNo,i,j,0,-1,game);//Total 6 directions
         if(temp.length()!=0){
           ans.pb(temp);
         }
+        // cout << "b" << endl;
+        // cout << ans.size() << " ";
 
         temp = markerDeletionHelper(playerNo,i,j,1,1,game);//Total 6 directions
         if(temp.length()!=0){
           ans.pb(temp);
         }
-
+        // cout << ans.size() << " ";
+        // cout << "c" << endl;
         temp = markerDeletionHelper(playerNo,i,j,-1,-1,game);//Total 6 directions
         if(temp.length()!=0){
           ans.pb(temp);
         }
+        // cout << ans.size() << " ";
 
         temp = markerDeletionHelper(playerNo,i,j,1,0,game);//Total 6 directions
         if(temp.length()!=0){
           ans.pb(temp);
         }
+        // cout << ans.size() << " ";
 
         temp = markerDeletionHelper(playerNo,i,j,-1,0,game);//Total 6 directions
         if(temp.length()!=0){
           ans.pb(temp);
         }
+        // cout << ans.size();
       }
+      // cout << endl;
     }
   }
   return ans;
@@ -605,7 +619,9 @@ vector<string> ourPlayer::removeRingFinal(int playerNo, ourGame* game){
 vector<string> ourPlayer::removeMarkerAndRing(int playerNo, ourGame* game){
   //This function checks if we can remove the rings or not and returns a vector of strings
   vector<string> ans;
+  // cout << "Do I come Here?" << endl;
   vector<string> first = markerDeletion(playerNo, game);
+  // cout << "And Here?" << endl;
   string temp;
   for(int i=0; i<first.size(); i++){
     string removeMarkerOne = first[i];
@@ -623,7 +639,9 @@ vector<string> ourPlayer::removeMarkerAndRing(int playerNo, ourGame* game){
 
 vector<string> ourPlayer::allDeletions(int playerNo, ourGame* game){
     vector<string> ans;
+    // cout << "Fuckkk!" << endl;
     vector<string> firstDeletion = removeMarkerAndRing(playerNo,game);
+    // cout << "Marker 1" << endl;
     // string move="";
     if(firstDeletion.size()==0)
       return ans;
@@ -634,6 +652,7 @@ vector<string> ourPlayer::allDeletions(int playerNo, ourGame* game){
         ourGame* firstGame = new ourGame();
         firstGame->copyTheBoard(game);
         moveDecider(playerNo,firstMove,firstGame);
+        // cout << "Marker 2" << endl;
         if((playerNo==1 && firstGame->playerOneRingsOnBoard==2)||(playerNo==2 && firstGame->playerTwoRingsOnBoard==2)){
           ans.pb(firstMove);
         }
@@ -687,20 +706,25 @@ vector<string> ourPlayer::moveList(int playerNo, ourGame* game){
     vector<string> fr = selectAndMoveFinal(playerNo, game);
     cout<<"And here?"<<endl;
     cout<<fr.size()<<endl;
+    int frSize = fr.size();
     if(fr.size()==0){
       cout << "NO MOVE LEFT" << endl;
     }
     else{
-      for(int i=0;i<fr.size();i++){
-        cout<<"i: "<<fr[i]<<endl;
-      }
-      for(int i=0; i<fr.size(); i++){
-        // cout<<"i: "<<i;
+      cout << "IDHAR" << endl;
+      // for(int i=0;i<fr.size();i++){
+      //   cout<<"i: "<< i<<" Move: "<<fr[i]<<endl;
+      // }
+      cout << "frSize: " << frSize << endl;
+
+      for(int i=0; i<frSize; i++){
+        // cout << "Yahoo" << endl;
+        cout<<"i: "<<i;
         // ourGame* afterFirstMove = new ourGame();
         // afterFirstMove->copyTheBoard(game);
         string firstMove = fr[i];
-        // cout<<" "<<firstMove<<endl;
-        moveDecider(playerNo, firstMove, game);
+        cout<<" "<<firstMove<<endl;
+        // moveDecider(playerNo, firstMove, game);
         // cout<<" 02";
         vector<string> dr = allDeletions(playerNo, game);
         // cout<<" o3";
@@ -708,6 +732,7 @@ vector<string> ourPlayer::moveList(int playerNo, ourGame* game){
         // cout<<" "<<dr.size()<<endl;
         if(dr.size()==0){
           //Nothing to delete
+          // game->moveUndo(playerNo,firstMove);
           ans.pb(firstMove);
         }
         else{
@@ -856,7 +881,7 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
     // gameTemp.printBoard();
     // cout<<"Sorting done"<<endl;
     for(int i=0;i<possible_moves.size();i++){
-      cout<<possible_moves[i]<<" <- move"<<endl;
+      //cout<<possible_moves[i]<<" <- move"<<endl;
       moveDecider(this->playerNumber,possible_moves[i],this->game);
       transitionMove tempMove = minimax(depth+1,false,alpha,beta,max_depth);
       if(alpha<=tempMove.value){
