@@ -23,12 +23,12 @@ int main(){
   string inp;
   p_id = 1;
   ourPlayer temp(1,150);
-  // while(true){
-  //   getline(cin,inp);
-  //   temp.moveDecider(p_id,inp,temp.game);
-  //   p_id = (p_id==1) ? 2 : 1;
-  //   temp.game->printBoard();
-  // }
+  while(true){
+    getline(cin,inp);
+    temp.moveDecider(p_id,inp,temp.game);
+    p_id = (p_id==1) ? 2 : 1;
+    temp.game->printBoard();
+  }
   ourPlayer playah(1,150);
   playah.play();
   //ourPlayer nonPlayah = playah;
