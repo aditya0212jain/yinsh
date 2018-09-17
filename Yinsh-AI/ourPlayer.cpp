@@ -691,20 +691,19 @@ vector<string> ourPlayer::moveList(int playerNo, ourGame* game){
       cout << "NO MOVE LEFT" << endl;
     }
     else{
-      for(int i=0;i<fr.size();i++){
-        cout<<"i: "<<fr[i]<<endl;
-      }
       for(int i=0; i<fr.size(); i++){
-        // cout<<"i: "<<i;
-        // ourGame* afterFirstMove = new ourGame();
-        // afterFirstMove->copyTheBoard(game);
+        ourGame* afterFirstMove = new ourGame();
+        afterFirstMove->copyTheBoard(game);
         string firstMove = fr[i];
-        // cout<<" "<<firstMove<<endl;
-        moveDecider(playerNo, firstMove, game);
+        moveDecider(playerNo, firstMove, afterFirstMove);
         // cout<<" 02";
-        vector<string> dr = allDeletions(playerNo, game);
+        cout<<"i: "<<i<<" "<<firstMove<<endl;
+        cout<<afterFirstMove->board[8][7].player<<endl;
+        cout<<afterFirstMove->board[8][8].player<<endl;
+        
+        vector<string> dr = allDeletions(playerNo, afterFirstMove);
         // cout<<" o3";
-        game->moveUndo(playerNo,firstMove);
+        // game->moveUndo(playerNo,firstMove);
         // cout<<" "<<dr.size()<<endl;
         if(dr.size()==0){
           //Nothing to delete
@@ -926,61 +925,81 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
 
 }
 
+void ourPlayer::initialPlacing(){
+  int count1=0,count2=0;
+  string oppMove;
+  if(this->playerNumber==2){
+   getline(cin,oppMove);
+   this->moveDecider(1,oppMove,this->game);
+   count2++; 
+  }
+  while(count1!=5&&count2!=5){
+    while(true){
+
+      int a = rand()%3;
+      int b;
+      if(a==0){
+        b=0;
+      }else{
+        b = rand()%(6*a);
+      }
+      cout<<"a,b: "<<a<<" "<<b<<endl;
+      pair<int,int> h = hexToCartesian(a,b,11);
+      cout<<"h "<<h.first<<" "<<h.second<<endl;
+      if(this->game->board[h.first][h.second].player==0){
+        string beta = "P ";
+        beta = beta+to_string(a)+" "+to_string(b);
+        cout<<beta<<endl;
+        this->moveDecider(this->playerNumber,beta,this->game);
+        count1++;
+        break;
+      }
+    }
+    if(count1==5&&count2==5){
+      break;
+    }
+    getline(cin,oppMove);
+    this->moveDecider((this->playerNumber%2)+1,oppMove,this->game);
+    // cout<<"haggu"<<endl; 
+    count2++;
+  }
+}
+
 
 void ourPlayer::play(){
   string opponentMove;
   int opponent_player_number;
   int count=0;
-  // while(count!=5){
-  //   // if(this->playerNumber==2){
-  //   // getline(cin,opponentMove);
-  //   // moveDecider(2,opponentMove,this->game);
-  //   // }
-  //   if(this->playerNumber==1){
-  //     while(true){
-  //       int a = rand()%6;
-  //       int b = rand()%(6*a);
 
-  //       pair<int,int> temp = hexToCartesian(a,b,11);
+  this->initialPlacing();
 
-  //       if(this->game->board[temp.first][temp.second].canBeUsed&&this->game->board[temp.first][temp.second].player==0){
-  //         cout<<"P "<<a<<" "<<b<<endl;
-  //         placeRing(1,temp.first,temp.second,this->game);
-  //         break;
-  //       }
-  //     }
-  //   }
-  //   getline(cin,opponentMove);
-  //   moveDecider(2,opponentMove,this->game);
-  //   count++;
-  // }
-  // cout<<"fuck this"<<endl;
-  moveDecider(1,"P 1 4",this->game);
-  cout<<"P 1 4"<<endl;
-  getline(cin,opponentMove);
-  moveDecider(2,opponentMove,this->game);
-  // moveDecider(2,"P 0 0",this->game);
-  moveDecider(1,"P 3 7",this->game);
-  cout<<"P 3 7"<<endl;
-  getline(cin,opponentMove);
-  moveDecider(2,opponentMove,this->game);
-  // moveDecider(2,"P 2 2",this->game);
-  moveDecider(1,"P 4 5",this->game);
-  cout<<"P 4 5"<<endl;
-  getline(cin,opponentMove);
-  moveDecider(2,opponentMove,this->game);
-  // moveDecider(2,"P 2 4",this->game);
-  moveDecider(1,"P 2 7",this->game);
-  cout<<"P 2 7"<<endl;
-  getline(cin,opponentMove);
-  moveDecider(2,opponentMove,this->game);
-  // moveDecider(2,"P 4 12",this->game);
-  moveDecider(1,"P 4 4",this->game);
-  cout<<"P 4 4"<<endl;
-  getline(cin,opponentMove);
-  moveDecider(2,opponentMove,this->game);
-  // moveDecider(2,"P 3 0",this->game);
-  // cout<<"this is it"<<endl;
+  // // cout<<"fuck this"<<endl;
+  // moveDecider(1,"P 0 0",this->game);
+  // cout<<"P 0 0"<<endl;
+  // getline(cin,opponentMove);
+  // moveDecider(2,opponentMove,this->game);
+  // // moveDecider(2,"P 0 0",this->game);
+  // moveDecider(1,"P 2 9",this->game);
+  // cout<<"P 2 9"<<endl;
+  // getline(cin,opponentMove);
+  // moveDecider(2,opponentMove,this->game);
+  // // moveDecider(2,"P 2 2",this->game);
+  // moveDecider(1,"P 2 0",this->game);
+  // cout<<"P 2 0"<<endl;
+  // getline(cin,opponentMove);
+  // moveDecider(2,opponentMove,this->game);
+  // // moveDecider(2,"P 2 4",this->game);
+  // moveDecider(1,"P 3 1",this->game);
+  // cout<<"P 3 1"<<endl;
+  // getline(cin,opponentMove);
+  // moveDecider(2,opponentMove,this->game);
+  // // moveDecider(2,"P 4 12",this->game);
+  // moveDecider(1,"P 4 4",this->game);
+  // cout<<"P 4 4"<<endl;
+  // getline(cin,opponentMove);
+  // moveDecider(2,opponentMove,this->game);
+  // // moveDecider(2,"P 3 0",this->game);
+  // // cout<<"this is it"<<endl;
 
   // this->game->printBoard();
   if(this->playerNumber==1){
