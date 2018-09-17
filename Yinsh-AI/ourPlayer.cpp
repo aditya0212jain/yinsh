@@ -679,7 +679,8 @@ struct transitionMove ourPlayer::idMinimax(int max_depth,double maxTime){
   for(depth=1;depth<=max_depth;depth++){
     struct transitionMove tempMove;
     cout<<"depth: "<<depth<<endl;
-    tempMove = minimax(depth,true,-INFINITY,INFINITY);
+    tempMove = minimax(1,true,-INFINITY,INFINITY,depth);
+    cout<<"yes"<<endl;
     if(bestMove.value<=tempMove.value){
       bestMove = tempMove;
     }
@@ -702,10 +703,10 @@ struct transitionMove ourPlayer::idMinimax(int max_depth,double maxTime){
 *undoMove(ourGame game)
 */
 //initialize with alpha = -INFINITY & beta = INFINITY
-struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alpha,long long int beta){
+struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alpha,long long int beta,int max_depth){
 
   //depth will never be zero
-  if(depth==0){
+  if(depth==max_depth){
     struct transitionMove ans;
     ans.move="Reached";
     ans.value=this->game->computeHeuristicValue();
@@ -716,6 +717,7 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
 
   //if our player's turn
   if(isMax){
+    cout<<"yup1"<<endl;
     bestMove.value=-INFINITY;
     vector<string> possible_moves;
     possible_moves = moveList(this->playerNumber,this->game);
@@ -723,7 +725,7 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
     possible_moves = sortChildren(possible_moves,true);
     for(int i=0;i<possible_moves.size();i++){
       moveDecider(this->playerNumber,possible_moves[i],this->game);
-      transitionMove tempMove = minimax(depth+1,false,alpha,beta);
+      transitionMove tempMove = minimax(depth+1,false,alpha,beta,max_depth);
       if(alpha<=tempMove.value){
         alpha = tempMove.value;
       }
@@ -744,6 +746,7 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
 
   //if opponent's turn
   if(!isMax){
+    cout<<"min1"<<endl;
     int opponent_player_number;
     opponent_player_number = (this->playerNumber==1) ? 2 : 1;
     bestMove.value = INFINITY;
@@ -752,7 +755,7 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
     possible_moves = sortChildren(possible_moves,false);
     for(int i=0;i<possible_moves.size();i++){
       moveDecider(opponent_player_number,possible_moves[i],this->game);
-      transitionMove tempMove= minimax(depth+1,true,alpha,beta);
+      transitionMove tempMove= minimax(depth+1,true,alpha,beta,max_depth);
       // beta = min(beta,value);
       if(beta>=tempMove.value){
         beta = tempMove.value;
@@ -777,6 +780,7 @@ void ourPlayer::play(){
   string opponentMove;
   int opponent_player_number;
   int count=0;
+
   // while(count!=5){
   //   // if(this->playerNumber==2){
   //   // getline(cin,opponentMove);
@@ -809,9 +813,44 @@ void ourPlayer::play(){
   moveDecider(2,"P 4 12",this->game);
   moveDecider(1,"P 4 4",this->game);
   moveDecider(2,"P 3 0",this->game);
+  //
+  // while(count!=5){
+  //   // if(this->playerNumber==2){
+  //   // getline(cin,opponentMove);
+  //   // moveDecider(2,opponentMove,this->game);
+  //   // }
+  //   if(this->playerNumber==1){
+  //     while(true){
+  //       int a = rand()%6;
+  //       int b = rand()%(6*a);
+  //
+  //       pair<int,int> temp = hexToCartesian(a,b,11);
+  //       cout<<"P "<<a<<" "<<b<<endl;
+  //       if(this->game->board[temp.first][temp.second].canBeUsed&&this->game->board[temp.first][temp.second].player==0){
+  //         placeRing(1,temp.first,temp.second,this->game);
+  //         break;
+  //       }
+  //     }
+  //   }
+  //   getline(cin,opponentMove);
+  //   moveDecider(2,opponentMove,this->game);
+  //   count++;
+  // }
+  // moveDecider(1,"P 1 4",this->game);
+  // moveDecider(2,"P 0 0",this->game);
+  // moveDecider(1,"P 3 7",this->game);
+  // moveDecider(2,"P 2 2",this->game);
+  // moveDecider(1,"P 4 5",this->game);
+  // moveDecider(2,"P 2 4",this->game);
+  // moveDecider(1,"P 2 7",this->game);
+  // moveDecider(2,"P 4 12",this->game);
+  // moveDecider(1,"P 4 4",this->game);
+  // moveDecider(2,"P 3 0",this->game);
+
   if(this->playerNumber==1){
-    transitionMove m = idMinimax(4,40);//max_depth,time
-    cout<<m.move;
+    transitionMove m = idMinimax(2,40);//max_depth,time
+    cout<<"o1"<<endl;
+    cout<<m.move<<endl;
     moveDecider(this->playerNumber,m.move,this->game);
 
     //getline(cin,opponentMove);
@@ -821,7 +860,7 @@ void ourPlayer::play(){
   while(!this->game->ended()){
     moveDecider(opponent_player_number,opponentMove,this->game);
     // this->game->execute_move(toMove(opponentMove));
-    transitionMove m = idMinimax(4,40);
+    transitionMove m = idMinimax(2,40);
     moveDecider(this->playerNumber,m.move,this->game);
     cout<<m.move;
     getline(cin,opponentMove);
