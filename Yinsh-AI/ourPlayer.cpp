@@ -51,6 +51,15 @@ vector<string> ourPlayer::sortChildren(vector<string> moves,bool forMax){
     //   cout << "Printing Board:::" << endl;
     //   this->game->printBoard();
     // }
+    // int myRings,opponentRings;
+    // if(this->playerNumber == 1){
+    //   myRings = this-> game->playerOneRingsOnBoard;
+    //   opponentRings = this-> game->playerTwoRingsOnBoard;
+    // }
+    // else{
+    //   myRings = this-> game->playerTwoRingsOnBoard;
+    //   opponentRings = this-> game->playerOneRingsOnBoard;
+    // }
     lli valueTemp = this->game->computeHeuristicValue(this->playerNumber);
     transitionMove temp;
     temp.move = moves[i];
@@ -869,7 +878,7 @@ struct transitionMove ourPlayer::idMinimax(int max_depth,double maxTime){
     if(bestMove.value<=tempMove.value){
       bestMove = tempMove;
     }
-    // cout<<"totalNodes: "<<totalNodes<<endl;
+    cerr<<"totalNodes: "<<totalNodes<<endl;
     // bestScore = max(bestScore,tempMove.value);
     //compute time to solve for depth
     clock_gettime(CLOCK_REALTIME, &move_time);
@@ -895,7 +904,15 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
   if(depth==max_depth){
     struct transitionMove ans;
     ans.move="Reached";
-
+    int myRings,opponentRings;
+    // if(this->playerNumber == 1){
+    //   myRings = this->game-> playerOneRingsOnBoard;
+    //   opponentRings = this->game-> playerTwoRingsOnBoard;
+    // }
+    // else{
+    //   myRings = this-> game->playerTwoRingsOnBoard;
+    //   opponentRings = this-> game->playerOneRingsOnBoard;
+    // }
     ans.value=this->game->computeHeuristicValue(this->playerNumber);
 
 
@@ -1167,6 +1184,8 @@ void ourPlayer::play(){
 
   // this->game->printBoard();
   if(this->playerNumber==1){
+    // srand(time[0])
+
     transitionMove m = idMinimax(2,40);//max_depth,time
     // cout<<"o1"<<endl;
     cout<<m.move<<endl;
@@ -1180,7 +1199,8 @@ void ourPlayer::play(){
   while(!this->game->ended()){
     moveDecider(opponent_player_number,opponentMove,this->game);
     // this->game->printBoard();
-    transitionMove m = idMinimax(2,40);
+    int depth1 = rand()%3 + 2;
+    transitionMove m = idMinimax(depth1,40);
     cout<<m.move<<endl;
     moveDecider(this->playerNumber,m.move,this->game);
     // this->game->printBoard();

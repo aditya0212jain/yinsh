@@ -93,11 +93,10 @@ void ourGame::printBoard(){
 double ourGame::computeHeuristicValue(int player){
   //This function computes the heuristic for the player according to the current configuration of the boardSize
 
-  // int player;//take it as input
   int count=0;
   vector<int> valuesForConsecutiveMarkers;
   int myRingsInitial=5,opponentRingsInitial=5;
-
+  //
   for(int i=0;i<12;i++){
     valuesForConsecutiveMarkers.push_back(0);
   }
@@ -155,6 +154,16 @@ double ourGame::computeHeuristicValue(int player){
   for(int i=0;i<12;i++){
     score+=weight[i]*valuesForConsecutiveMarkers[i];
   }
+
+  // int playerOneMarkers = this->playerOneMarkersOnBoard;
+  // int playerTwoMarkers = this->playerTwoMarkersOnBoard;
+  // if(player==1){
+  //   score = playerOneMarkers - playerTwoMarkers;
+  // }
+  // else{
+  //   score = playerTwoMarkers - playerOneMarkers;
+  // }
+
   if(player==1){
     score+=10000*(myRingsInitial-this->playerOneRingsOnBoard);
     score-=10000*(opponentRingsInitial-this->playerTwoRingsOnBoard);
