@@ -44,8 +44,8 @@ vector<string> ourPlayer::sortChildren(vector<string> moves,bool forMax){
   // ourGame gameTemp;
   // gameTemp.copyTheBoard(this->game);
   for(int i=0;i<moves.size();i++){
-    ourGame xgame;
-    xgame.copyTheBoard(this->game);
+    // ourGame xgame;
+    // xgame.copyTheBoard(this->game);
     moveDecider(playerNumber,moves[i],this->game);
     // if(i==0){
     //   cout << "Printing Board:::" << endl;
@@ -57,10 +57,10 @@ vector<string> ourPlayer::sortChildren(vector<string> moves,bool forMax){
     temp.value = valueTemp;
     v.push_back(temp);
     this->game->moveUndo(playerNumber,moves[i]);
-    if(!xgame.equalsTo(this->game)){
-      cout<<"Not equal"<<endl;
-      cout<<moves[i]<<" i:"<<i<<endl;
-    }
+    // if(!xgame.equalsTo(this->game)){
+    //   cout<<"Not equal"<<endl;
+    //   cout<<moves[i]<<" i:"<<i<<endl;
+    // }
   }
   // cout<<"--------------------------- In sorting CHECK BOARDS BELOW"<<endl;
   //   this->game->printBoard();
@@ -637,9 +637,16 @@ vector<string> ourPlayer::removeMarkerAndRing(int playerNo, ourGame* game){
   for(int i=0; i<first.size(); i++){
     string removeMarkerOne = first[i];
     // cout << first[i] << endl;
-    ourGame* firstGame = new ourGame();
-    firstGame->copyTheBoard(game);
-    moveDecider(playerNo,removeMarkerOne,firstGame);
+    /*
+    *Check the three below commented lines 
+    * are they necessary
+    * @sarthakVishnoi
+    *
+    */
+
+    // ourGame* firstGame = new ourGame();
+    // firstGame->copyTheBoard(game);
+    // moveDecider(playerNo,removeMarkerOne,firstGame);
     vector<string> firstRing = removeRingFinal(playerNo, game);
     for(int j=0; j<firstRing.size(); j++){
       string t = removeMarkerOne + " " + firstRing[j];
@@ -686,7 +693,7 @@ vector<string> ourPlayer::allDeletions(int playerNo, ourGame* game){
                 ans.pb(temp);
               }
               else{
-                vector<string> thirdDeletion = removeMarkerAndRing(playerNo, firstGame);
+                vector<string> thirdDeletion = removeMarkerAndRing(playerNo, firstGame);///<- is this correct @sarthakVishnoi
                 if(thirdDeletion.size()==0){
                   string temp = firstMove + " " + secondMove;
                   ans.pb(temp);
@@ -770,11 +777,11 @@ vector<string> ourPlayer::moveList(int playerNo, ourGame* game){
     // cout << "First Round Size: " << firstRound.size() << endl;
     for(int i=0; i<firstRound.size(); i++){
       // cout << "Count" << endl;
-      ourGame* afterFirstMove = new ourGame();
-      afterFirstMove->copyTheBoard(game);
+      // ourGame* afterFirstMove = new ourGame();
+      // afterFirstMove->copyTheBoard(game);
       string fm = firstRound[i];
-      moveDecider(playerNo, fm, afterFirstMove);
-      vector<string> sr = selectAndMoveFinal(playerNo,afterFirstMove);
+      moveDecider(playerNo, fm, game);
+      vector<string> sr = selectAndMoveFinal(playerNo,game);
       if(sr.size()==0){
         //No move to play ring
         ans.pb(fm);
@@ -784,11 +791,12 @@ vector<string> ourPlayer::moveList(int playerNo, ourGame* game){
         // cout << sr[18] << endl;
         // cout << fm << endl;
         for(int j=0; j<sr.size(); j++){
-          ourGame*  afterSecondMove = new ourGame();
-          afterSecondMove->copyTheBoard(afterFirstMove);
+          // ourGame*  afterSecondMove = new ourGame();
+          // afterSecondMove->copyTheBoard(afterFirstMove);
           string sm = sr[j];
-          moveDecider(playerNo, sm, afterSecondMove);
-          vector<string> tr = allDeletions(playerNo, afterSecondMove);
+          moveDecider(playerNo, sm, game);
+          vector<string> tr = allDeletions(playerNo, game);
+          game->moveUndo(playerNo,sm);
           //cout << tr.size() << endl;
           // cout << sm << " " << j << "\n";
           if(tr.size()==0){
@@ -808,6 +816,7 @@ vector<string> ourPlayer::moveList(int playerNo, ourGame* game){
           }
         }
       }
+      game->moveUndo(playerNo,fm);
     }
   }
   return ans;
@@ -984,7 +993,92 @@ void ourPlayer::initialPlacing(){
   }
   while(count1!=5||count2!=5){
     while(true){
+      if(this->game->board[5][5].player==0){
+        string beta = "P 0 0";
+        cout<<beta<<endl;
+        this->moveDecider(this->playerNumber,beta,this->game);
+        count1++;
+        break;
+      }
 
+      //placing 4th ring
+      if(count1==3){
+        int a = 5;
+        bool assigned=false;
+        //checking if already opponent ring is there
+        for(int b=1;b<(6*a);b++){
+          pair<int,int> h = hexToCartesian(a,b,11);
+          if(this->game->board[h.first][h.second].canBeUsed&&this->game->board[h.first][h.second].player==((this->playerNumber%2)+1)){
+            pair<int,int> h1 = hexToCartesian(a,b+1,11);
+            pair<int,int> h2 = hexToCartesian(a,b-1,11);
+            if(this->game->board[h1.first][h1.second].canBeUsed&&this->game->board[h1.first][h1.second].player==0){
+              string beta = "P ";
+              beta = beta+to_string(a)+" "+to_string(b+1);
+              cout<<beta<<endl;
+              this->moveDecider(this->playerNumber,beta,this->game);
+              count1++;
+              assigned = true;
+              break;
+            }else if(this->game->board[h2.first][h2.second].canBeUsed&&this->game->board[h2.first][h2.second].player==0){
+              string beta = "P ";
+              beta = beta+to_string(a)+" "+to_string(b-1);
+              cout<<beta<<endl;
+              this->moveDecider(this->playerNumber,beta,this->game);
+              count1++;
+              assigned = true;
+              break;
+            }
+            
+          }
+        }
+        if(assigned){
+          break;
+        }else{
+          //assigning random from the edges
+          bool smalloop=true;
+          while(smalloop){
+            int b = rand()%(6*a);
+            pair<int,int> h = hexToCartesian(a,b,11);
+            if(this->game->board[h.first][h.second].canBeUsed&&this->game->board[h.first][h.second].player==0){
+              string beta = "P ";
+              beta = beta+to_string(a)+" "+to_string(b);
+              cout<<beta<<endl;
+              this->moveDecider(this->playerNumber,beta,this->game);
+              count1++;
+              assigned = true;
+              break;
+            }
+          }
+          break;
+        }
+
+      }
+      if(count1==4){
+        int a =5;
+        bool assigned=false;
+        for(int b=0;b<(6*a);b++){
+          pair<int,int> h = hexToCartesian(a,b,11);
+          if(this->game->board[h.first][h.second].canBeUsed&&this->game->board[h.first][h.second].player==this->playerNumber){
+            int c = b/a;
+            int d = (rand()%3)+1 + (4*c);
+            pair<int,int > h1 = hexToCartesian(4,d,11);
+            if(this->game->board[h1.first][h1.second].player==0){
+              string beta = "P ";
+              beta = beta+to_string(4)+" "+to_string(d);
+              cout<<beta<<endl;
+              this->moveDecider(this->playerNumber,beta,this->game);
+              count1++;
+              assigned = true;
+              break;
+            }else{
+              break;
+            }
+          }
+        }
+        if(assigned){
+          break;
+        }
+      }
       int a = rand()%3;
       int b;
       if(a==0){
