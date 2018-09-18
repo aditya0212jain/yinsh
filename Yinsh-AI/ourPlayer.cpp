@@ -92,35 +92,37 @@ ourPlayer::ourPlayer(int playerNumber,int timeLeft){
 }
 //These hexagon and position will be decided by Alpha-Beta pruning
 void ourPlayer::placeRing(int playerNo, int x, int y, ourGame* game){
-  //Hexagon defines the hexagon in which we will place the new rings
-  //position defines the position of that new ring in the hexagon
-  // move temp;//it will be automatically initialized by {"",0,0}
-  // pair<int,int> p = cartesianToHex(x,y,11);//rows = 11
-  // //cout << p.first << " " << p.second << endl;
-  // temp.type = "P";
-  // temp.hex = p.first; // hexagon
-  // temp.pos = p.second; //position
-  //cout << "DO I";
-  //rings.pb(mp(x,y));
-  //cout << " Reach here?" << endl;
+
   struct boardCell tempboardCell; // Ring is placed, and not marker
   tempboardCell.player = playerNo;//this->playerNumber;
   tempboardCell.containsMarker = false;
   tempboardCell.containsRings = true;
   tempboardCell.canBeUsed = true;
-  //cout << "And here?" << endl;
-  // cout << (game.board.size()) << endl;
-  // cout << game.board[x][y].player << " ";
-  // cout << "Definitely I don't reach here, Do I?" << endl;
   game->board[x][y]  = tempboardCell;
-  //cout << game.board[x][y].player << endl;
   if(/*this->playerNumber*/playerNo==1){
     game->playerOneRingsOnBoard++;
   }
   else{
     game->playerTwoRingsOnBoard++;
   }
-  //return temp;
+}
+
+void ourPlayer::addMarker(int playerNo, int hex, int pos, ourGame* game){
+  pair<int,int> cartesian = hexToCartesian(hex,pos,11);
+  int x = cartesian.first;
+  int y = cartesian.second;
+  struct boardCell tempboardCell; // Ring is placed, and not marker
+  tempboardCell.player = playerNo;//this->playerNumber;
+  tempboardCell.containsMarker = true;
+  tempboardCell.containsRings = false;
+  tempboardCell.canBeUsed = true;
+  game->board[x][y]  = tempboardCell;
+  if(/*this->playerNumber*/playerNo==1){
+    game->playerOneMarkersOnBoard++;
+  }
+  else{
+    game->playerTwoMarkersOnBoard++;
+  }
 }
 
 void ourPlayer::moveRing(int playerNo,int xStart, int yStart, int x, int y, ourGame* game){
@@ -493,7 +495,7 @@ string ourPlayer::markerDeletionHelper(int playerNo, int x, int y, int dirX, int
         break;
       }
     }
-    else{ 
+    else{
       break;
     }
   }
@@ -662,7 +664,7 @@ vector<string> ourPlayer::allDeletions(int playerNo, ourGame* game){
       for(int i=0; i<firstDeletion.size(); i++){
         string firstMove = firstDeletion[i];
         // move = firstMove;
-        cout << firstMove << endl;
+        //cout << firstMove << endl;
         ourGame* firstGame = new ourGame();
         firstGame->copyTheBoard(game);
         moveDecider(playerNo,firstMove,firstGame);
