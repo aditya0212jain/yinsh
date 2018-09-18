@@ -46,17 +46,36 @@ vector<string> ourPlayer::sortChildren(vector<string> moves,bool forMax){
   for(int i=0;i<moves.size();i++){
     // ourGame xgame;
     // xgame.copyTheBoard(this->game);
+
+    if(htMap.find(moves[i])==htMap.end()){
+
     moveDecider(playerNumber,moves[i],this->game);
     // if(i==0){
     //   cout << "Printing Board:::" << endl;
     //   this->game->printBoard();
+    // }
+    // int myRings,opponentRings;
+    // if(this->playerNumber == 1){
+    //   myRings = this-> game->playerOneRingsOnBoard;
+    //   opponentRings = this-> game->playerTwoRingsOnBoard;
+    // }
+    // else{
+    //   myRings = this-> game->playerTwoRingsOnBoard;
+    //   opponentRings = this-> game->playerOneRingsOnBoard;
     // }
     lli valueTemp = this->game->computeHeuristicValue(this->playerNumber);
     transitionMove temp;
     temp.move = moves[i];
     temp.value = valueTemp;
     v.push_back(temp);
+    htMap[moves[i]]=valueTemp;
     this->game->moveUndo(playerNumber,moves[i]);
+    }else{
+      transitionMove temp;
+      temp.value = htMap[moves[i]];
+      temp.move = moves[i];
+      v.push_back(temp);
+    }
     // if(!xgame.equalsTo(this->game)){
     //   cout<<"Not equal"<<endl;
     //   cout<<moves[i]<<" i:"<<i<<endl;
@@ -750,7 +769,7 @@ vector<string> ourPlayer::moveList(int playerNo, ourGame* game){
     // cout<<fr.size()<<endl;
     int frSize = fr.size();
     if(fr.size()==0){
-      cout << "NO MOVE LEFT" << endl;
+      // cout << "NO MOVE LEFT" << endl;
     }
     else{
       // cout << "IDHAR" << endl;
@@ -850,34 +869,28 @@ vector<string> ourPlayer::moveList(int playerNo, ourGame* game){
 struct transitionMove ourPlayer::idMinimax(int max_depth,double maxTime){
   int depth = 0;
   double tempTime=0;
-  struct timespec start_time,move_time;
   htMap.clear();
-
+  totalNodes=0;
   //start noting time
-  clock_gettime(CLOCK_REALTIME, &start_time);
   struct transitionMove bestMove;
   struct transitionMove tempMove;
   bestMove.value=-INFINITY;
+  double timeRemaining= this->timeLeft-maxTime;
+  if(timeRemaining<=5){
+    max_depth = 2;
+  }
   for(depth=1;depth<=max_depth;depth++){
-    // cout<<"depth: "<<depth<<endl;
-    // ourGame gameTemp;
-    // gameTemp.copyTheBoard(this->game);
     tempMove = minimax(0,true,-INFINITY,INFINITY,depth);
-    // this->game->printBoard();
-    // cout<<"tempMove: "<<tempMove.move<<" "<<tempMove.value<<endl;
-    // cout<<"yes"<<endl;
     if(bestMove.value<=tempMove.value){
       bestMove = tempMove;
     }
-    // cout<<"totalNodes: "<<totalNodes<<endl;
+    cerr<<"totalNodes: "<<totalNodes<<endl;
     // bestScore = max(bestScore,tempMove.value);
-    //compute time to solve for depth
-    clock_gettime(CLOCK_REALTIME, &move_time);
-    double seconds = (double)((move_time.tv_sec+move_time.tv_nsec*1e-9) - (double)(start_time.tv_sec+start_time.tv_nsec*1e-9));
-    //return value if time exceeded
-    if(seconds>=maxTime){
-      htMap.clear();
-      return bestMove;
+    if(totalNodes<2000&&depth==3){
+      if(timeRemaining>20){
+        cerr<<"Doing 4 depth"<<endl;
+        max_depth=4;
+      }
     }
   }
   htMap.clear();
@@ -895,7 +908,15 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
   if(depth==max_depth){
     struct transitionMove ans;
     ans.move="Reached";
-
+    int myRings,opponentRings;
+    // if(this->playerNumber == 1){
+    //   myRings = this->game-> playerOneRingsOnBoard;
+    //   opponentRings = this->game-> playerTwoRingsOnBoard;
+    // }
+    // else{
+    //   myRings = this-> game->playerTwoRingsOnBoard;
+    //   opponentRings = this-> game->playerOneRingsOnBoard;
+    // }
     ans.value=this->game->computeHeuristicValue(this->playerNumber);
 
 
@@ -928,18 +949,13 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
 
     possible_moves = sortChildren(possible_moves,true);
     
-    // cout<<"sorted"<<endl;
-    // cout<<"CHECK BOARDS BELOW"<<endl;
-    // this->game->printBoard();
-    // cout<<"below is gameTemp"<<endl;;
-    // gameTemp.printBoard();
-    // cout<<"Sorting done"<<endl;
     for(int i=0;i<possible_moves.size();i++){
 
       // cout<<possible_moves[i]<<" <- move"<<endl;
 
       moveDecider(this->playerNumber,possible_moves[i],this->game);
       transitionMove tempMove = minimax(depth+1,false,alpha,beta,max_depth);
+      htMap[possible_moves[i]]=tempMove.value;
       if(alpha<=tempMove.value){
         alpha = tempMove.value;
       }
@@ -986,6 +1002,7 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
     for(int i=0;i<possible_moves.size();i++){
       moveDecider(opponent_player_number,possible_moves[i],this->game);
       transitionMove tempMove= minimax(depth+1,true,alpha,beta,max_depth);
+      htMap[possible_moves[i]]=tempMove.value;
       // beta = min(beta,value);
       if(beta>=tempMove.value){
         beta = tempMove.value;
@@ -1025,7 +1042,7 @@ void ourPlayer::initialPlacing(){
         break;
       }
 
-      //placing 4th ring
+      // //placing 4th ring
       if(count1==3){
         int a = 5;
         bool assigned=false;
@@ -1169,8 +1186,15 @@ void ourPlayer::play(){
   // // cout<<"this is it"<<endl;
 
   // this->game->printBoard();
+  double seconds;
+  clock_t t1,t2;
+  t1 = clock();
   if(this->playerNumber==1){
-    transitionMove m = idMinimax(3,40);//max_depth,time
+    // if(this->game->pla)
+    t2 = clock();
+    seconds = t2-t1;
+    seconds = seconds/CLOCKS_PER_SEC;
+    transitionMove m = idMinimax(3,seconds);//max_depth,time
     // cout<<"o1"<<endl;
     cout<<m.move<<endl;
     // this->game->printBoard();
@@ -1183,7 +1207,11 @@ void ourPlayer::play(){
   while(!this->game->ended()){
     moveDecider(opponent_player_number,opponentMove,this->game);
     // this->game->printBoard();
-    transitionMove m = idMinimax(3,40);
+    t2 = clock();
+    seconds = t2-t1;
+    seconds = seconds/CLOCKS_PER_SEC;
+    cerr<<"time elapsed: "<<seconds<<endl;
+    transitionMove m = idMinimax(3,seconds);
     cout<<m.move<<endl;
     moveDecider(this->playerNumber,m.move,this->game);
     // this->game->printBoard();

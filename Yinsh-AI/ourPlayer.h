@@ -69,7 +69,7 @@ public:
   vector<string> allDeletions(int playerNo, ourGame* game);
   //void play();
   void inverseMarker(int playerNo, int xStart, int yStart, int endX, int endY, ourGame* game);
-  unordered_map <string,transpositionNode> htMap;
+  unordered_map <string,long long int> htMap;
   void play();
   string minimax_decision(ourGame game);
   struct transitionMove minimax(int depth,bool isMax,long long int alpha,long long int beta,int max_depth);

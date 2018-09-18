@@ -13,7 +13,7 @@ class Server:
                         None
                 """
                 self.communicator_list = []
-                self.NETWORK_TIMER = 150
+                self.NETWORK_TIMER = 1000
                 self.log_file_handle = None
 
         def setLogFile(self, filename):
@@ -182,7 +182,7 @@ if __name__ == '__main__':
         parser.add_argument('-ip', dest = 'ip', type = str, default = '0.0.0.0', help = 'Server IP')
         parser.add_argument('-n', dest = 'n', metavar = 'N', type = int, default = 5, help = 'Yinsh board size')
         parser.add_argument('-NC', dest = 'num_clients', metavar = 'num_clients', type = int, default = 2, help = 'Number of clients connecting to the server')
-        parser.add_argument('-TL', dest = 'time_limit', metavar = 'time_limit', type = int, default = 150, help = 'Time limit (in s)')
+        parser.add_argument('-TL', dest = 'time_limit', metavar = 'time_limit', type = int, default = 1000, help = 'Time limit (in s)')
         parser.add_argument('-LOG',dest = 'log_file', metavar = 'log_file', type = str, default = "", help = 'Logger File for Evaluation purposes')
         args = parser.parse_args()
         if args.n < 5 or args.n > 7:

@@ -1,1 +1,1 @@
-./ourPlayer_3AI_NoSorting
+./ourPlayer_3AI

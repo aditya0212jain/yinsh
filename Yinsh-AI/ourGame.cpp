@@ -92,14 +92,15 @@ void ourGame::printBoard(){
 
 double ourGame::computeHeuristicValue(int player){
   //This function computes the heuristic for the player according to the current configuration of the boardSize
-
-  // int player;//take it as input
-  int count=0;
-  vector<int> valuesForConsecutiveMarkers;
+  lli score=0;
+  int count=0,count2=0;
+  vector<int> valuesForConsecutiveMarkers,valuesForConsecutiveMarkers2;
   int myRingsInitial=5,opponentRingsInitial=5;
-
+  int otherPlayer = (player%2)+1;
+  //
   for(int i=0;i<12;i++){
     valuesForConsecutiveMarkers.push_back(0);
+    valuesForConsecutiveMarkers2.push_back(0);
   }
 
   for(int i=0;i<rows;i++){
@@ -109,6 +110,10 @@ double ourGame::computeHeuristicValue(int player){
           valuesForConsecutiveMarkers[count]++;
           count=0;
         }
+        if(count2!=0){
+          valuesForConsecutiveMarkers2[count2]++;
+          count2=0;
+        }
       }else{
         if(board[i][j].player!=player){
           if(count!=0){
@@ -116,10 +121,27 @@ double ourGame::computeHeuristicValue(int player){
             count=0;
           }
         }else{
+          pair<int,int> h = cartesianToHex(i,j,11);
+          
           if(board[i][j].containsMarker){
             count++;
           }else if(board[i][j].containsRings){
             count+=0.5;
+          }
+        }
+
+        if(board[i][j].player!=otherPlayer){
+          if(count2!=0){
+            valuesForConsecutiveMarkers2[count2]++;
+            count2=0;
+          }
+        }else{
+          pair<int,int> h = cartesianToHex(i,j,11);
+          
+          if(board[i][j].containsMarker){
+            count2++;
+          }else if(board[i][j].containsRings){
+            count2+=0.5;
           }
         }
       }
@@ -133,6 +155,10 @@ double ourGame::computeHeuristicValue(int player){
           valuesForConsecutiveMarkers[count]++;
           count=0;
         }
+        if(count2!=0){
+          valuesForConsecutiveMarkers2[count2]++;
+          count2=0;
+        }
       }else{
         if(board[i][j].player!=player){
           if(count!=0){
@@ -146,22 +172,71 @@ double ourGame::computeHeuristicValue(int player){
             count+=0.5;
           }
         }
+
+        if(board[i][j].player!=otherPlayer){
+          if(count2!=0){
+            valuesForConsecutiveMarkers2[count2]++;
+            count2=0;
+          }
+        }else{
+          pair<int,int> h = cartesianToHex(i,j,11);
+          
+          if(board[i][j].containsMarker){
+            count2++;
+          }else if(board[i][j].containsRings){
+            count2+=0.5;
+          }
+        }
       }
     }
   }
 
-  lli score=0;
-  int weight[] = {0,1,3,9,27,81,81,81,81,81,81,81};
+  
+  int weight[] = {0,1,3,9,27,81,100,120,140,160,180,81};
+  int opponentWeight[] = {0,0,-2,-5,-50,-100000,-100000,-100000,-100000,-100000,-100000,-100000};
   for(int i=0;i<12;i++){
     score+=weight[i]*valuesForConsecutiveMarkers[i];
+    // score+=opponentWeight[i]*valuesForConsecutiveMarkers2[i];
   }
+
+  // int playerOneMarkers = this->playerOneMarkersOnBoard;
+  // int playerTwoMarkers = this->playerTwoMarkersOnBoard;
+  // if(player==1){
+  //   score = playerOneMarkers - playerTwoMarkers;
+  // }
+  // else{
+  //   score = playerTwoMarkers - playerOneMarkers;
+  // }
+
   if(player==1){
-    score+=10000*(myRingsInitial-this->playerOneRingsOnBoard);
-    score-=10000*(opponentRingsInitial-this->playerTwoRingsOnBoard);
+    score+=100000*(myRingsInitial-this->playerOneRingsOnBoard);
+    score-=100000*(opponentRingsInitial-this->playerTwoRingsOnBoard);
   }else{
-    score+=10000*(myRingsInitial-this->playerTwoRingsOnBoard);
-    score-=10000*(opponentRingsInitial-this->playerOneRingsOnBoard);
+    score+=100000*(myRingsInitial-this->playerTwoRingsOnBoard);
+    score-=100000*(opponentRingsInitial-this->playerOneRingsOnBoard);
   }
+
+  // if(player==1){
+  //   score-=this->playerTwoMarkersOnBoard;
+  // }else{
+  //   score-=this->playerOneMarkersOnBoard;
+  // }
+
+  // Adding stability for corners
+  // int stableInit[] = {1,6,11,16,21,26};
+  // int stableWeights[] = {0,2,2,2,2};
+  
+  // for(int i=0;i<6;i++){
+  //   int c2=0;
+  //   int c1=0;
+  //   for(int j=stableInit[i];j<stableInit[i]+4;j++){
+  //     pair<int,int> h = hexToCartesian(5,j,11);
+  //     if(this->board[h.first][h.second].player==player){
+  //       c2++;
+  //     }
+  //   }
+  //   score+=stableWeights[c2];
+  // }
 
   return score;
 
