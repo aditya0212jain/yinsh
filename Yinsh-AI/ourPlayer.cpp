@@ -462,6 +462,9 @@ string ourPlayer::markerDeletionHelper(int playerNo, int x, int y, int dirX, int
       if(game->board[i][j].player==playerNo){
         markerCount++;
       }
+      else{
+        break;
+      }
       if(markerCount==5){
         pair<int,int> initial = cartesianToHex(x,y,rows);
         pair<int,int> finall = cartesianToHex(i,j,rows);
@@ -490,7 +493,9 @@ string ourPlayer::markerDeletionHelper(int playerNo, int x, int y, int dirX, int
         break;
       }
     }
-    else break;
+    else{ 
+      break;
+    }
   }
   // cout << "MarkerCount=" << markerCount << endl;
   return temp;
@@ -546,6 +551,10 @@ vector<string> ourPlayer::markerDeletion(int playerNo, ourGame* game){
       // cout << endl;
     }
   }
+  // cout <<"-----------------------------" << endl;
+  // for(int i=0; i<ans.size(); i++)
+    // cout << ans[i] << endl;
+  // cout << "++++++++++++++++++++++++++" << endl;
   return ans;
 }
 
@@ -621,10 +630,13 @@ vector<string> ourPlayer::removeMarkerAndRing(int playerNo, ourGame* game){
   vector<string> ans;
   // cout << "Do I come Here?" << endl;
   vector<string> first = markerDeletion(playerNo, game);
+
   // cout << "And Here?" << endl;
   string temp;
+  // cout << "removeMarkerAndRing STARTS!!" << endl;
   for(int i=0; i<first.size(); i++){
     string removeMarkerOne = first[i];
+    // cout << first[i] << endl;
     ourGame* firstGame = new ourGame();
     firstGame->copyTheBoard(game);
     moveDecider(playerNo,removeMarkerOne,firstGame);
@@ -634,6 +646,7 @@ vector<string> ourPlayer::removeMarkerAndRing(int playerNo, ourGame* game){
       ans.pb(t);
     }
   }
+  // cout << "removeMarkerAndRing ENDS!" << endl;
   return ans;
 }
 
@@ -649,6 +662,7 @@ vector<string> ourPlayer::allDeletions(int playerNo, ourGame* game){
       for(int i=0; i<firstDeletion.size(); i++){
         string firstMove = firstDeletion[i];
         // move = firstMove;
+        // cout << firstMove << endl;
         ourGame* firstGame = new ourGame();
         firstGame->copyTheBoard(game);
         moveDecider(playerNo,firstMove,firstGame);
@@ -708,13 +722,11 @@ vector<string> ourPlayer::moveList(int playerNo, ourGame* game){
     // cout<<fr.size()<<endl;
     int frSize = fr.size();
     if(fr.size()==0){
-      // cout << "NO MOVE LEFT" << endl;
+      cout << "NO MOVE LEFT" << endl;
     }
     else{
       // cout << "IDHAR" << endl;
-      // for(int i=0;i<fr.size();i++){
-      //   cout<<"i: "<< i<<" Move: "<<fr[i]<<endl;
-      // }
+
       // cout << "frSize: " << frSize << endl;
 
       for(int i=0; i<frSize; i++){
@@ -817,7 +829,7 @@ struct transitionMove ourPlayer::idMinimax(int max_depth,double maxTime){
   struct transitionMove tempMove;
   bestMove.value=-INFINITY;
   for(depth=1;depth<=max_depth;depth++){
-    cout<<"depth: "<<depth<<endl;
+    // cout<<"depth: "<<depth<<endl;
     // ourGame gameTemp;
     // gameTemp.copyTheBoard(this->game);
     tempMove = minimax(0,true,-INFINITY,INFINITY,depth);
@@ -827,7 +839,7 @@ struct transitionMove ourPlayer::idMinimax(int max_depth,double maxTime){
     if(bestMove.value<=tempMove.value){
       bestMove = tempMove;
     }
-    cout<<"totalNodes: "<<totalNodes<<endl;
+    // cout<<"totalNodes: "<<totalNodes<<endl;
     // bestScore = max(bestScore,tempMove.value);
     //compute time to solve for depth
     clock_gettime(CLOCK_REALTIME, &move_time);
@@ -864,7 +876,7 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
 
   //if our player's turn
   if(isMax){
-    cout<<"max"<<endl;
+    // cout<<"max"<<endl;
     bestMove.value=-INFINITY;
     vector<string> possible_moves;
     // this->game->printBoard();
@@ -890,7 +902,9 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
     // gameTemp.printBoard();
     // cout<<"Sorting done"<<endl;
     for(int i=0;i<possible_moves.size();i++){
-      cout<<possible_moves[i]<<" <- move"<<endl;
+
+      // cout<<possible_moves[i]<<" <- move"<<endl;
+
       moveDecider(this->playerNumber,possible_moves[i],this->game);
       transitionMove tempMove = minimax(depth+1,false,alpha,beta,max_depth);
       if(alpha<=tempMove.value){
@@ -916,15 +930,15 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
 
   //if opponent's turn
   if(!isMax){
-    cout<<"min1"<<endl;
+    // cout<<"min1"<<endl;
     int opponent_player_number;
     opponent_player_number = (this->playerNumber==1) ? 2 : 1;
     bestMove.value = INFINITY;
     vector<string> possible_moves;
-    cout<<"opponent_player "<<opponent_player_number<<endl;
-    this->game->printBoard();
+    // cout<<"opponent_player "<<opponent_player_number<<endl;
+    // this->game->printBoard();
     possible_moves = moveList(opponent_player_number,this->game);
-    cout<<"possible moves: "<<possible_moves.size()<<endl;
+    // cout<<"possible moves: "<<possible_moves.size()<<endl;
     // cout<<possible_moves[2]<<endl;
     // if(possible_moves.size()==0){
     //       struct transitionMove ans;
@@ -968,7 +982,7 @@ void ourPlayer::initialPlacing(){
    this->moveDecider(1,oppMove,this->game);
    count2++; 
   }
-  while(count1!=5&&count2!=5){
+  while(count1!=5||count2!=5){
     while(true){
 
       int a = rand()%3;
@@ -978,9 +992,9 @@ void ourPlayer::initialPlacing(){
       }else{
         b = rand()%(6*a);
       }
-      cout<<"a,b: "<<a<<" "<<b<<endl;
+      // cout<<"a,b: "<<a<<" "<<b<<endl;
       pair<int,int> h = hexToCartesian(a,b,11);
-      cout<<"h "<<h.first<<" "<<h.second<<endl;
+      // cout<<"h "<<h.first<<" "<<h.second<<endl;
       if(this->game->board[h.first][h.second].player==0){
         string beta = "P ";
         beta = beta+to_string(a)+" "+to_string(b);

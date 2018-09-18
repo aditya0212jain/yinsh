@@ -191,6 +191,7 @@ void ourGame::copyTheBoard(ourGame* game){
 bool ourGame::ended(){
   return false;//change this after
 }
+
 void ourGame::moveUndo(int playerNo, string s){
   ourPlayer temp(1,150);
   int length = s.length();
