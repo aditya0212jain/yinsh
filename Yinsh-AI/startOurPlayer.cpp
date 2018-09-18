@@ -18,19 +18,48 @@ using namespace std;
 
 //Using main function for testing our players, @Aditya see how to combine this with other clientX
 int main(){
+  srand ( time(NULL) );
   //int myPlayerNumber = 1;
   int p_id,bs,tl;
   string inp;
-  p_id = 1;
-  ourPlayer temp(1,150);
+  getline(cin,inp);
+  vector<string> argus= split(inp,' ');
+  p_id = stoi(argus[0]);
+  bs = stoi(argus[1]);
+  tl = stoi(argus[2]);
+  // cout<<p_id<<endl;
+  // cout<<bs<<endl;
+  // cout<<tl<<endl;
+  // ourPlayer temp(1,150);
+  // temp.moveDecider(1,"P 1 5",temp.game);
+  // temp.moveDecider(2,"P 0 0",temp.game);
+  // temp.moveDecider(1,"P 1 2",temp.game);
+  // temp.moveDecider(2,"P 2 4",temp.game);
+  // temp.moveDecider(1,"P 2 10",temp.game);
+  // temp.moveDecider(2,"S 0 0 M 1 3",temp.game);
+  // temp.moveDecider(1,"S 1 5 M 1 4",temp.game);
+  // temp.moveDecider(2,"S 2 4 M 3 7",temp.game);
+  // temp.moveDecider(1,"S 1 2 M 2 5",temp.game);
+  // temp.moveDecider(2,"P 5 6",temp.game);
+  // temp.game->printBoard();
+  // temp.moveDecider(1,"S 2 10 M 3 6",temp.game);
+  // temp.game->printBoard();
+  // temp.game->moveUndo(1,"S 2 10 M 3 6");
+  // temp.game->printBoard();
+  // cout<<"rings:"<<temp.game->playerOneRingsOnBoard<<" "<<temp.game->playerTwoRingsOnBoard<<endl;
+
+  // while(true){
+  //   cin>>p_id;
+  // }
   // while(true){
   //   getline(cin,inp);
   //   temp.moveDecider(p_id,inp,temp.game);
   //   p_id = (p_id==1) ? 2 : 1;
   //   temp.game->printBoard();
   // }
-  ourPlayer playah(1,150);
-  // playah.play();
+  // cout<<"played id: "<<p_id<<endl;
+  ourPlayer playah(p_id,tl);
+  playah.play();
   //ourPlayer nonPlayah = playah;
   //nonPlayah.game = new ourGame();
   string input;

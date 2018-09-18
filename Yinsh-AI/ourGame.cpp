@@ -204,7 +204,6 @@ void ourGame::moveUndo(int playerNo, string s){
   vector<string> p = split(s,' ');
   int pointer = p.size()-1;
 
-
   while(pointer>=0){
     if(p[pointer].compare("RS")==0){
       int startX = stoi(p[pointer+1]);
