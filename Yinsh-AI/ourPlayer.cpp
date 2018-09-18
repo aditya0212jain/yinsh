@@ -665,54 +665,73 @@ vector<string> ourPlayer::allDeletions(int playerNo, ourGame* game){
     vector<string> firstDeletion = removeMarkerAndRing(playerNo,game);
     // cout << "Marker 1" << endl;
     // string move="";
+    bool flag1, flag2;
     if(firstDeletion.size()==0)
       return ans;
     else{
       for(int i=0; i<firstDeletion.size(); i++){
+        flag1=false;
         string firstMove = firstDeletion[i];
         // move = firstMove;
         //cout << firstMove << endl;
-        ourGame* firstGame = new ourGame();
-        firstGame->copyTheBoard(game);
-        moveDecider(playerNo,firstMove,firstGame);
+        // ourGame* firstGame = new ourGame();
+        // firstGame->copyTheBoard(game);
+        moveDecider(playerNo,firstMove,game);
         // cout << "Marker 2" << endl;
-        if((playerNo==1 && firstGame->playerOneRingsOnBoard==2)||(playerNo==2 && firstGame->playerTwoRingsOnBoard==2)){
+        if((playerNo==1 && game->playerOneRingsOnBoard==2)||(playerNo==2 && game->playerTwoRingsOnBoard==2)){
           ans.pb(firstMove);
+          game->moveUndo(playerNo,firstMove);
+          flag1 = true;
         }
         else{
-          vector<string> secondDeletion = removeMarkerAndRing(playerNo,firstGame);
+          vector<string> secondDeletion = removeMarkerAndRing(playerNo,game);
           if(secondDeletion.size()==0){
             ans.pb(firstMove);
+            game->moveUndo(playerNo,firstMove);
+            flag1=true;
           }
           else{
             for(int j=0; j<secondDeletion.size(); j++){
+              flag2=false;
               string secondMove = secondDeletion[j];
-              ourGame* secondGame = new ourGame();
-              secondGame->copyTheBoard(firstGame);
-              moveDecider(playerNo,secondMove,secondGame);
-              if((playerNo==1 && secondGame->playerOneRingsOnBoard==2)||(playerNo==2 && secondGame->playerTwoRingsOnBoard==2)){
+              // ourGame* secondGame = new ourGame();
+              // secondGame->copyTheBoard(firstGame);
+              moveDecider(playerNo,secondMove,game);
+              if((playerNo==1 && game->playerOneRingsOnBoard==2)||(playerNo==2 && game->playerTwoRingsOnBoard==2)){
                 string temp = firstMove + " " + secondMove;
                 ans.pb(temp);
+                game->moveUndo(playerNo,secondMove);
+                flag2=true;
               }
               else{
-                vector<string> thirdDeletion = removeMarkerAndRing(playerNo, firstGame);///<- is this correct @sarthakVishnoi
+                // vector<string> thirdDeletion = removeMarkerAndRing(playerNo, secondGame);///<- is this correct @sarthakVishnoi
+                vector<string> thirdDeletion = removeMarkerAndRing(playerNo,game);
                 if(thirdDeletion.size()==0){
                   string temp = firstMove + " " + secondMove;
                   ans.pb(temp);
+                  game->moveUndo(playerNo,secondMove);
+                  flag2=true;
                 }
                 else{
                   for(int k=0; k<thirdDeletion.size(); k++){
                     string thirdMove = thirdDeletion[k];
-                    ourGame* thirdGame = new ourGame();
-                    thirdGame-> copyTheBoard(secondGame);
-                    moveDecider(playerNo,thirdMove,thirdGame);
+                    // ourGame* thirdGame = new ourGame();
+                    // thirdGame-> copyTheBoard(secondGame);
+                    moveDecider(playerNo,thirdMove,game);
                     string tempp = firstMove+ " " + secondMove + " " + thirdMove;
                     ans.pb(tempp);
+                    game->moveUndo(playerNo,thirdMove);
                   }
                 }
               }
+              if(!flag2){
+                game->moveUndo(playerNo,secondMove);
+              }
             }
           }
+        }
+        if(!flag1){
+          game->moveUndo(playerNo,firstMove);
         }
       }
     }
@@ -1148,7 +1167,7 @@ void ourPlayer::play(){
 
   // this->game->printBoard();
   if(this->playerNumber==1){
-    transitionMove m = idMinimax(3,40);//max_depth,time
+    transitionMove m = idMinimax(2,40);//max_depth,time
     // cout<<"o1"<<endl;
     cout<<m.move<<endl;
     // this->game->printBoard();
@@ -1161,7 +1180,7 @@ void ourPlayer::play(){
   while(!this->game->ended()){
     moveDecider(opponent_player_number,opponentMove,this->game);
     // this->game->printBoard();
-    transitionMove m = idMinimax(3,40);
+    transitionMove m = idMinimax(2,40);
     cout<<m.move<<endl;
     moveDecider(this->playerNumber,m.move,this->game);
     // this->game->printBoard();

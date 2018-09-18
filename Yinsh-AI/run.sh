@@ -1,1 +1,1 @@
-./ourPlayer_4AI
+./ourPlayer_3AI
