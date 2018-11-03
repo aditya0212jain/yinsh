@@ -214,7 +214,7 @@ bool ourGame::ended(){
 }
 
 void ourGame::moveUndo(int playerNo, string s){
-  ourPlayer temp(1,150);
+  ourPlayer temp(1,150,rows/2);//Change 5 with a configuration
   int length = s.length();
   //cout << "Length of input: " << length << endl;
 

@@ -35,11 +35,10 @@ class ourPlayer{
 
 public:
   ourGame* game;
-  ourPlayer(int a, int b);
+  ourPlayer(int playerNumber, int timeLeft,int numberOfRings);
   void addMarker(int playerNo, int x, int y, ourGame* game);
   void placeRing(int num, int a, int b, ourGame* game); //Returns the move which needs to be printed
   void moveRing(int num, int xs, int ys, int b, int c, ourGame* game); //Returns the move which should be printed
-  int selectRing(); //gives the index of the ring which is selected for moving
   void removeRing(int num, int x, int y, ourGame* game);
   void removeRow(int num, int a, int b, int c, int d, ourGame* game);
   void moveDecider(int playerNo, string s, ourGame* game);

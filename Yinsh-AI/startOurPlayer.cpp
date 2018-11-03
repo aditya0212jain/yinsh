@@ -17,14 +17,15 @@ N and M are same and are given by only one arguments -n , -s for K
 int main(){
   srand ( time(NULL) );
   //int myPlayerNumber = 1;
-  int p_id,bs,tl;
+  int p_id,bs,tl,numberofRings;
   string inp;
   getline(cin,inp);
   vector<string> argus= split(inp,' ');
   p_id = stoi(argus[0]);
   bs = stoi(argus[1]);
   tl = stoi(argus[2]);
-  ourPlayer playah(p_id,tl);
+  numberofRings = 5;
+  ourPlayer playah(p_id,tl,numberofRings);
   playah.play();
   string input;
 

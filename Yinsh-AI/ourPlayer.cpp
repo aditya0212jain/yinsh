@@ -67,9 +67,9 @@ vector<string> ourPlayer::sortChildren(vector<string> moves,bool forMax){
 
 //Assuming PLayer 0 moves first and PLayer 1 follows
 
-ourPlayer::ourPlayer(int playerNumber,int timeLeft){
+ourPlayer::ourPlayer(int playerNumber,int timeLeft,int numberOfRings){
   this->playerNumber =  playerNumber; //1-> Player 1, 2-> Player 2
-  this->totalRings =  5; //This version only has to deal with 5 rings
+  this->totalRings =  numberOfRings; //This version only has to deal with 5 rings
   this->timeLeft =  timeLeft; //will be initialised with full time
   this->myRingsRemoved = 0;//starting with 0 rings
   this->game = new ourGame();
@@ -604,17 +604,6 @@ vector<string> ourPlayer::removeMarkerAndRing(int playerNo, ourGame* game){
   // cout << "removeMarkerAndRing STARTS!!" << endl;
   for(int i=0; i<first.size(); i++){
     string removeMarkerOne = first[i];
-    // cout << first[i] << endl;
-    /*
-    *Check the three below commented lines
-    * are they necessary
-    * @sarthakVishnoi
-    *
-    */
-
-    // ourGame* firstGame = new ourGame();
-    // firstGame->copyTheBoard(game);
-    // moveDecider(playerNo,removeMarkerOne,firstGame);
     vector<string> firstRing = removeRingFinal(playerNo, game);
     for(int j=0; j<firstRing.size(); j++){
       string t = removeMarkerOne + " " + firstRing[j];
@@ -635,10 +624,6 @@ vector<string> ourPlayer::allDeletions(int playerNo, ourGame* game){
       for(int i=0; i<firstDeletion.size(); i++){
         flag1=false;
         string firstMove = firstDeletion[i];
-        // move = firstMove;
-        //cout << firstMove << endl;
-        // ourGame* firstGame = new ourGame();
-        // firstGame->copyTheBoard(game);
         moveDecider(playerNo,firstMove,game);
         // cout << "Marker 2" << endl;
         if((playerNo==1 && game->playerOneRingsOnBoard==2)||(playerNo==2 && game->playerTwoRingsOnBoard==2)){
