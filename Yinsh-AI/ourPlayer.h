@@ -6,32 +6,17 @@
 #include <unordered_map>
 
 #define lli long long int
-/*
-class ourPlayer{
-private:
-  int total_rings;
-  int player_no;
-  double time_left;
-
-public:
-  ourPlayer();
-  void play();
-  move placeRing();
-  move selectRing();
-  move moveRing();
-  move removeRowStart();
-  move removeRowEnd();
-  move removeRing();
-
-};
-*/
-
 
 using namespace std;
 
 struct transpositionNode{
   lli score;
   lli max_minus_depth;
+};
+
+struct childSortNode{
+  ourGame gameNode;
+  lli value;
 };
 
 struct transitionMove{
@@ -67,7 +52,6 @@ public:
   vector<string> removeRingFinal(int playerNo, ourGame* game);
   vector<string> removeMarkerAndRing(int playerNo, ourGame* game);
   vector<string> allDeletions(int playerNo, ourGame* game);
-  //void play();
   void inverseMarker(int playerNo, int xStart, int yStart, int endX, int endY, ourGame* game);
   unordered_map <string,long long int> htMap;
   void play();
@@ -79,5 +63,4 @@ public:
 
 };
 
-//What's This??-> used as the ending syntax for the if condition applied above for not including the header file more than once
 #endif

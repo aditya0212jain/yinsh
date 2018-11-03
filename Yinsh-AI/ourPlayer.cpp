@@ -13,11 +13,6 @@ int totalNodes=0;
 
 using namespace std;
 
-struct childSortNode{
-  ourGame gameNode;
-  lli value;
-};
-
 /*General Comments*/
 // I think we should use the approach of double rows naming and use the approach of hexagon naming just for input and output, as that is only stored in the game which is used by Yinsh.js
 /*GeneralComments over*/
@@ -40,29 +35,10 @@ vector<string> ourPlayer::sortChildren(vector<string> moves,bool forMax){
   }else{
     playerNumber = (this->playerNumber==1) ? 2:1;
   }
-  // cout<<"in sorting , playerNumber "<<playerNumber<<" moves size:"<<moves.size()<<endl;
-  // ourGame gameTemp;
-  // gameTemp.copyTheBoard(this->game);
   for(int i=0;i<moves.size();i++){
-    // ourGame xgame;
-    // xgame.copyTheBoard(this->game);
-
     if(htMap.find(moves[i])==htMap.end()){
 
     moveDecider(playerNumber,moves[i],this->game);
-    // if(i==0){
-    //   cout << "Printing Board:::" << endl;
-    //   this->game->printBoard();
-    // }
-    // int myRings,opponentRings;
-    // if(this->playerNumber == 1){
-    //   myRings = this-> game->playerOneRingsOnBoard;
-    //   opponentRings = this-> game->playerTwoRingsOnBoard;
-    // }
-    // else{
-    //   myRings = this-> game->playerTwoRingsOnBoard;
-    //   opponentRings = this-> game->playerOneRingsOnBoard;
-    // }
     lli valueTemp = this->game->computeHeuristicValue(this->playerNumber);
     transitionMove temp;
     temp.move = moves[i];
@@ -76,16 +52,7 @@ vector<string> ourPlayer::sortChildren(vector<string> moves,bool forMax){
       temp.move = moves[i];
       v.push_back(temp);
     }
-    // if(!xgame.equalsTo(this->game)){
-    //   cout<<"Not equal"<<endl;
-    //   cout<<moves[i]<<" i:"<<i<<endl;
-    // }
   }
-  // cout<<"--------------------------- In sorting CHECK BOARDS BELOW"<<endl;
-  //   this->game->printBoard();
-  //   cout<<"below is gameTemp"<<endl;;
-  //   gameTemp.printBoard();
-  //   cout<<" Equal or not: "<<gameTemp.equalsTo(this->game)<<endl;
   if(forMax){
     sort(v.begin(),v.end(),compareForMax);
   }else{
@@ -100,9 +67,7 @@ vector<string> ourPlayer::sortChildren(vector<string> moves,bool forMax){
 
 //Assuming PLayer 0 moves first and PLayer 1 follows
 
-//Constructor
 ourPlayer::ourPlayer(int playerNumber,int timeLeft){
-  //cin>>player_no>>total_rings>>time_left;
   this->playerNumber =  playerNumber; //1-> Player 1, 2-> Player 2
   this->totalRings =  5; //This version only has to deal with 5 rings
   this->timeLeft =  timeLeft; //will be initialised with full time
@@ -149,18 +114,12 @@ void ourPlayer::moveRing(int playerNo,int xStart, int yStart, int x, int y, ourG
   //We assume that index is never out of bounds and move to be moved is a valid move
   struct move temp;// = {"",0,0};
 
-  // pair<int,int> p = cartesianToHex(x,y,11);//rows = 11
-  // temp.type = "M";
-  // temp.hex = p.first; // hexagon
-  // temp.pos = p.second; //position
   //There will be a marker at original position
 
   pair<int,int> newMarkerPosition = mp(xStart,yStart);
   if(!(game->board[xStart][yStart]).containsRings){
-    //cout << "Kaise kar lete hai aap!" << endl;
     return ;
   }
-  //rings[index] = mp(x,y);
   struct boardCell tempBoardCellRing;// {this->playerNumber, true, false}; //Adding ring to the new positions
   tempBoardCellRing.player = playerNo;//this->playerNumber;
   tempBoardCellRing.containsRings = true;
@@ -168,7 +127,6 @@ void ourPlayer::moveRing(int playerNo,int xStart, int yStart, int x, int y, ourG
   tempBoardCellRing.canBeUsed = true;
   game->board[x][y] = tempBoardCellRing;
   //We can say that this position isn't occupied by any other marker, hence pushBack it
-  //markers.pb(newMarkerPosition);
   boardCell tempBoardCellMarker;// = {this->playerNumber,false,true}; // Marker is placed and not ring
   tempBoardCellMarker.player = playerNo;//this->playerNumber;
   tempBoardCellMarker.containsMarker = true;
@@ -181,19 +139,16 @@ void ourPlayer::moveRing(int playerNo,int xStart, int yStart, int x, int y, ourG
     game->playerOneMarkersOnBoard++;
   else
     game->playerTwoMarkersOnBoard++;
-  //return temp;
 }
 
 void ourPlayer::removeRing(int playerNo, int x, int y, ourGame* game){
   //Remove the ring, removal of markers will be done separately
   boardCell tempBoard = game->board[x][y];
-  //cout << p.first << " " << p.second << " Yolo" <<  endl;
   pair<int,int> rad = cartesianToHex(x,y,11);//rows = 11
   struct move temp;// = {"",0,0};
   temp.type = "X";
   temp.hex = rad.first;
   temp.pos = rad.second;
-  //rings.erase(rings.begin()+index);
   boardCell tempBoardCell;// = {this->playerNumber,false,true}; // Marker is placed and not ring
   tempBoardCell.player = 0;
   tempBoardCell.containsMarker = false;
@@ -206,13 +161,11 @@ void ourPlayer::removeRing(int playerNo, int x, int y, ourGame* game){
   else{
     game->playerTwoRingsOnBoard--;
   }
-  //return temp;
 }
 
 void ourPlayer::removeRow(int playerNo, int startX, int startY, int endX, int endY, ourGame* game){
   int movementX = endX - startX;
   int movementY = endY - startY;
-  // cout << movementX << " " << movementY << endl;
   if(movementX==0){
     //Vertical move
     int mov = movementY/abs(movementY);
@@ -263,13 +216,11 @@ void ourPlayer::removeRow(int playerNo, int startX, int startY, int endX, int en
 void ourPlayer::inverseMarker(int playerNo, int startX, int startY, int endX, int endY, ourGame* game){
   int movementX = endX - startX;
   int movementY = endY - startY;
-  // cout << movementX << " " << movementY << endl;
   if(movementX==0){
     //Vertical move
     int mov = movementY/abs(movementY);
     for(int i = min(startY,endY)+1; i<=max(endY,startY)-1; i++){
       boardCell tempBoardCell = game->board[startX][i];
-      // tempBoardCell.player = 0;
       if(tempBoardCell.player!=0){
         tempBoardCell.player = 3 - tempBoardCell.player;
       }
@@ -289,7 +240,6 @@ void ourPlayer::inverseMarker(int playerNo, int startX, int startY, int endX, in
     int mov = movementX/abs(movementX);
     for(int i = min(startX,endX)+1; i<=max(endX,startX)-1; i++){
       boardCell tempBoardCell = game->board[i][startY];
-      // tempBoardCell.player = 0;
       if(tempBoardCell.player!=0){
         tempBoardCell.player = 3 - tempBoardCell.player;
       }
@@ -309,7 +259,6 @@ void ourPlayer::inverseMarker(int playerNo, int startX, int startY, int endX, in
     int i,j;
     for(i = min(startX,endX)+1,j=min(endY,startY)+1; i<=max(startX,endX)-1,j<=max(endY,startY)-1; i++,j++){
       boardCell tempBoardCell = game->board[i][j];
-      // tempBoardCell.player = 0;
       if(tempBoardCell.player!=0){
         tempBoardCell.player = 3 - tempBoardCell.player;
       }
@@ -331,10 +280,8 @@ void ourPlayer::inverseMarker(int playerNo, int startX, int startY, int endX, in
 
 void ourPlayer::moveDecider(int playerNo, string s, ourGame* game){
   int length = s.length();
-  //cout << "Length of input: " << length << endl;
   int pointer = 0;
   int rows = (game->rows);
-  //cout << rows << " Yeh toh number of rows hai!!" << endl;
   //Here the coordinates are in hex and pos form
   vector<string> p = split(s,' ');
 
@@ -680,10 +627,7 @@ vector<string> ourPlayer::removeMarkerAndRing(int playerNo, ourGame* game){
 
 vector<string> ourPlayer::allDeletions(int playerNo, ourGame* game){
     vector<string> ans;
-    // cout << "Fuckkk!" << endl;
     vector<string> firstDeletion = removeMarkerAndRing(playerNo,game);
-    // cout << "Marker 1" << endl;
-    // string move="";
     bool flag1, flag2;
     if(firstDeletion.size()==0)
       return ans;
@@ -777,28 +721,13 @@ vector<string> ourPlayer::moveList(int playerNo, ourGame* game){
       // cout << "frSize: " << frSize << endl;
 
       for(int i=0; i<frSize; i++){
-        // cout << "Yahoo" << endl;
-        // cout<<"i: "<<i;
-        // ourGame* afterFirstMove = new ourGame();
-        // afterFirstMove->copyTheBoard(game);
         string firstMove = fr[i];
         // cout<<" "<<firstMove<<endl;
         moveDecider(playerNo, firstMove, game);
-        // cout<<" 02";
-        // cout<<"i: "<<i<<" "<<firstMove<<endl;
-        // cout<<afterFirstMove->board[8][7].player<<endl;
-        // cout<<afterFirstMove->board[8][8].player<<endl;
 
         vector<string> dr = allDeletions(playerNo, game);
-        // cout << "MoveUndo" << endl;
         game->moveUndo(playerNo,firstMove);
-        // cout << "Done and Dusted!" << endl;
-        // cout << "drSize:" << dr.size() << endl;
-        // cout << i << endl;
-        // cout<<" "<<dr.size()<<endl;
         if(dr.size()==0){
-          //Nothing to delete
-          // game->moveUndo(playerNo,firstMove);
           ans.pb(firstMove);
         }
         else{
@@ -807,7 +736,6 @@ vector<string> ourPlayer::moveList(int playerNo, ourGame* game){
             string temp = firstMove + " " + dr[j];
             ans.pb(temp);
           }
-          // cout << "Do I!!!!!!!!!!!!" << endl;
         }
       }
     }
@@ -816,9 +744,6 @@ vector<string> ourPlayer::moveList(int playerNo, ourGame* game){
     //There are deletions possible
     // cout << "First Round Size: " << firstRound.size() << endl;
     for(int i=0; i<firstRound.size(); i++){
-      // cout << "Count" << endl;
-      // ourGame* afterFirstMove = new ourGame();
-      // afterFirstMove->copyTheBoard(game);
       string fm = firstRound[i];
       moveDecider(playerNo, fm, game);
       vector<string> sr = selectAndMoveFinal(playerNo,game);
@@ -827,9 +752,6 @@ vector<string> ourPlayer::moveList(int playerNo, ourGame* game){
         ans.pb(fm);
       }
       else{
-        // cout << sr.size() << endl;
-        // cout << sr[18] << endl;
-        // cout << fm << endl;
         for(int j=0; j<sr.size(); j++){
           // ourGame*  afterSecondMove = new ourGame();
           // afterSecondMove->copyTheBoard(afterFirstMove);
@@ -909,14 +831,6 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
     struct transitionMove ans;
     ans.move="Reached";
     int myRings,opponentRings;
-    // if(this->playerNumber == 1){
-    //   myRings = this->game-> playerOneRingsOnBoard;
-    //   opponentRings = this->game-> playerTwoRingsOnBoard;
-    // }
-    // else{
-    //   myRings = this-> game->playerTwoRingsOnBoard;
-    //   opponentRings = this-> game->playerOneRingsOnBoard;
-    // }
     ans.value=this->game->computeHeuristicValue(this->playerNumber);
 
 
@@ -930,28 +844,11 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
     // cout<<"max"<<endl;
     bestMove.value=-INFINITY;
     vector<string> possible_moves;
-    // this->game->printBoard();
-    // cout<<"fuck it"<<endl;
     possible_moves = moveList(this->playerNumber,this->game);
-    // childVector = gameNode.children();//assuming children function returns an vector of possible gameNodes
-    // if(possible_moves.size()==0){
-    //       struct transitionMove ans;
-    //       ans.move="Reached";
-    //       ans.value=INFINITY;
-    //       // cout<<"returning value:"<<ans.value<<endl;
-    //       return ans;
-    // }
-    // cout<<"possible moves count in max:"<<possible_moves.size()<<endl;
-    // cout<<"sorting"<<endl;
-    // ourGame gameTemp;
-    //   gameTemp.copyTheBoard(this->game);
-
 
     possible_moves = sortChildren(possible_moves,true);
     
     for(int i=0;i<possible_moves.size();i++){
-
-      // cout<<possible_moves[i]<<" <- move"<<endl;
 
       moveDecider(this->playerNumber,possible_moves[i],this->game);
       transitionMove tempMove = minimax(depth+1,false,alpha,beta,max_depth);
@@ -959,16 +856,11 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
       if(alpha<=tempMove.value){
         alpha = tempMove.value;
       }
-      // alpha = max(alpha,value);
       if(bestMove.value<=tempMove.value){
         bestMove = tempMove;
         bestMove.move = possible_moves[i];
       }
-      // bestScore = max(value,bestScore);
-      // cout<<"undo starting"<<endl;
       this->game->moveUndo(this->playerNumber,possible_moves[i]);
-
-      // cout<<"undo done"<<endl;
       if(alpha>=beta){
         tempMove.move = possible_moves[i];
         return tempMove;
@@ -984,19 +876,7 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
     opponent_player_number = (this->playerNumber==1) ? 2 : 1;
     bestMove.value = INFINITY;
     vector<string> possible_moves;
-    // cout<<"opponent_player "<<opponent_player_number<<endl;
-    // this->game->printBoard();
     possible_moves = moveList(opponent_player_number,this->game);
-    // cout<<"possible moves: "<<possible_moves.size()<<endl;
-    // cout<<possible_moves[2]<<endl;
-    // if(possible_moves.size()==0){
-    //       struct transitionMove ans;
-    //       ans.move="Reached";
-    //       ans.value=-INFINITY;
-    //       // cout<<"returning value:"<<ans.value<<endl;
-    //       return ans;
-    // }
-    // cout<<"possible moves count in min:"<<possible_moves.size()<<endl;
     possible_moves = sortChildren(possible_moves,false);
     // cout<<possible_moves[2]<<endl;
     for(int i=0;i<possible_moves.size();i++){
@@ -1156,36 +1036,6 @@ void ourPlayer::play(){
   int count=0;
 
   this->initialPlacing();
-
-  // // cout<<"fuck this"<<endl;
-  // moveDecider(1,"P 0 0",this->game);
-  // cout<<"P 0 0"<<endl;
-  // getline(cin,opponentMove);
-  // moveDecider(2,opponentMove,this->game);
-  // // moveDecider(2,"P 0 0",this->game);
-  // moveDecider(1,"P 2 9",this->game);
-  // cout<<"P 2 9"<<endl;
-  // getline(cin,opponentMove);
-  // moveDecider(2,opponentMove,this->game);
-  // // moveDecider(2,"P 2 2",this->game);
-  // moveDecider(1,"P 2 0",this->game);
-  // cout<<"P 2 0"<<endl;
-  // getline(cin,opponentMove);
-  // moveDecider(2,opponentMove,this->game);
-  // // moveDecider(2,"P 2 4",this->game);
-  // moveDecider(1,"P 3 1",this->game);
-  // cout<<"P 3 1"<<endl;
-  // getline(cin,opponentMove);
-  // moveDecider(2,opponentMove,this->game);
-  // // moveDecider(2,"P 4 12",this->game);
-  // moveDecider(1,"P 4 4",this->game);
-  // cout<<"P 4 4"<<endl;
-  // getline(cin,opponentMove);
-  // moveDecider(2,opponentMove,this->game);
-  // // moveDecider(2,"P 3 0",this->game);
-  // // cout<<"this is it"<<endl;
-
-  // this->game->printBoard();
   double seconds;
   clock_t t1,t2;
   t1 = clock();
@@ -1219,61 +1069,3 @@ void ourPlayer::play(){
     getline(cin,opponentMove);
   }
 }
-
-/*
-vector<string> ans;
-vector<string> beforeDeletion = markerDeletion(playerNo, game);
-//string deletionString="";
-for(int i=0; i<beforeDeletion.size(); i++){
-  string temp = beforeDeletion[i];
-  ourGame* tempGame = new ourGame();
-  tempGame->copyTheBoard(game);
-  moveDecider(playerNo,temp,tempGame);
-  //deletionString = deletionString + temp + " ";
-  //vector<pair<pair<int,int>,pair<int,int> > > tt = selectAndMove(playerNo, game);
-  vector<string> selectAndMoveM = selectAndMoveFinal(playerNo,tempGame);
-  for(int j=0; j<selectAndMoveM.size(); j++){
-    string tempTemp = selectAndMoveM[j];
-    ourGame* tempTempGame = new ourGame();
-    tempTempGame->copyTheBoard(tempGame);
-    moveDecider(playerNo,tempTemp,tempTempGame);
-
-    vector<string> markerDelete = markerDeletion(playerNo,tempTempGame);
-    if(markerDelete.size()==0){
-      string ansMember = temp + " " + tempTemp;
-      ans.pb(ansMember);
-    }
-    else{
-      for(int k=0; k<markerDelete.size(); k++){
-        string tempTemp_Temp = markerDelete[k];
-        // ourGame tempTemp_TempGame = new ourGame();
-        // *(tempTemp_TempGame) = *(tempTempGame);
-        // moveDecider(playerNo,tempTemp_Temp, tempTemp_TempGame);
-        string ansMember = temp + " " + tempTemp + " " + tempTemp_Temp;
-        ans.pb(ansMember);
-      }
-    }
-  }
-}
-//vector<pair<pair<int,int>,pair<int,int> > > tt = selectAndMove(playerNo,game);
-vector<string> snm = selectAndMoveFinal(playerNo, game);
-for(int i=0; i<snm.size(); i++){
-  string s = snm[i];
-  ourGame* tempGame = new ourGame();
-  tempGame->copyTheBoard(game);
-  moveDecider(playerNo,s,tempGame);
-  vector<string> snms = markerDeletion(playerNo, tempGame);
-  if(snms.size()==0){
-    ans.pb(s);
-  }
-  else{
-    for(int j=0; j<snms.size(); j++){
-      string ss = snms[j];
-      string ansMember = s + " " + ss;
-      ans.pb(ansMember);
-    }
-  }
-}
-return ans;
-//All the markers deleted
-*/

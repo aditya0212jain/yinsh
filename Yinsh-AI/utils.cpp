@@ -22,9 +22,6 @@ int getNearestInteger(double a){
     double eps = 0.3;
     int p = (int)a;
     int q = (int)a +1;
-    // cout << "p=" << p << " " << "q=" << q << endl;
-    // cout << (abs((double)p-a)<eps) << endl;
-    // cout << (abs((double)q-a)<eps) << endl;
     if(abs((double)p-a)<eps)
         return p;
     else return q;
@@ -81,20 +78,13 @@ pair<int,int> cartesianToHex(int x, int y, int rows){
                 pos = angle/theta;
             }
             posInt = getNearestInteger(pos);
-            //cout << pos << endl;
-            //cout << "Theta="<<theta << " " << "Angle=" << angle << endl;
-            //cout << pos << " " << endl;
-            //cout << ((int)pos+1) << endl;
-            //cout << "Theta="<<(int)theta << " " << "Angle=" << (int)angle << endl;
         }
     }
     if(hex<=(rows-1)/2){
         poss = posInt;
         hexx = hex;
     }
-    //cout << hex << " " << poss << endl;
     if(!(poss==-1 && hexx==-1)){
-        //cout << "Cartesian (" <<x<<","<<y<<") is mapped to Radial ("<<hexx<<","<<poss<<")."<<endl;
         pair<int,int> ans = mp(hexx,poss);
         return ans;
     }

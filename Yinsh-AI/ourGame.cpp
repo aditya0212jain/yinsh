@@ -50,21 +50,6 @@ ourGame::ourGame(){
     board.pb(boardRow);
 
   }
-  //cout << "Board[0][5]: " << board[0][5].canBeUsed << endl;
-
-  //First index corresponds to vertical and second to y=x waali type ka diagnol
-
-  //Checking the board configuration
-  /*
-  for(int i=0; i<rows; i++){
-    for(int j=0; j<rows; j++){
-      if(board[i][j].canBeUsed)
-        cout << j << " ";
-    }
-    cout << endl;
-  }
-  */
-  //cout << (board.size()) << " " << (board[0].size()) << endl;
 }
 
 /*Big Question, how are we storing the board configuration*/
@@ -199,14 +184,6 @@ double ourGame::computeHeuristicValue(int player){
     // score+=opponentWeight[i]*valuesForConsecutiveMarkers2[i];
   }
 
-  // int playerOneMarkers = this->playerOneMarkersOnBoard;
-  // int playerTwoMarkers = this->playerTwoMarkersOnBoard;
-  // if(player==1){
-  //   score = playerOneMarkers - playerTwoMarkers;
-  // }
-  // else{
-  //   score = playerTwoMarkers - playerOneMarkers;
-  // }
 
   if(player==1){
     score+=100000*(myRingsInitial-this->playerOneRingsOnBoard);
@@ -216,35 +193,8 @@ double ourGame::computeHeuristicValue(int player){
     score-=100000*(opponentRingsInitial-this->playerOneRingsOnBoard);
   }
 
-  // if(player==1){
-  //   score-=this->playerTwoMarkersOnBoard;
-  // }else{
-  //   score-=this->playerOneMarkersOnBoard;
-  // }
-
-  // Adding stability for corners
-  // int stableInit[] = {1,6,11,16,21,26};
-  // int stableWeights[] = {0,2,2,2,2};
-  
-  // for(int i=0;i<6;i++){
-  //   int c2=0;
-  //   int c1=0;
-  //   for(int j=stableInit[i];j<stableInit[i]+4;j++){
-  //     pair<int,int> h = hexToCartesian(5,j,11);
-  //     if(this->board[h.first][h.second].player==player){
-  //       c2++;
-  //     }
-  //   }
-  //   score+=stableWeights[c2];
-  // }
 
   return score;
-
-  // if(player==1){
-  //   return this->playerOneMarkersOnBoard - this->playerTwoMarkersOnBoard;
-  // }else{
-  //   return this->playerTwoMarkersOnBoard - this->playerOneMarkersOnBoard;
-  // }
 
 }
 
@@ -258,10 +208,6 @@ void ourGame::copyTheBoard(ourGame* game){
   board = game->board;// index = (0,0)->0, others -> ((h)*(h+1))/2 + pos
 }
 
-// vector<ourGame> ourGame::children(){
-//   vector<ourGame> ans;
-//   return ans;
-// }
 
 bool ourGame::ended(){
   return false;//change this after
@@ -389,10 +335,6 @@ bool ourGame::equalsTo(ourGame *game){
     for(int j=0;j<board[i].size();j++){
       boardCell t1 = board[i][j];
       boardCell t2 = game->board[i][j];
-      // if(i==6&&j==9){
-      //   cout<<"t1 "<<t1.player<<" "<<t1.containsMarker<<" "<<t1.containsRings<<" "<<t1.canBeUsed<<endl;
-      //   cout<<"t2 "<<t2.player<<" "<<t2.containsMarker<<" "<<t2.containsRings<<" "<<t2.canBeUsed<<endl;
-      // }
       if(t1.player!=t2.player){
         cout<<"Found mismatch "<<i<<" ,"<<j<<endl;
         return false;
