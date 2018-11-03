@@ -2,6 +2,7 @@
 var size = parseInt(document.currentScript.getAttribute('size'));
 var rings = parseInt(document.currentScript.getAttribute('rings'));
 var rows = parseInt(document.currentScript.getAttribute('rows'));
+var seq = parseInt(document.currentScript.getAttribute('seq'));
 var dimension = [ size , size ];
 
 var game_canvas = document.getElementById('GameBoard');
@@ -65,7 +66,7 @@ function SwitchPlayer(){
 function Point(x, y) {
   this.x = x;
   this.y = y;
-  this.piece=0;  //2-> player 0, -2-> player 1
+  this.piece=0;
   this.guide=false;
 }
 
@@ -74,21 +75,20 @@ for (var i = 0; i < rows; i++) {
   positions[i] = new Array(rows);
 }
 
-//This function plots the points, which are the edges of the triangles on the board, nothing to do with logic
 function PlotPoints(){
 	for (var i = 0; i < rows; i++) {
 		var x=i-rings;
 		var low=-rings;
 		var high=rings;
-
+		
 		if(x==0){
 			low=-(rings-1); high=(rings-1);
 		}
-
+		
 		if(x>=1&&x<=(rings-1)){
 			low=-(rings)+x;
 		}
-
+		
 		if(x==(rings)){
 			low=1; high=(rings-1);
 		}
@@ -103,19 +103,18 @@ function PlotPoints(){
 
 		for(var j=0;j<rows;j++){
 			var y=j-(rings);
-
+			
 			if(!(y>=low&&y<=high)){
 				positions[i][j]= new Point(-1,-1);
 				continue;
 			}
-
+			
 			positions[i][j]= new Point(centerx+altitude*x,centery-spacing*(y-x/2));
 			positions[i][j].valid=true;
 		}
 	}
 }
 
-//It basically draws the corresponding lines between those points. Again nothing to do with logic
 function DrawBoardLines(){
 	for(var i=0;i<rows;i++){
 		var begin=0;
@@ -143,7 +142,7 @@ function DrawBoardLines(){
 		//game_ctx.moveTo(0,0);
 		//game_ctx.lineTo(100,100);
 		game_ctx.stroke();
-
+		
 	}
 	for(var j=0;j<rows;j++){
 		var begin=0;
@@ -170,7 +169,7 @@ function DrawBoardLines(){
 		//ctx.moveTo(0,0);
 		//ctx.lineTo(100,100);
 		game_ctx.stroke();
-
+		
 	}
 
 	for(var i=0;i<rows;i++){
@@ -250,14 +249,14 @@ function SelectRings(xcoord,ycoord){
 		guide_ctx.fill();
 		guide_ctx.stroke();
 		player[current_player].current_ring=[xcoord,ycoord];
-
+		
 		BlackGuides(xcoord,ycoord,1,1,true);
 		BlackGuides(xcoord,ycoord,-1,-1,true);
 		BlackGuides(xcoord,ycoord,0,1,true);
 		BlackGuides(xcoord,ycoord,1,0,true);
 		BlackGuides(xcoord,ycoord,0,-1,true);
 		BlackGuides(xcoord,ycoord,-1,0,true);
-
+		
 		required_move=2;
         return true
 	} else {
@@ -316,9 +315,9 @@ function RemoveBlackGuides(xring,yring,destx,desty,asign,bsign){
 			var grd=piece_ctx.createRadialGradient(positions[xring+a][yring+b].x,positions[xring+a][yring+b].y,altitude*3/20
 					,positions[xring+a][yring+b].x,positions[xring+a][yring+b].y,altitude*3/10);
 
-
-
-
+				
+				
+				
 
 			if(positions[xring+a][yring+b].piece==1){
 				grd.addColorStop(0,player[0].color);
@@ -332,21 +331,21 @@ function RemoveBlackGuides(xring,yring,destx,desty,asign,bsign){
 			}
 
 			piece_ctx.fillStyle=grd;
-
+			
 			piece_ctx.fill();
 			piece_ctx.stroke();
 		}
-
+		
 	}
 }
 
 function CheckRows(){
 	for(var i=0;i<rows;i++){
-		for(var j=0;j+rings-1<11;j++){
+		for(var j=0;j+seq-1<11;j++){
 			if(Math.abs(positions[i][j].piece)!=1||positions[i][j].x==-1)
 				continue;
 			var isrow=true;
-			for(var k=1;k<=rings-1;k++){
+			for(var k=1;k<=seq-1;k++){
 				if(positions[i][j].piece!=positions[i][j+k].piece||positions[i][j+k].x==-1||j+k>=rows){
 					isrow=false;
 					break;
@@ -355,27 +354,27 @@ function CheckRows(){
 			if(isrow==false){
 				continue;
 			}
-
+			
 			var row_player=0;
 			if(positions[i][j].piece==-1){
 				row_player++;
 			}
 			var list = [];
-			for(var k=0;k<rings;k++){
+			for(var k=0;k<seq;k++){
 				list.push([i,j+k])
 			}
 			player[row_player].five_row.push(list)
 			// player[row_player].five_row.push([[i,j],[i,j+1],[i,j+2],[i,j+3],[i,j+4]]);
-			// player[row_player].five_row.push([[i, j+k] for k in range(rings)]);
-
+			// player[row_player].five_row.push([[i, j+k] for k in range(seq)]);
+			 
 		}
 	}
-	for(var i=0;i+rings-1<rows;i++){
+	for(var i=0;i+seq-1<rows;i++){
 		for(var j=0;j<rows;j++){
 			if(Math.abs(positions[i][j].piece)!=1||positions[i][j].x==-1)
 				continue;
 			var isrow=true;
-			for(var k=1;k<=rings-1;k++){
+			for(var k=1;k<=seq-1;k++){
 				if(positions[i][j].piece!=positions[i+k][j].piece||positions[i+k][j].x==-1||i+k>=rows){
 					isrow=false;
 					break;
@@ -384,19 +383,19 @@ function CheckRows(){
 			if(isrow==false){
 				continue;
 			}
-
+			
 			var row_player=0;
 			if(positions[i][j].piece==-1){
 				row_player++;
 			}
 			// player[row_player].five_row.push([[i,j],[i+1,j],[i+2,j],[i+3,j],[i+4,j]]);
 			var list = [];
-			for(var k=0;k<rings;k++){
+			for(var k=0;k<seq;k++){
 				list.push([i+k,j])
 			}
 			player[row_player].five_row.push(list)
-			// player[row_player].five_row.push([[i+k, j] for k in range(rings)]);
-
+			// player[row_player].five_row.push([[i+k, j] for k in range(seq)]);
+			
 		}
 	}
 	for(var i=0;i<rows;i++){
@@ -404,7 +403,7 @@ function CheckRows(){
 			if(Math.abs(positions[i][j].piece)!=1||positions[i][j].x==-1)
 				continue;
 			var isrow=true;
-			for(var k=1;k<=rings-1;k++){
+			for(var k=1;k<=seq-1;k++){
 				if(i+k>=rows||j+k>=rows||positions[i][j].piece!=positions[i+k][j+k].piece||positions[i+k][j+k].x==-1){
 					isrow=false;
 					break;
@@ -413,29 +412,29 @@ function CheckRows(){
 			if(isrow==false){
 				continue;
 			}
-
+			
 			var row_player=0;
 			if(positions[i][j].piece==-1){
 				row_player++;
 			}
 			// player[row_player].five_row.push([[i,j],[i+1,j+1],[i+2,j+2],[i+3,j+3],[i+4,j+4]]);
 			var list = [];
-			for(var k=0;k<rings;k++){
+			for(var k=0;k<seq;k++){
 				list.push([i+k,j+k])
 			}
 			player[row_player].five_row.push(list)
-			// player[row_player].five_row.push([[i+k, j+k] for k in range(rings)]);
-
+			// player[row_player].five_row.push([[i+k, j+k] for k in range(seq)]);
+			
 		}
 	}
-
+	
 }
 
 function HighlightRow(state=3){
 	guide_ctx.clearRect(0, 0, guide_canvas.width, guide_canvas.height);
 	if(player[current_player].five_row.length!=0){
 		for(var i=0;i<player[current_player].five_row.length;i++){
-			for(var j=0;j<rings;j++){
+			for(var j=0;j<seq;j++){
 				var xindex=player[current_player].five_row[i][j][0];
 				var yindex=player[current_player].five_row[i][j][1];
 
@@ -494,15 +493,14 @@ function RemoveRow(x, y, state=4){
     if(x == null || y == null){
         return false;
     }
-
 	var row_count=0;
 	var select_row=-1;
 	for(var i=0;i<player[current_player].five_row.length;i++){
         firstPointX = player[current_player].five_row[i][0][0];
         firstPointY = player[current_player].five_row[i][0][1];
-        lastPointX = player[current_player].five_row[i][rings-1][0];
-        lastPointY = player[current_player].five_row[i][rings-1][1];
-
+        lastPointX = player[current_player].five_row[i][seq-1][0];
+        lastPointY = player[current_player].five_row[i][seq-1][1];
+        
         if(matchPoints(x, y, firstPointX, firstPointY) || matchPoints(x, y, lastPointX, lastPointY)) {
             if(state == 4) {
 	            required_move=3.5;
@@ -520,29 +518,27 @@ function RemoveRowEnd(startX, startY, endX, endY, state=4){
     if(startX == null || startY == null){
         return false;
     }
-
 	var row_count=0;
 	var select_row=-1;
 	for(var i=0;i<player[current_player].five_row.length;i++){
         firstPointX = player[current_player].five_row[i][0][0];
         firstPointY = player[current_player].five_row[i][0][1];
-        lastPointX = player[current_player].five_row[i][rings-1][0];
-        lastPointY = player[current_player].five_row[i][rings-1][1];
-
+        lastPointX = player[current_player].five_row[i][seq-1][0];
+        lastPointY = player[current_player].five_row[i][seq-1][1];
+        
         if((matchPoints(startX, startY, firstPointX, firstPointY) && matchPoints(endX, endY, lastPointX,
                     lastPointY)) || (matchPoints(startX, startY, lastPointX, lastPointY) &&
                         matchPoints(endX, endY, firstPointX, firstPointY))) {
             select_row = i;
             row_count += 1;
-
+         
         }
 	}
-
-	if(row_count==1){
+	if(row_count>=1){
         var removeList = new Array();
         removeList.push(select_row);
 
-		for(var k=0;k<rings;k++){
+		for(var k=0;k<seq;k++){
 			var xclear=player[current_player].five_row[select_row][k][0];
 			var yclear=player[current_player].five_row[select_row][k][1];
 			piece_ctx.clearRect(positions[xclear][yclear].x-altitude/1.9, positions[xclear][yclear].y-altitude/1.9
@@ -553,24 +549,18 @@ function RemoveRowEnd(startX, startY, endX, endY, state=4){
 				if(i==select_row){
 					continue;
 				}
-				for(var j=0;j<rings;j++){
+				for(var j=0;j<seq;j++){
 					if(player[current_player].five_row[i][j][0]==player[current_player].five_row[select_row][k][0]
 						&&player[current_player].five_row[i][j][1]==player[current_player].five_row[select_row][k][1]){
                             removeList.push(i);
-							//player[current_player].five_row.splice(i,1);
 					}
 				}
 			}
 		}
-
-        var sortRemList = removeList.sort(); // sorts in ascending order
-        for(i=removeList.length; i>=0; i--){
-            player[current_player].five_row.splice(sortRemList[i], 1)
-        }
-		//player[current_player].five_row.splice(select_row,1);
+        player[current_player].five_row.length = 0
+		CheckRows();
 		required_move=state;
-
-		HighlightRow();
+		guide_ctx.clearRect(0, 0, guide_canvas.width, guide_canvas.height);
         return true
 	} else {
         return false
@@ -607,8 +597,7 @@ function RemoveRing(xcoord,ycoord,state=4){
 			}
 		}
 		else{
-			required_move=3;
-				HighlightRow();
+			HighlightRow();
 		}
         return true
 	} else {
@@ -618,7 +607,6 @@ function RemoveRing(xcoord,ycoord,state=4){
 
 var startX = null;
 var startY = null;
-
 function IsClickValid(mouse){
 	for(var i=0;i<rows;i++){
 		for(var j=0;j<rows;j++){
@@ -680,3 +668,4 @@ document.addEventListener('click', function(event) {
         	IsClickValid(canvasMousePosition);
         }
     }, false);
+

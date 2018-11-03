@@ -13,7 +13,7 @@ class Server:
                         None
                 """
                 self.communicator_list = []
-                self.NETWORK_TIMER = 1000
+                self.NETWORK_TIMER = 150
                 self.log_file_handle = None
 
         def setLogFile(self, filename):
@@ -129,11 +129,12 @@ class Server:
                                 self.SendData2Client(idx,json.dumps(data))
                                 self.CloseClient(idx)
 
-        def playYinsh(self,n,timelimit,client_0,client_1):
+        def playYinsh(self,n,s,timelimit,client_0,client_1):
                 """
                         Starts a game of Yinsh between client_0 (as Player_1) and client_1 (as Player_2)
                 Args:
                         n: (int) board size
+                        s: (int) sequence length
                         timelimit: time limit 
                         client_0: (int) idx of Player 1
                         client_1: (int) idx of Player 2
@@ -141,10 +142,10 @@ class Server:
                         None
                 """
                 if( (client_0 < len(self.communicator_list)) and (client_1) < len(self.communicator_list)):
-                        dataString = '{id} {size} {time}'.format(id=1, size=n, time=timelimit)
+                        dataString = '{id} {size} {time} {seq}'.format(id=1, size=n, time=timelimit, seq=s)
                         data = {'meta':'', 'action':'INIT','data':dataString}
                         self.SendData2Client(client_0, json.dumps(data))
-                        dataString = '{id} {size} {time}'.format(id=2, size=n, time=timelimit)
+                        dataString = '{id} {size} {time} {seq}'.format(id=2, size=n, time=timelimit, seq=s)
                         data = {'meta':'', 'action':'INIT','data':dataString}
                         self.SendData2Client(client_1, json.dumps(data))                        
                         while(True):
@@ -181,12 +182,16 @@ if __name__ == '__main__':
         parser.add_argument('port', metavar = '10000', type = int, help = 'Server port')
         parser.add_argument('-ip', dest = 'ip', type = str, default = '0.0.0.0', help = 'Server IP')
         parser.add_argument('-n', dest = 'n', metavar = 'N', type = int, default = 5, help = 'Yinsh board size')
+        parser.add_argument('-s', dest = 's', metavar = 'S', type = int, default = 5, help = 'Sequence Length')
         parser.add_argument('-NC', dest = 'num_clients', metavar = 'num_clients', type = int, default = 2, help = 'Number of clients connecting to the server')
-        parser.add_argument('-TL', dest = 'time_limit', metavar = 'time_limit', type = int, default = 1000, help = 'Time limit (in s)')
+        parser.add_argument('-TL', dest = 'time_limit', metavar = 'time_limit', type = int, default = 150, help = 'Time limit (in s)')
         parser.add_argument('-LOG',dest = 'log_file', metavar = 'log_file', type = str, default = "", help = 'Logger File for Evaluation purposes')
         args = parser.parse_args()
         if args.n < 5 or args.n > 7:
                 print 'Game size should be 5, 6 or 7 rings.'
+                sys.exit()
+        if args.s < 5 or args.n > 6:
+                print 'Sequence Length should be 5 or 6.'
                 sys.exit()
         if args.log_file != '':
                 local_Server.setLogFile(args.log_file)
@@ -194,4 +199,4 @@ if __name__ == '__main__':
         if(local_Server.client_count < 2):
                 local_Server.SendInitError2Clients()
         else:
-                local_Server.playYinsh(args.n,args.time_limit,0,1)   
+                local_Server.playYinsh(args.n,args.s,args.time_limit,0,1)        

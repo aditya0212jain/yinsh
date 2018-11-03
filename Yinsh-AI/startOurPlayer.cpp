@@ -7,6 +7,13 @@ using namespace std;
 
 
 //Using main function for testing our players, @Aditya see how to combine this with other clientX
+/*
+N size of the board
+M number of starting rings
+K consecutive markers needed to remove rings
+(N,M,K) :  (5,5,5), (6,6,5) and (6,6,6)
+N and M are same and are given by only one arguments -n , -s for K
+*/
 int main(){
   srand ( time(NULL) );
   //int myPlayerNumber = 1;
