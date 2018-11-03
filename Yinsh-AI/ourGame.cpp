@@ -188,9 +188,11 @@ double ourGame::computeHeuristicValue(int player){
   if(player==1){
     score+=100000*(myRingsInitial-this->playerOneRingsOnBoard);
     score-=100000*(opponentRingsInitial-this->playerTwoRingsOnBoard);
+    // score+=this->playerOneMarkersOnBoard;
   }else{
     score+=100000*(myRingsInitial-this->playerTwoRingsOnBoard);
-    score-=100000*(opponentRingsInitial-this->playerOneRingsOnBoard);
+    score-=100000*(opponentRingsInitial-this->playerOneRingsOnBoard);////teen zeros aur the
+    // score+=this->playerTwoMarkersOnBoard;
   }
 
 
@@ -214,7 +216,7 @@ bool ourGame::ended(){
 }
 
 void ourGame::moveUndo(int playerNo, string s){
-  ourPlayer temp(1,150,rows/2);//Change 5 with a configuration
+  ourPlayer temp(1,150,rows/2,5);//Change 5 with a configuration
   int length = s.length();
   //cout << "Length of input: " << length << endl;
 
@@ -252,8 +254,6 @@ void ourGame::moveUndo(int playerNo, string s){
       int y = stoi(p[pointer+5]);
       pair<int,int> convertStart= hexToCartesian(xStart, yStart, rows);
       pair<int,int> convertEnd = hexToCartesian(x,y,rows);
-      //cout << convertStart.first << " " << convertStart.second << endl;
-      //cout << convertEnd.first << " " << convertEnd.second << endl;
       temp.moveRing(playerNo,convertEnd.first, convertEnd.second, convertStart.first, convertStart.second, game);
       removeMarker(playerNo,convertEnd.first,convertEnd.second);
       // pointer += 6;

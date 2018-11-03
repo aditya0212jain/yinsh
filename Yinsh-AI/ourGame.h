@@ -29,13 +29,13 @@ public:
   int rows; //Number of Rows in Board
   int boardSize; // For this part, it is 85
   vector< vector<boardCell> > board;// index = (0,0)->0, others -> ((h)*(h+1))/2 + pos
+  vector< pair<int,int> > playerOneRingPositions;
+  vector< pair<int,int> > playerTwoRingPositions;
   //vector<pair<int,int>> axialToRadialDatabase; //  index = (0,0)->0, others -> ((h)*(h+1))/2 + pos, dataBaseIndex contains a pair which gives
 
 
   ourGame();
   //ourGame(int n);
-  void execute_move(struct move m);
-  bool check_validity(struct move m);
   double computeHeuristicValue(int player);
   void printBoard();
   bool ended();

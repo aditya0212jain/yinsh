@@ -67,13 +67,15 @@ vector<string> ourPlayer::sortChildren(vector<string> moves,bool forMax){
 
 //Assuming PLayer 0 moves first and PLayer 1 follows
 
-ourPlayer::ourPlayer(int playerNumber,int timeLeft,int numberOfRings){
+ourPlayer::ourPlayer(int playerNumber,int timeLeft,int numberOfRings,int markersNeededToRemove){
   this->playerNumber =  playerNumber; //1-> Player 1, 2-> Player 2
   this->totalRings =  numberOfRings; //This version only has to deal with 5 rings
   this->timeLeft =  timeLeft; //will be initialised with full time
   this->myRingsRemoved = 0;//starting with 0 rings
   this->game = new ourGame();
+  this->markersNeededToRemove = markersNeededToRemove;
 }
+
 //These hexagon and position will be decided by Alpha-Beta pruning
 void ourPlayer::placeRing(int playerNo, int x, int y, ourGame* game){
 
@@ -83,16 +85,18 @@ void ourPlayer::placeRing(int playerNo, int x, int y, ourGame* game){
   tempboardCell.containsRings = true;
   tempboardCell.canBeUsed = true;
   game->board[x][y]  = tempboardCell;
-  if(/*this->playerNumber*/playerNo==1){
+  if(playerNo==1){
     game->playerOneRingsOnBoard++;
+    game->playerOneRingPositions.push_back(make_pair(x,y));
   }
   else{
     game->playerTwoRingsOnBoard++;
+    game->playerTwoRingPositions.push_back(make_pair(x,y));
   }
 }
 
 void ourPlayer::addMarker(int playerNo, int hex, int pos, ourGame* game){
-  pair<int,int> cartesian = hexToCartesian(hex,pos,11);
+  pair<int,int> cartesian = hexToCartesian(hex,pos,2*totalRings + 1);//11 or 13 as per board size @3Nov
   int x = cartesian.first;
   int y = cartesian.second;
   struct boardCell tempboardCell; // Ring is placed, and not marker
@@ -101,7 +105,7 @@ void ourPlayer::addMarker(int playerNo, int hex, int pos, ourGame* game){
   tempboardCell.containsRings = false;
   tempboardCell.canBeUsed = true;
   game->board[x][y]  = tempboardCell;
-  if(/*this->playerNumber*/playerNo==1){
+  if(playerNo==1){
     game->playerOneMarkersOnBoard++;
   }
   else{
@@ -133,33 +137,49 @@ void ourPlayer::moveRing(int playerNo,int xStart, int yStart, int x, int y, ourG
   tempBoardCellMarker.containsRings = false;
   tempBoardCellMarker.canBeUsed = true;
 
+
+
   game->board[newMarkerPosition.first][newMarkerPosition.second] = tempBoardCellMarker;
   inverseMarker(playerNo,xStart,yStart,x,y,game);
-  if(/*this->playerNumber*/playerNo==1)
+  if(playerNo==1){
     game->playerOneMarkersOnBoard++;
-  else
+    auto it = find(game->playerOneRingPositions.begin(),game->playerOneRingPositions.end(),mp(xStart,yStart));
+    if(it!=game->playerOneRingPositions.end())
+      *it = mp(x,y);
+  }
+  else{
     game->playerTwoMarkersOnBoard++;
+    auto it = find(game->playerTwoRingPositions.begin(),game->playerTwoRingPositions.end(),mp(xStart,yStart));
+    if(it!=game->playerTwoRingPositions.end())
+      *it = mp(x,y);
+  }
 }
 
 void ourPlayer::removeRing(int playerNo, int x, int y, ourGame* game){
   //Remove the ring, removal of markers will be done separately
   boardCell tempBoard = game->board[x][y];
-  pair<int,int> rad = cartesianToHex(x,y,11);//rows = 11
-  struct move temp;// = {"",0,0};
-  temp.type = "X";
-  temp.hex = rad.first;
-  temp.pos = rad.second;
+  // pair<int,int> rad = cartesianToHex(x,y,11);//rows = 11
+  // struct move temp;// = {"",0,0};
+  // temp.type = "X";
+  // temp.hex = rad.first;
+  // temp.pos = rad.second;
   boardCell tempBoardCell;// = {this->playerNumber,false,true}; // Marker is placed and not ring
   tempBoardCell.player = 0;
   tempBoardCell.containsMarker = false;
   tempBoardCell.containsRings = false;
   tempBoardCell.canBeUsed = true;
   game->board[x][y] = tempBoardCell;
-  if(/*this->playerNumber*/playerNo==1){
+  if(playerNo==1){
     game->playerOneRingsOnBoard--;
+    auto it = find(game->playerOneRingPositions.begin(),game->playerOneRingPositions.end(),make_pair(x,y));
+    if(it!=game->playerOneRingPositions.end())
+      game->playerOneRingPositions.erase(it);
   }
   else{
     game->playerTwoRingsOnBoard--;
+    auto it = find(game->playerTwoRingPositions.begin(),game->playerTwoRingPositions.end(),make_pair(x,y));
+    if(it!=game->playerTwoRingPositions.end())
+      game->playerTwoRingPositions.erase(it);
   }
 }
 
@@ -206,10 +226,10 @@ void ourPlayer::removeRow(int playerNo, int startX, int startY, int endX, int en
     cout << "Galat chal rahe ho, sahi Karo!!!" << endl;
   }
   if(/*this->playerNumber*/playerNo==1){
-    game->playerOneMarkersOnBoard = game->playerOneMarkersOnBoard-5;
+    game->playerOneMarkersOnBoard = game->playerOneMarkersOnBoard-markersNeededToRemove;
   }
   else{
-    game->playerTwoMarkersOnBoard = game->playerTwoMarkersOnBoard-5;
+    game->playerTwoMarkersOnBoard = game->playerTwoMarkersOnBoard-markersNeededToRemove;
   }
 }
 
@@ -297,7 +317,6 @@ void ourPlayer::moveDecider(int playerNo, string s, ourGame* game){
       pointer += 6;
     }
     else if(p[pointer].compare("P")==0){
-      // cout << "Did I come here?" << endl;
       int x = stoi(p[pointer+1]);
       int y = stoi(p[pointer+2]);
       pair<int,int> coor = hexToCartesian(x,y,rows);
@@ -345,7 +364,7 @@ vector<pair<pair<int,int>,pair<int,int> > > ourPlayer::selectAndMoveHelper(int p
     }
     else if(!(game->board[i][j].canBeUsed)){
       //cout << ans.size() << endl;
-      // cout << "At this value I came here: " << i << " " << j << endl;
+      //cout << "At this value I came here: " << i << " " << j << endl;
       return ans;
     }
     else if(game->board[i][j].containsRings){
@@ -368,9 +387,6 @@ vector<pair<pair<int,int>,pair<int,int> > > ourPlayer::selectAndMoveHelper(int p
         ans.pb(mp(f,mp(i,j)));
       }
     }
-    // if(i==0 && j==5){
-    //   cout << game->board[i][j].canBeUsed << endl;
-    // }
   }
 }
 
@@ -378,39 +394,60 @@ vector<pair<pair<int,int>,pair<int,int> > > ourPlayer::selectAndMove(int playerN
   vector<pair<pair<int,int>,pair<int,int> > > ans;
   vector<pair<pair<int,int>,pair<int,int> > > temp;
 
-  // v.insert( v.end(), w.begin(), w.end());
-  for(int i=0; i<game->rows; i++){
-    for (int j=0; j<game->rows; j++){
+  if(playerNo==1){
+    for(int p=0;p<game->playerOneRingPositions.size();p++){
+      int i = game->playerOneRingPositions[p].first;
+      int j = game->playerOneRingPositions[p].second;
+
       if(game->board[i][j].containsRings){
-        // cout<<"containsRings"<<endl;
-        // cout<<game->board[i][j].player<<" :player"<<endl;
-        // cout<<playerNo<<endl;
         if(game->board[i][j].player==playerNo){
-          //cout << i << " " << j << endl;
            temp = selectAndMoveHelper(playerNo,i,j,0,1,game);//Total 6 directions
            ans.insert(ans.end(), temp.begin(), temp.end());
-          //  cout << ans.size() << endl;
            temp = selectAndMoveHelper(playerNo,i,j,0,-1,game);//Total 6 directions
            ans.insert(ans.end(), temp.begin(), temp.end());
-           // cout << ans.size() << endl;
            temp = selectAndMoveHelper(playerNo,i,j,1,1,game);//Total 6 directions
            ans.insert(ans.end(), temp.begin(), temp.end());
-           // cout << ans.size() << endl;
            temp = selectAndMoveHelper(playerNo,i,j,-1,-1,game);//Total 6 directions
            ans.insert(ans.end(), temp.begin(), temp.end());
-           // cout << ans.size() << endl;
-           // cout << "KYU " << temp[4].second.first << " " << temp[4].second.second << endl;
            temp = selectAndMoveHelper(playerNo,i,j,1,0,game);//Total 6 directions
            ans.insert(ans.end(), temp.begin(), temp.end());
-           // cout << ans.size() << endl;
+
            temp = selectAndMoveHelper(playerNo,i,j,-1,0,game);//Total 6 directions
            ans.insert(ans.end(), temp.begin(), temp.end());
-          //  cout <<"ans size"<< ans.size() << endl;
 
         }
       }
     }
   }
+  else{
+    for(int p=0;p<game->playerTwoRingPositions.size();p++){
+      int i = game->playerTwoRingPositions[p].first;
+      int j = game->playerTwoRingPositions[p].second;
+
+      if(game->board[i][j].containsRings){
+        if(game->board[i][j].player==playerNo){
+           temp = selectAndMoveHelper(playerNo,i,j,0,1,game);//Total 6 directions
+           ans.insert(ans.end(), temp.begin(), temp.end());
+           temp = selectAndMoveHelper(playerNo,i,j,0,-1,game);//Total 6 directions
+           ans.insert(ans.end(), temp.begin(), temp.end());
+           temp = selectAndMoveHelper(playerNo,i,j,1,1,game);//Total 6 directions
+           ans.insert(ans.end(), temp.begin(), temp.end());
+           temp = selectAndMoveHelper(playerNo,i,j,-1,-1,game);//Total 6 directions
+           ans.insert(ans.end(), temp.begin(), temp.end());
+           temp = selectAndMoveHelper(playerNo,i,j,1,0,game);//Total 6 directions
+           ans.insert(ans.end(), temp.begin(), temp.end());
+
+           temp = selectAndMoveHelper(playerNo,i,j,-1,0,game);//Total 6 directions
+           ans.insert(ans.end(), temp.begin(), temp.end());
+
+        }
+      }
+    }
+
+  }
+
+
+
   return ans;
 }
 
@@ -433,7 +470,7 @@ string ourPlayer::markerDeletionHelper(int playerNo, int x, int y, int dirX, int
       else{
         break;
       }
-      if(markerCount==5){
+      if(markerCount == markersNeededToRemove){//To edit here for removal of more markers @3Nov
         pair<int,int> initial = cartesianToHex(x,y,rows);
         pair<int,int> finall = cartesianToHex(i,j,rows);
         string result;
@@ -457,7 +494,6 @@ string ourPlayer::markerDeletionHelper(int playerNo, int x, int y, int dirX, int
         result3 = convert3.str();
 
         temp = "RS " + result + " " + result1 + " RE " + result2 + " " + result3;
-        //ans.pb(temp);
         break;
       }
     }
@@ -531,7 +567,6 @@ vector<string> ourPlayer::selectAndMoveFinal(int playerNo, ourGame* game){
   vector<pair<pair<int,int>, pair<int,int> > > list = selectAndMove(playerNo, game);
   string temp="";
   int rows = game->rows;
-  // cout << list.size() << endl;
 
   for(int i=0; i<list.size(); i++){
     int s1 = list[i].first.first;
@@ -571,10 +606,10 @@ vector<string> ourPlayer::removeRingFinal(int playerNo, ourGame* game){
   int rows = game->rows;
   vector<string> ans;
   string temp;
-  for(int i=0; i<rows; i++){
-    for(int j=0; j<rows; j++){
-      if(game->board[i][j].player==playerNo && game->board[i][j].containsRings){
-        pair<int,int> initial = cartesianToHex(i,j,rows);
+  pair<int,int> initial;
+  if(playerNo==1){
+    for(int i=0;i<game->playerOneRingPositions.size();i++){
+      initial = cartesianToHex(game->playerOneRingPositions[i].first,game->playerOneRingPositions[i].second,rows);
         string result;
         ostringstream convert;
         convert << initial.first;
@@ -587,7 +622,22 @@ vector<string> ourPlayer::removeRingFinal(int playerNo, ourGame* game){
 
         temp = "X " + result + " " + result1;
         ans.pb(temp);
-      }
+    }
+  }else{
+    for(int i=0;i<game->playerTwoRingPositions.size();i++){
+      initial = cartesianToHex(game->playerTwoRingPositions[i].first,game->playerTwoRingPositions[i].second,rows);
+        string result;
+        ostringstream convert;
+        convert << initial.first;
+        result = convert.str();
+
+        string result1;
+        ostringstream convert1;
+        convert1 << initial.second;
+        result1 = convert1.str();
+
+        temp = "X " + result + " " + result1;
+        ans.pb(temp);
     }
   }
   return ans;
@@ -596,7 +646,6 @@ vector<string> ourPlayer::removeRingFinal(int playerNo, ourGame* game){
 vector<string> ourPlayer::removeMarkerAndRing(int playerNo, ourGame* game){
   //This function checks if we can remove the rings or not and returns a vector of strings
   vector<string> ans;
-  // cout << "Do I come Here?" << endl;
   vector<string> first = markerDeletion(playerNo, game);
 
   // cout << "And Here?" << endl;
@@ -694,15 +743,11 @@ vector<string> ourPlayer::moveList(int playerNo, ourGame* game){
   if(firstRound.size()==0){
     //Nothing to delete
     vector<string> fr = selectAndMoveFinal(playerNo, game);
-    // cout<<"And here?"<<endl;
-    // cout<<fr.size()<<endl;
     int frSize = fr.size();
     if(fr.size()==0){
       // cout << "NO MOVE LEFT" << endl;
     }
     else{
-      // cout << "IDHAR" << endl;
-
       // cout << "frSize: " << frSize << endl;
 
       for(int i=0; i<frSize; i++){
@@ -792,13 +837,16 @@ struct transitionMove ourPlayer::idMinimax(int max_depth,double maxTime){
       bestMove = tempMove;
     }
     cerr<<"totalNodes: "<<totalNodes<<endl;
-    // bestScore = max(bestScore,tempMove.value);
-    if(totalNodes<2000&&depth==3){
-      if(timeRemaining>20){
-        cerr<<"Doing 4 depth"<<endl;
-        max_depth=4;
-      }
+    if(totalNodes>5000){
+      break;
     }
+    // bestScore = max(bestScore,tempMove.value);
+    // if(totalNodes<2000&&depth==3){
+    //   if(timeRemaining>20){
+    //     cerr<<"Doing 4 depth"<<endl;
+    //     max_depth=4;
+    //   }
+    // }
   }
   htMap.clear();
   return tempMove;
@@ -831,6 +879,7 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
     vector<string> possible_moves;
     possible_moves = moveList(this->playerNumber,this->game);
 
+    //Commenting Sorting for a while
     possible_moves = sortChildren(possible_moves,true);
     
     for(int i=0;i<possible_moves.size();i++){
@@ -1046,7 +1095,7 @@ void ourPlayer::play(){
     seconds = t2-t1;
     seconds = seconds/CLOCKS_PER_SEC;
     cerr<<"time elapsed: "<<seconds<<endl;
-    transitionMove m = idMinimax(3,seconds);
+    transitionMove m = idMinimax(4,seconds);
     cout<<m.move<<endl;
     moveDecider(this->playerNumber,m.move,this->game);
     // this->game->printBoard();

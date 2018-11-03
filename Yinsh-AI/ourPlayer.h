@@ -29,13 +29,14 @@ class ourPlayer{
   int totalRings;//Number of rings that needs to be placed on the board
   int timeLeft;//timeLeft for playing (in secs)
   int myRingsRemoved;
+  int markersNeededToRemove;
   //vector < pair<int,int> > rings; // Length 5 vector which contains the position of the rings in the format (x,y)  (ie. axial Coordinates)
   //vector < pair<int,int> > markers; //Contains the position of the markers in (x,y) format (ie. axial coordinates)
 
 
 public:
   ourGame* game;
-  ourPlayer(int playerNumber, int timeLeft,int numberOfRings);
+  ourPlayer(int playerNumber, int timeLeft,int numberOfRings,int markersNeededToRemove);
   void addMarker(int playerNo, int x, int y, ourGame* game);
   void placeRing(int num, int a, int b, ourGame* game); //Returns the move which needs to be printed
   void moveRing(int num, int xs, int ys, int b, int c, ourGame* game); //Returns the move which should be printed
