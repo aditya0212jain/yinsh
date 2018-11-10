@@ -31,6 +31,8 @@ public:
   vector< vector<boardCell> > board;// index = (0,0)->0, others -> ((h)*(h+1))/2 + pos
   vector< pair<int,int> > playerOneRingPositions;
   vector< pair<int,int> > playerTwoRingPositions;
+  vector< pair<int,int> > playerOneMarkerPosition;
+  vector< pair<int,int> > playerTwoMarkerPosition;
   //vector<pair<int,int>> axialToRadialDatabase; //  index = (0,0)->0, others -> ((h)*(h+1))/2 + pos, dataBaseIndex contains a pair which gives
 
 
