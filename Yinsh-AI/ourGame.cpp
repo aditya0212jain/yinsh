@@ -7,14 +7,14 @@
 
 using namespace std;
 
-ourGame::ourGame(){
+ourGame::ourGame(int boardSize){
   currPlayer = 1; //Player 1 will start
   playerOneRingsOnBoard = 0; // Initially there are 0 player 1 rings on the board
   playerTwoRingsOnBoard = 0; // Initially there are 0 player 2 rings on the board
   playerOneMarkersOnBoard = 0; // Initially there are 0 player 1 rings on the board
   playerTwoMarkersOnBoard = 0; // Initially there are 0 player 2 rings on the board
-  boardSize = 85; //Atleast this is true for this part, we'll initialise it with a variable for the next part
-  rows = 11;
+  //boardSize = 85; //Atleast this is true for this part, we'll initialise it with a variable for the next part
+  rows = 2*boardSize+1;
 
   for(int i=0;i<rows;i++){
     boardCell tempBoardCell;// {0,false,false};
@@ -83,7 +83,7 @@ double ourGame::computeHeuristicValue(int player){
   int myRingsInitial=5,opponentRingsInitial=5;
   int otherPlayer = (player%2)+1;
   //
-  for(int i=0;i<12;i++){
+  for(int i=0;i<rows+1;i++){
     valuesForConsecutiveMarkers.push_back(0);
     valuesForConsecutiveMarkers2.push_back(0);
   }
@@ -106,8 +106,8 @@ double ourGame::computeHeuristicValue(int player){
             count=0;
           }
         }else{
-          pair<int,int> h = cartesianToHex(i,j,11);
-          
+          pair<int,int> h = cartesianToHex(i,j,rows);
+
           if(board[i][j].containsMarker){
             count++;
           }else if(board[i][j].containsRings){
@@ -121,8 +121,8 @@ double ourGame::computeHeuristicValue(int player){
             count2=0;
           }
         }else{
-          pair<int,int> h = cartesianToHex(i,j,11);
-          
+          pair<int,int> h = cartesianToHex(i,j,rows);
+
           if(board[i][j].containsMarker){
             count2++;
           }else if(board[i][j].containsRings){
@@ -164,8 +164,8 @@ double ourGame::computeHeuristicValue(int player){
             count2=0;
           }
         }else{
-          pair<int,int> h = cartesianToHex(i,j,11);
-          
+          pair<int,int> h = cartesianToHex(i,j,rows);
+
           if(board[i][j].containsMarker){
             count2++;
           }else if(board[i][j].containsRings){
@@ -176,10 +176,10 @@ double ourGame::computeHeuristicValue(int player){
     }
   }
 
-  
-  int weight[] = {0,1,3,9,27,81,100,120,140,160,180,81};
-  int opponentWeight[] = {0,0,-2,-5,-50,-100000,-100000,-100000,-100000,-100000,-100000,-100000};
-  for(int i=0;i<12;i++){
+
+  int weight[] = {0,1,3,9,27,81,100,120,140,160,180,81,27,9};
+  int opponentWeight[] = {0,0,-2,-5,-50,-1000,-1000,-1000,-1000,-1000,-1000,-1000, -1000,-1000};
+  for(int i=0;i<rows+1;i++){
     score+=weight[i]*valuesForConsecutiveMarkers[i];
     // score+=opponentWeight[i]*valuesForConsecutiveMarkers2[i];
   }
@@ -206,7 +206,7 @@ void ourGame::copyTheBoard(ourGame* game){
   playerTwoRingsOnBoard = game->playerTwoRingsOnBoard;
   playerOneMarkersOnBoard = game->playerOneMarkersOnBoard;
   playerTwoMarkersOnBoard = game->playerTwoMarkersOnBoard;
-  boardSize = game->boardSize; // For this part, it is 85
+  // boardSize = game->boardSize; // For this part, it is 85
   board = game->board;// index = (0,0)->0, others -> ((h)*(h+1))/2 + pos
 }
 

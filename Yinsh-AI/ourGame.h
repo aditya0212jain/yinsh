@@ -26,8 +26,8 @@ public:
   int playerTwoRingsOnBoard; // Number of rings belonging to player 2
   int playerOneMarkersOnBoard; //Number of markers of player 1 on boardCell
   int playerTwoMarkersOnBoard; //Number of markers of player 2 on board
-  int rows; //Number of Rows in Board
-  int boardSize; // For this part, it is 85
+  int rows; //Number of Rows in Board = 2*boardSize + 1
+  // int boardSize; // For this part, it is 85
   vector< vector<boardCell> > board;// index = (0,0)->0, others -> ((h)*(h+1))/2 + pos
   vector< pair<int,int> > playerOneRingPositions;
   vector< pair<int,int> > playerTwoRingPositions;
@@ -36,7 +36,7 @@ public:
   //vector<pair<int,int>> axialToRadialDatabase; //  index = (0,0)->0, others -> ((h)*(h+1))/2 + pos, dataBaseIndex contains a pair which gives
 
 
-  ourGame();
+  ourGame(int boardSize);
   //ourGame(int n);
   double computeHeuristicValue(int player);
   void printBoard();

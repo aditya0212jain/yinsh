@@ -26,7 +26,6 @@ bool compareForMin(const transitionMove &a,const transitionMove &b){
   return a.value<b.value;
 }
 
-
 vector<string> ourPlayer::sortChildren(vector<string> moves,bool forMax){
   vector<transitionMove> v;
   int playerNumber;
@@ -68,11 +67,12 @@ vector<string> ourPlayer::sortChildren(vector<string> moves,bool forMax){
 //Assuming PLayer 0 moves first and PLayer 1 follows
 
 ourPlayer::ourPlayer(int playerNumber,int timeLeft,int numberOfRings,int markersNeededToRemove){
+  int boardSize = numberOfRings;
   this->playerNumber =  playerNumber; //1-> Player 1, 2-> Player 2
   this->totalRings =  numberOfRings; //This version only has to deal with 5 rings
   this->timeLeft =  timeLeft; //will be initialised with full time
   this->myRingsRemoved = 0;//starting with 0 rings
-  this->game = new ourGame();
+  this->game = new ourGame(boardSize);
   this->markersNeededToRemove = markersNeededToRemove;
 }
 
@@ -506,9 +506,6 @@ vector<pair<pair<int,int>,pair<int,int> > > ourPlayer::selectAndMove(int playerN
     }
 
   }
-
-
-
   return ans;
 }
 
@@ -572,7 +569,7 @@ vector<string> ourPlayer::markerDeletion(int playerNo, ourGame* game){
   string temp = "";
 
   /*
-  Below stored positions were used 
+  Below stored positions were used
   */
 
   // if(playerNo==1){
@@ -661,10 +658,10 @@ vector<string> ourPlayer::markerDeletion(int playerNo, ourGame* game){
         }
         // cout << "a" << endl;
         // cout << ans.size() << " ";
-        temp = markerDeletionHelper(playerNo,i,j,0,-1,game);//Total 6 directions
-        if(temp.length()!=0){
-          ans.pb(temp);
-        }
+        // temp = markerDeletionHelper(playerNo,i,j,0,-1,game);//Total 6 directions
+        // if(temp.length()!=0){
+        //   ans.pb(temp);
+        // }
         // cout << "b" << endl;
         // cout << ans.size() << " ";
 
@@ -674,10 +671,10 @@ vector<string> ourPlayer::markerDeletion(int playerNo, ourGame* game){
         }
         // cout << ans.size() << " ";
         // cout << "c" << endl;
-        temp = markerDeletionHelper(playerNo,i,j,-1,-1,game);//Total 6 directions
-        if(temp.length()!=0){
-          ans.pb(temp);
-        }
+        // temp = markerDeletionHelper(playerNo,i,j,-1,-1,game);//Total 6 directions
+        // if(temp.length()!=0){
+        //   ans.pb(temp);
+        // }
         // cout << ans.size() << " ";
 
         temp = markerDeletionHelper(playerNo,i,j,1,0,game);//Total 6 directions
@@ -686,10 +683,10 @@ vector<string> ourPlayer::markerDeletion(int playerNo, ourGame* game){
         }
         // cout << ans.size() << " ";
 
-        temp = markerDeletionHelper(playerNo,i,j,-1,0,game);//Total 6 directions
-        if(temp.length()!=0){
-          ans.pb(temp);
-        }
+        // temp = markerDeletionHelper(playerNo,i,j,-1,0,game);//Total 6 directions
+        // if(temp.length()!=0){
+        //   ans.pb(temp);
+        // }
         // cout << ans.size();
       }
       // cout << endl;
@@ -881,6 +878,7 @@ vector<string> ourPlayer::moveList(int playerNo, ourGame* game){
   vector<string> ans;
   vector<string> firstRound = allDeletions(playerNo, game);
   // cout << "Do I Reach here?" << endl;
+  cout << "First Move, first Round: " << firstRound.size() << endl;
   if(firstRound.size()==0){
     //Nothing to delete
     vector<string> fr = selectAndMoveFinal(playerNo, game);
@@ -1022,7 +1020,7 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
 
     //Commenting Sorting for a while
     possible_moves = sortChildren(possible_moves,true);
-    
+
     for(int i=0;i<possible_moves.size();i++){
 
       moveDecider(this->playerNumber,possible_moves[i],this->game);
@@ -1080,6 +1078,7 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
 }
 
 void ourPlayer::initialPlacing(){
+  int width = 2 * this->totalRings + 1;
   int count1=0,count2=0;
   string oppMove;
   if(this->playerNumber==2){
@@ -1103,10 +1102,10 @@ void ourPlayer::initialPlacing(){
         bool assigned=false;
         //checking if already opponent ring is there
         for(int b=1;b<(6*a);b++){
-          pair<int,int> h = hexToCartesian(a,b,11);
+          pair<int,int> h = hexToCartesian(a,b,width);
           if(this->game->board[h.first][h.second].canBeUsed&&this->game->board[h.first][h.second].player==((this->playerNumber%2)+1)){
-            pair<int,int> h1 = hexToCartesian(a,b+1,11);
-            pair<int,int> h2 = hexToCartesian(a,b-1,11);
+            pair<int,int> h1 = hexToCartesian(a,b+1,width);
+            pair<int,int> h2 = hexToCartesian(a,b-1,width);
             if(this->game->board[h1.first][h1.second].canBeUsed&&this->game->board[h1.first][h1.second].player==0){
               string beta = "P ";
               beta = beta+to_string(a)+" "+to_string(b+1);
@@ -1134,7 +1133,7 @@ void ourPlayer::initialPlacing(){
           bool smalloop=true;
           while(smalloop){
             int b = rand()%(6*a);
-            pair<int,int> h = hexToCartesian(a,b,11);
+            pair<int,int> h = hexToCartesian(a,b,width);
             if(this->game->board[h.first][h.second].canBeUsed&&this->game->board[h.first][h.second].player==0){
               string beta = "P ";
               beta = beta+to_string(a)+" "+to_string(b);
@@ -1153,11 +1152,11 @@ void ourPlayer::initialPlacing(){
         int a =5;
         bool assigned=false;
         for(int b=0;b<(6*a);b++){
-          pair<int,int> h = hexToCartesian(a,b,11);
+          pair<int,int> h = hexToCartesian(a,b,width);
           if(this->game->board[h.first][h.second].canBeUsed&&this->game->board[h.first][h.second].player==this->playerNumber){
             int c = b/a;
             int d = (rand()%3)+1 + (4*c);
-            pair<int,int > h1 = hexToCartesian(4,d,11);
+            pair<int,int > h1 = hexToCartesian(4,d,width);
             if(this->game->board[h1.first][h1.second].player==0){
               string beta = "P ";
               beta = beta+to_string(4)+" "+to_string(d);
@@ -1183,7 +1182,7 @@ void ourPlayer::initialPlacing(){
         b = rand()%(6*a);
       }
       // cout<<"a,b: "<<a<<" "<<b<<endl;
-      pair<int,int> h = hexToCartesian(a,b,11);
+      pair<int,int> h = hexToCartesian(a,b,width);
       // cout<<"h "<<h.first<<" "<<h.second<<endl;
       if(this->game->board[h.first][h.second].player==0){
         string beta = "P ";
