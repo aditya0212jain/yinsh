@@ -445,8 +445,6 @@ vector<pair<pair<int,int>,pair<int,int> > > ourPlayer::selectAndMoveHelper(int p
       return ans;
     }
     else if(!(game->board[i][j].canBeUsed)){
-      //cout << ans.size() << endl;
-      //cout << "At this value I came here: " << i << " " << j << endl;
       return ans;
     }
     else if(game->board[i][j].containsRings){
@@ -454,7 +452,6 @@ vector<pair<pair<int,int>,pair<int,int> > > ourPlayer::selectAndMoveHelper(int p
     }
     else if(game->board[i][j].containsMarker && oneMarker==0){
         oneMarker=1;
-        //ans.pb(mp(f,mp(i,j)));
     }
     else if(game->board[i][j].containsMarker && oneMarker==1){
       //Nothing
@@ -465,7 +462,6 @@ vector<pair<pair<int,int>,pair<int,int> > > ourPlayer::selectAndMoveHelper(int p
         return ans;
       }
       else{
-        //cout << i << " " << j << endl;
         ans.pb(mp(f,mp(i,j)));
       }
     }
@@ -493,10 +489,8 @@ vector<pair<pair<int,int>,pair<int,int> > > ourPlayer::selectAndMove(int playerN
            ans.insert(ans.end(), temp.begin(), temp.end());
            temp = selectAndMoveHelper(playerNo,i,j,1,0,game);//Total 6 directions
            ans.insert(ans.end(), temp.begin(), temp.end());
-
            temp = selectAndMoveHelper(playerNo,i,j,-1,0,game);//Total 6 directions
            ans.insert(ans.end(), temp.begin(), temp.end());
-
         }
       }
     }
@@ -518,10 +512,8 @@ vector<pair<pair<int,int>,pair<int,int> > > ourPlayer::selectAndMove(int playerN
            ans.insert(ans.end(), temp.begin(), temp.end());
            temp = selectAndMoveHelper(playerNo,i,j,1,0,game);//Total 6 directions
            ans.insert(ans.end(), temp.begin(), temp.end());
-
            temp = selectAndMoveHelper(playerNo,i,j,-1,0,game);//Total 6 directions
            ans.insert(ans.end(), temp.begin(), temp.end());
-
         }
       }
     }
@@ -552,25 +544,26 @@ string ourPlayer::markerDeletionHelper(int playerNo, int x, int y, int dirX, int
       if(markerCount == markersNeededToRemove){//To edit here for removal of more markers @3Nov
         pair<int,int> initial = cartesianToHex(x,y,rows);
         pair<int,int> finall = cartesianToHex(i,j,rows);
-        string result;
-        ostringstream convert;
-        convert << initial.first;
-        result = convert.str();
+        
+        string result = to_string(initial.first);
+    // ostringstream convert;
+    // convert << initial.first;
+    // result = convert.str();
 
-        string result1;
-        ostringstream convert1;
-        convert1 << initial.second;
-        result1 = convert1.str();
+    string result1 = to_string(initial.second);
+    // ostringstream convert1;
+    // convert1 << initial.second;
+    // result1 = convert1.str();
 
-        string result2;
-        ostringstream convert2;
-        convert2 << finall.first;
-        result2 = convert2.str();
+    string result2 = to_string(finall.first);
+    // ostringstream convert2;
+    // convert2 << finall.first;
+    // result2 = convert2.str();
 
-        string result3;
-        ostringstream convert3;
-        convert3 << finall.second;
-        result3 = convert3.str();
+    string result3 = to_string(finall.second);
+    // ostringstream convert3;
+    // convert3 << finall.second;
+    // result3 = convert3.str();
 
         temp = "RS " + result + " " + result1 + " RE " + result2 + " " + result3;
         break;
@@ -780,25 +773,25 @@ vector<string> ourPlayer::selectAndMoveFinal(int playerNo, ourGame* game){
     pair<int,int> initial = cartesianToHex(s1,s2,rows);
     pair<int,int> finall = cartesianToHex(m1,m2,rows);
 
-    string result;
-    ostringstream convert;
-    convert << initial.first;
-    result = convert.str();
+    string result = to_string(initial.first);
+    // ostringstream convert;
+    // convert << initial.first;
+    // result = convert.str();
 
-    string result1;
-    ostringstream convert1;
-    convert1 << initial.second;
-    result1 = convert1.str();
+    string result1 = to_string(initial.second);
+    // ostringstream convert1;
+    // convert1 << initial.second;
+    // result1 = convert1.str();
 
-    string result2;
-    ostringstream convert2;
-    convert2 << finall.first;
-    result2 = convert2.str();
+    string result2 = to_string(finall.first);
+    // ostringstream convert2;
+    // convert2 << finall.first;
+    // result2 = convert2.str();
 
-    string result3;
-    ostringstream convert3;
-    convert3 << finall.second;
-    result3 = convert3.str();
+    string result3 = to_string(finall.second);
+    // ostringstream convert3;
+    // convert3 << finall.second;
+    // result3 = convert3.str();
 
     temp = "S " + result + " " + result1 + " M " + result2 + " " + result3;
     ans.pb(temp);
@@ -814,15 +807,15 @@ vector<string> ourPlayer::removeRingFinal(int playerNo, ourGame* game){
   if(playerNo==1){
     for(int i=0;i<game->playerOneRingPositions.size();i++){
       initial = cartesianToHex(game->playerOneRingPositions[i].first,game->playerOneRingPositions[i].second,rows);
-        string result;
-        ostringstream convert;
-        convert << initial.first;
-        result = convert.str();
+        string result = to_string(initial.first);
+        // ostringstream convert;
+        // convert << initial.first;
+        // result = convert.str();
 
-        string result1;
-        ostringstream convert1;
-        convert1 << initial.second;
-        result1 = convert1.str();
+        string result1 = to_string(initial.second);
+        // ostringstream convert1;
+        // convert1 << initial.second;
+        // result1 = convert1.str();
 
         temp = "X " + result + " " + result1;
         ans.pb(temp);
@@ -830,15 +823,15 @@ vector<string> ourPlayer::removeRingFinal(int playerNo, ourGame* game){
   }else{
     for(int i=0;i<game->playerTwoRingPositions.size();i++){
       initial = cartesianToHex(game->playerTwoRingPositions[i].first,game->playerTwoRingPositions[i].second,rows);
-        string result;
-        ostringstream convert;
-        convert << initial.first;
-        result = convert.str();
+        string result = to_string(initial.first);
+        // ostringstream convert;
+        // convert << initial.first;
+        // result = convert.str();
 
-        string result1;
-        ostringstream convert1;
-        convert1 << initial.second;
-        result1 = convert1.str();
+        string result1 = to_string(initial.second);
+        // ostringstream convert1;
+        // convert1 << initial.second;
+        // result1 = convert1.str();
 
         temp = "X " + result + " " + result1;
         ans.pb(temp);
@@ -878,7 +871,6 @@ vector<string> ourPlayer::allDeletions(int playerNo, ourGame* game){
         flag1=false;
         string firstMove = firstDeletion[i];
         moveDecider(playerNo,firstMove,game);
-        // cout << "Marker 2" << endl;
         if((playerNo==1 && game->playerOneRingsOnBoard==2)||(playerNo==2 && game->playerTwoRingsOnBoard==2)){
           ans.pb(firstMove);
           game->moveUndo(playerNo,firstMove);
@@ -895,8 +887,6 @@ vector<string> ourPlayer::allDeletions(int playerNo, ourGame* game){
             for(int j=0; j<secondDeletion.size(); j++){
               flag2=false;
               string secondMove = secondDeletion[j];
-              // ourGame* secondGame = new ourGame();
-              // secondGame->copyTheBoard(firstGame);
               moveDecider(playerNo,secondMove,game);
               if((playerNo==1 && game->playerOneRingsOnBoard==2)||(playerNo==2 && game->playerTwoRingsOnBoard==2)){
                 string temp = firstMove + " " + secondMove;
@@ -905,7 +895,6 @@ vector<string> ourPlayer::allDeletions(int playerNo, ourGame* game){
                 flag2=true;
               }
               else{
-                // vector<string> thirdDeletion = removeMarkerAndRing(playerNo, secondGame);///<- is this correct @sarthakVishnoi
                 vector<string> thirdDeletion = removeMarkerAndRing(playerNo,game);
                 if(thirdDeletion.size()==0){
                   string temp = firstMove + " " + secondMove;
@@ -916,8 +905,6 @@ vector<string> ourPlayer::allDeletions(int playerNo, ourGame* game){
                 else{
                   for(int k=0; k<thirdDeletion.size(); k++){
                     string thirdMove = thirdDeletion[k];
-                    // ourGame* thirdGame = new ourGame();
-                    // thirdGame-> copyTheBoard(secondGame);
                     moveDecider(playerNo,thirdMove,game);
                     string tempp = firstMove+ " " + secondMove + " " + thirdMove;
                     ans.pb(tempp);
@@ -1032,10 +1019,10 @@ struct transitionMove ourPlayer::idMinimax(int max_depth,double maxTime){
       bestMove = tempMove;
     }
     cerr<<"totalNodes: "<<totalNodes<<endl;
-    if(totalNodes>5000){
-      return bestMove;
-      break;
-    }
+    // if(totalNodes>5000){
+    //   return bestMove;
+    //   break;
+    // }
     // bestScore = max(bestScore,tempMove.value);
     // if(totalNodes<2000&&depth==3){
     //   if(timeRemaining>20){
@@ -1290,7 +1277,7 @@ void ourPlayer::play(){
     seconds = t2-t1;
     seconds = seconds/CLOCKS_PER_SEC;
     cerr<<"time elapsed: "<<seconds<<endl;
-    transitionMove m = idMinimax(3,seconds);
+    transitionMove m = idMinimax(4,seconds);
     cout<<m.move<<endl;
     moveDecider(this->playerNumber,m.move,this->game);
     // this->game->printBoard();
