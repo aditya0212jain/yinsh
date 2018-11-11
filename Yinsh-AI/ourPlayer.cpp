@@ -26,7 +26,6 @@ bool compareForMin(const transitionMove &a,const transitionMove &b){
   return a.value<b.value;
 }
 
-
 vector<string> ourPlayer::sortChildren(vector<string> moves,bool forMax){
   vector<transitionMove> v;
   int playerNumber;
@@ -35,23 +34,33 @@ vector<string> ourPlayer::sortChildren(vector<string> moves,bool forMax){
   }else{
     playerNumber = (this->playerNumber==1) ? 2:1;
   }
-  for(int i=0;i<moves.size();i++){
-    if(htMap.find(moves[i])==htMap.end()){
+  // for(int i=0;i<moves.size();i++){
+  //   if(htMap.find(moves[i])==htMap.end()){
 
-    moveDecider(playerNumber,moves[i],this->game);
+  //   moveDecider(playerNumber,moves[i],this->game);
+  //   lli valueTemp = this->game->computeHeuristicValue(this->playerNumber);
+  //   transitionMove temp;
+  //   temp.move = moves[i];
+  //   temp.value = valueTemp;
+  //   v.push_back(temp);
+  //   htMap[moves[i]]=valueTemp;
+  //   this->game->moveUndo(playerNumber,moves[i]);
+  //   }else{
+  //     transitionMove temp;
+  //     temp.value = htMap[moves[i]];
+  //     temp.move = moves[i];
+  //     v.push_back(temp);
+  //   }
+  // }
+  for(int i=0;i<moves.size();i++){
+  moveDecider(playerNumber,moves[i],this->game);
     lli valueTemp = this->game->computeHeuristicValue(this->playerNumber);
     transitionMove temp;
     temp.move = moves[i];
     temp.value = valueTemp;
     v.push_back(temp);
-    htMap[moves[i]]=valueTemp;
+    // htMap[moves[i]]=valueTemp;
     this->game->moveUndo(playerNumber,moves[i]);
-    }else{
-      transitionMove temp;
-      temp.value = htMap[moves[i]];
-      temp.move = moves[i];
-      v.push_back(temp);
-    }
   }
   if(forMax){
     sort(v.begin(),v.end(),compareForMax);
@@ -68,11 +77,12 @@ vector<string> ourPlayer::sortChildren(vector<string> moves,bool forMax){
 //Assuming PLayer 0 moves first and PLayer 1 follows
 
 ourPlayer::ourPlayer(int playerNumber,int timeLeft,int numberOfRings,int markersNeededToRemove){
+  int boardSize = numberOfRings;
   this->playerNumber =  playerNumber; //1-> Player 1, 2-> Player 2
   this->totalRings =  numberOfRings; //This version only has to deal with 5 rings
   this->timeLeft =  timeLeft; //will be initialised with full time
   this->myRingsRemoved = 0;//starting with 0 rings
-  this->game = new ourGame();
+  this->game = new ourGame(boardSize);
   this->markersNeededToRemove = markersNeededToRemove;
 }
 
@@ -517,9 +527,6 @@ vector<pair<pair<int,int>,pair<int,int> > > ourPlayer::selectAndMove(int playerN
     }
 
   }
-
-
-
   return ans;
 }
 
@@ -583,7 +590,7 @@ vector<string> ourPlayer::markerDeletion(int playerNo, ourGame* game){
   string temp = "";
 
   /*
-  Below stored positions were used 
+  Below stored positions were used
   */
 
   // if(playerNo==1){
@@ -717,10 +724,10 @@ vector<string> ourPlayer::markerDeletion(int playerNo, ourGame* game){
         }
         // cout << "a" << endl;
         // cout << ans.size() << " ";
-        temp = markerDeletionHelper(playerNo,i,j,0,-1,game);//Total 6 directions
-        if(temp.length()!=0){
-          ans.pb(temp);
-        }
+        // temp = markerDeletionHelper(playerNo,i,j,0,-1,game);//Total 6 directions
+        // if(temp.length()!=0){
+        //   ans.pb(temp);
+        // }
         // cout << "b" << endl;
         // cout << ans.size() << " ";
 
@@ -730,10 +737,10 @@ vector<string> ourPlayer::markerDeletion(int playerNo, ourGame* game){
         }
         // cout << ans.size() << " ";
         // cout << "c" << endl;
-        temp = markerDeletionHelper(playerNo,i,j,-1,-1,game);//Total 6 directions
-        if(temp.length()!=0){
-          ans.pb(temp);
-        }
+        // temp = markerDeletionHelper(playerNo,i,j,-1,-1,game);//Total 6 directions
+        // if(temp.length()!=0){
+        //   ans.pb(temp);
+        // }
         // cout << ans.size() << " ";
 
         temp = markerDeletionHelper(playerNo,i,j,1,0,game);//Total 6 directions
@@ -742,10 +749,10 @@ vector<string> ourPlayer::markerDeletion(int playerNo, ourGame* game){
         }
         // cout << ans.size() << " ";
 
-        temp = markerDeletionHelper(playerNo,i,j,-1,0,game);//Total 6 directions
-        if(temp.length()!=0){
-          ans.pb(temp);
-        }
+        // temp = markerDeletionHelper(playerNo,i,j,-1,0,game);//Total 6 directions
+        // if(temp.length()!=0){
+        //   ans.pb(temp);
+        // }
         // cout << ans.size();
       }
       // cout << endl;
@@ -936,7 +943,6 @@ vector<string> ourPlayer::moveList(int playerNo, ourGame* game){
   //Returns a list of moves
   vector<string> ans;
   vector<string> firstRound = allDeletions(playerNo, game);
-  // cout << "Do I Reach here?" << endl;
   if(firstRound.size()==0){
     //Nothing to delete
     vector<string> fr = selectAndMoveFinal(playerNo, game);
@@ -945,20 +951,19 @@ vector<string> ourPlayer::moveList(int playerNo, ourGame* game){
       // cout << "NO MOVE LEFT" << endl;
     }
     else{
-      // cout << "frSize: " << frSize << endl;
-
+      // no deletions but move
       for(int i=0; i<frSize; i++){
         string firstMove = fr[i];
-        // cout<<" "<<firstMove<<endl;
         moveDecider(playerNo, firstMove, game);
 
         vector<string> dr = allDeletions(playerNo, game);
         game->moveUndo(playerNo,firstMove);
         if(dr.size()==0){
+          //move and then no deletion
           ans.pb(firstMove);
         }
         else{
-          // cout << "drSize: " << dr.size() << endl;
+          //move and then delete
           for(int j=0; j<dr.size(); j++){
             string temp = firstMove + " " + dr[j];
             ans.pb(temp);
@@ -969,7 +974,6 @@ vector<string> ourPlayer::moveList(int playerNo, ourGame* game){
   }
   else{
     //There are deletions possible
-    // cout << "First Round Size: " << firstRound.size() << endl;
     for(int i=0; i<firstRound.size(); i++){
       string fm = firstRound[i];
       moveDecider(playerNo, fm, game);
@@ -979,25 +983,19 @@ vector<string> ourPlayer::moveList(int playerNo, ourGame* game){
         ans.pb(fm);
       }
       else{
+        //delete then move
         for(int j=0; j<sr.size(); j++){
-          // ourGame*  afterSecondMove = new ourGame();
-          // afterSecondMove->copyTheBoard(afterFirstMove);
           string sm = sr[j];
           moveDecider(playerNo, sm, game);
           vector<string> tr = allDeletions(playerNo, game);
           game->moveUndo(playerNo,sm);
-          //cout << tr.size() << endl;
-          // cout << sm << " " << j << "\n";
           if(tr.size()==0){
             //Nothing to delete
             string temp = fm + " " + sm;
-            //cout << temp << endl;
             ans.pb(temp);
-            // if(j==18)
-            //   cout << "What happens?" << endl;
           }
           else{
-            //Something to delete
+            //delete move and then delete
             for(int k=0; k<tr.size(); k++){
               string temp = fm + " " + sm + " " + tr[k];
               ans.pb(temp);
@@ -1018,7 +1016,7 @@ vector<string> ourPlayer::moveList(int playerNo, ourGame* game){
 struct transitionMove ourPlayer::idMinimax(int max_depth,double maxTime){
   int depth = 0;
   double tempTime=0;
-  htMap.clear();
+  // htMap.clear();
   totalNodes=0;
   //start noting time
   struct transitionMove bestMove;
@@ -1035,6 +1033,7 @@ struct transitionMove ourPlayer::idMinimax(int max_depth,double maxTime){
     }
     cerr<<"totalNodes: "<<totalNodes<<endl;
     if(totalNodes>5000){
+      return bestMove;
       break;
     }
     // bestScore = max(bestScore,tempMove.value);
@@ -1045,8 +1044,8 @@ struct transitionMove ourPlayer::idMinimax(int max_depth,double maxTime){
     //   }
     // }
   }
-  htMap.clear();
-  return tempMove;
+  // htMap.clear();
+  return tempMove;//initially it was tempMove
 }
 
 /*
@@ -1062,8 +1061,6 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
     ans.move="Reached";
     int myRings,opponentRings;
     ans.value=this->game->computeHeuristicValue(this->playerNumber);
-
-
     return ans;
   }
 
@@ -1078,12 +1075,12 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
 
     //Commenting Sorting for a while
     possible_moves = sortChildren(possible_moves,true);
-    
+
     for(int i=0;i<possible_moves.size();i++){
 
       moveDecider(this->playerNumber,possible_moves[i],this->game);
       transitionMove tempMove = minimax(depth+1,false,alpha,beta,max_depth);
-      htMap[possible_moves[i]]=tempMove.value;
+      // htMap[possible_moves[i]]=tempMove.value;
       if(alpha<=tempMove.value){
         alpha = tempMove.value;
       }
@@ -1113,7 +1110,7 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
     for(int i=0;i<possible_moves.size();i++){
       moveDecider(opponent_player_number,possible_moves[i],this->game);
       transitionMove tempMove= minimax(depth+1,true,alpha,beta,max_depth);
-      htMap[possible_moves[i]]=tempMove.value;
+      // htMap[possible_moves[i]]=tempMove.value;
       // beta = min(beta,value);
       if(beta>=tempMove.value){
         beta = tempMove.value;
@@ -1136,6 +1133,7 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
 }
 
 void ourPlayer::initialPlacing(){
+  int width = 2 * this->totalRings + 1;
   int count1=0,count2=0;
   string oppMove;
   if(this->playerNumber==2){
@@ -1159,10 +1157,10 @@ void ourPlayer::initialPlacing(){
         bool assigned=false;
         //checking if already opponent ring is there
         for(int b=1;b<(6*a);b++){
-          pair<int,int> h = hexToCartesian(a,b,11);
+          pair<int,int> h = hexToCartesian(a,b,width);
           if(this->game->board[h.first][h.second].canBeUsed&&this->game->board[h.first][h.second].player==((this->playerNumber%2)+1)){
-            pair<int,int> h1 = hexToCartesian(a,b+1,11);
-            pair<int,int> h2 = hexToCartesian(a,b-1,11);
+            pair<int,int> h1 = hexToCartesian(a,b+1,width);
+            pair<int,int> h2 = hexToCartesian(a,b-1,width);
             if(this->game->board[h1.first][h1.second].canBeUsed&&this->game->board[h1.first][h1.second].player==0){
               string beta = "P ";
               beta = beta+to_string(a)+" "+to_string(b+1);
@@ -1190,7 +1188,7 @@ void ourPlayer::initialPlacing(){
           bool smalloop=true;
           while(smalloop){
             int b = rand()%(6*a);
-            pair<int,int> h = hexToCartesian(a,b,11);
+            pair<int,int> h = hexToCartesian(a,b,width);
             if(this->game->board[h.first][h.second].canBeUsed&&this->game->board[h.first][h.second].player==0){
               string beta = "P ";
               beta = beta+to_string(a)+" "+to_string(b);
@@ -1209,11 +1207,11 @@ void ourPlayer::initialPlacing(){
         int a =5;
         bool assigned=false;
         for(int b=0;b<(6*a);b++){
-          pair<int,int> h = hexToCartesian(a,b,11);
+          pair<int,int> h = hexToCartesian(a,b,width);
           if(this->game->board[h.first][h.second].canBeUsed&&this->game->board[h.first][h.second].player==this->playerNumber){
             int c = b/a;
             int d = (rand()%3)+1 + (4*c);
-            pair<int,int > h1 = hexToCartesian(4,d,11);
+            pair<int,int > h1 = hexToCartesian(4,d,width);
             if(this->game->board[h1.first][h1.second].player==0){
               string beta = "P ";
               beta = beta+to_string(4)+" "+to_string(d);
@@ -1239,7 +1237,7 @@ void ourPlayer::initialPlacing(){
         b = rand()%(6*a);
       }
       // cout<<"a,b: "<<a<<" "<<b<<endl;
-      pair<int,int> h = hexToCartesian(a,b,11);
+      pair<int,int> h = hexToCartesian(a,b,width);
       // cout<<"h "<<h.first<<" "<<h.second<<endl;
       if(this->game->board[h.first][h.second].player==0){
         string beta = "P ";

@@ -22,10 +22,10 @@ int main(){
   getline(cin,inp);
   vector<string> argus= split(inp,' ');
   p_id = stoi(argus[0]);
-  bs = stoi(argus[1]);
-  tl = stoi(argus[2]);
+  bs = stoi(argus[1]); //boardSize
+  tl = stoi(argus[2]); //
   markersNeededToRemove = stoi(argus[3]);
-  numberofRings = 5;
+  numberofRings = bs;
   ourPlayer playah(p_id,tl,numberofRings,markersNeededToRemove);
   playah.play();
   string input;
