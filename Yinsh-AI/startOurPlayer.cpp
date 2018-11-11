@@ -25,7 +25,7 @@ int main(){
   bs = stoi(argus[1]); //boardSize
   tl = stoi(argus[2]); //
   markersNeededToRemove = stoi(argus[3]);
-  numberofRings = 5;
+  numberofRings = bs;
   ourPlayer playah(p_id,tl,numberofRings,markersNeededToRemove);
   playah.play();
   string input;

@@ -878,7 +878,7 @@ vector<string> ourPlayer::moveList(int playerNo, ourGame* game){
   vector<string> ans;
   vector<string> firstRound = allDeletions(playerNo, game);
   // cout << "Do I Reach here?" << endl;
-  cout << "First Move, first Round: " << firstRound.size() << endl;
+  // cout << "First Move, first Round: " << firstRound.size() << endl;
   if(firstRound.size()==0){
     //Nothing to delete
     vector<string> fr = selectAndMoveFinal(playerNo, game);
@@ -1086,9 +1086,11 @@ void ourPlayer::initialPlacing(){
    this->moveDecider(1,oppMove,this->game);
    count2++;
   }
-  while(count1!=5||count2!=5){
+  cerr << "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&" << endl;
+  cerr << "NUmber of Rings= " << this->totalRings << endl;
+  while(count1!=this->totalRings||count2!=this->totalRings){
     while(true){
-      if(this->game->board[5][5].player==0){
+      if(this->game->board[this->totalRings][this->totalRings].player==0){
         string beta = "P 0 0";
         cout<<beta<<endl;
         this->moveDecider(this->playerNumber,beta,this->game);
@@ -1193,7 +1195,7 @@ void ourPlayer::initialPlacing(){
         break;
       }
     }
-    if(count1==5&&count2==5){
+    if(count1==this->totalRings&&count2==this->totalRings){
       break;
     }
     getline(cin,oppMove);
