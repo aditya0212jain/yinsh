@@ -34,23 +34,33 @@ vector<string> ourPlayer::sortChildren(vector<string> moves,bool forMax){
   }else{
     playerNumber = (this->playerNumber==1) ? 2:1;
   }
-  for(int i=0;i<moves.size();i++){
-    if(htMap.find(moves[i])==htMap.end()){
+  // for(int i=0;i<moves.size();i++){
+  //   if(htMap.find(moves[i])==htMap.end()){
 
-    moveDecider(playerNumber,moves[i],this->game);
+  //   moveDecider(playerNumber,moves[i],this->game);
+  //   lli valueTemp = this->game->computeHeuristicValue(this->playerNumber);
+  //   transitionMove temp;
+  //   temp.move = moves[i];
+  //   temp.value = valueTemp;
+  //   v.push_back(temp);
+  //   htMap[moves[i]]=valueTemp;
+  //   this->game->moveUndo(playerNumber,moves[i]);
+  //   }else{
+  //     transitionMove temp;
+  //     temp.value = htMap[moves[i]];
+  //     temp.move = moves[i];
+  //     v.push_back(temp);
+  //   }
+  // }
+  for(int i=0;i<moves.size();i++){
+  moveDecider(playerNumber,moves[i],this->game);
     lli valueTemp = this->game->computeHeuristicValue(this->playerNumber);
     transitionMove temp;
     temp.move = moves[i];
     temp.value = valueTemp;
     v.push_back(temp);
-    htMap[moves[i]]=valueTemp;
+    // htMap[moves[i]]=valueTemp;
     this->game->moveUndo(playerNumber,moves[i]);
-    }else{
-      transitionMove temp;
-      temp.value = htMap[moves[i]];
-      temp.move = moves[i];
-      v.push_back(temp);
-    }
   }
   if(forMax){
     sort(v.begin(),v.end(),compareForMax);
@@ -105,13 +115,14 @@ void ourPlayer::addMarker(int playerNo, int hex, int pos, ourGame* game){
   tempboardCell.containsRings = false;
   tempboardCell.canBeUsed = true;
   game->board[x][y]  = tempboardCell;
+  // game->allMarkerPosition.push_back(mp(x,y));
   if(playerNo==1){
     game->playerOneMarkersOnBoard++;
-    game->playerOneMarkerPosition.push_back(mp(x,y));
+    // game->playerOneMarkerPosition.push_back(mp(x,y));
   }
   else{
     game->playerTwoMarkersOnBoard++;
-    game->playerTwoMarkerPosition.push_back(mp(x,y));
+    // game->playerTwoMarkerPosition.push_back(mp(x,y));
   }
 }
 
@@ -143,19 +154,20 @@ void ourPlayer::moveRing(int playerNo,int xStart, int yStart, int x, int y, ourG
 
   game->board[newMarkerPosition.first][newMarkerPosition.second] = tempBoardCellMarker;
   inverseMarker(playerNo,xStart,yStart,x,y,game);
+  // game->allMarkerPosition.push_back(mp(xStart,yStart));
   if(playerNo==1){
     game->playerOneMarkersOnBoard++;
     auto it = find(game->playerOneRingPositions.begin(),game->playerOneRingPositions.end(),mp(xStart,yStart));
     if(it!=game->playerOneRingPositions.end())
       *it = mp(x,y);
-    game->playerOneMarkerPosition.push_back(mp(xStart,yStart));
+    // game->playerOneMarkerPosition.push_back(mp(xStart,yStart));
   }
   else{
     game->playerTwoMarkersOnBoard++;
     auto it = find(game->playerTwoRingPositions.begin(),game->playerTwoRingPositions.end(),mp(xStart,yStart));
     if(it!=game->playerTwoRingPositions.end())
       *it = mp(x,y);
-    game->playerTwoMarkerPosition.push_back(mp(xStart,yStart));
+    // game->playerTwoMarkerPosition.push_back(mp(xStart,yStart));
   }
 }
 
@@ -194,16 +206,19 @@ void ourPlayer::removeRow(int playerNo, int startX, int startY, int endX, int en
     //Vertical move
     int mov = movementY/abs(movementY);
     for(int i = min(startY,endY); i<=max(endY,startY); i++){
+      // auto it = find(game->allMarkerPosition.begin(),game->allMarkerPosition.end(),mp(startX,i));
+      // if(it!=game->allMarkerPosition.end())
+      //   game->allMarkerPosition.erase(it);
       //Removing marker position from vector
-      if(game->board[startX][i].player==1){
-        auto it = find(game->playerOneMarkerPosition.begin(),game->playerOneMarkerPosition.end(),make_pair(startX,i));
-        if(it!=game->playerOneMarkerPosition.end())
-          game->playerOneMarkerPosition.erase(it);
-      }else{
-        auto it = find(game->playerTwoMarkerPosition.begin(),game->playerTwoMarkerPosition.end(),make_pair(startX,i));
-        if(it!=game->playerTwoMarkerPosition.end())
-          game->playerTwoMarkerPosition.erase(it);
-      }
+      // if(game->board[startX][i].player==1){
+      //   auto it = find(game->playerOneMarkerPosition.begin(),game->playerOneMarkerPosition.end(),make_pair(startX,i));
+      //   if(it!=game->playerOneMarkerPosition.end())
+      //     game->playerOneMarkerPosition.erase(it);
+      // }else{
+      //   auto it = find(game->playerTwoMarkerPosition.begin(),game->playerTwoMarkerPosition.end(),make_pair(startX,i));
+      //   if(it!=game->playerTwoMarkerPosition.end())
+      //     game->playerTwoMarkerPosition.erase(it);
+      // }
       //done removing
       boardCell tempBoardCell;
       tempBoardCell.player = 0;
@@ -217,16 +232,19 @@ void ourPlayer::removeRow(int playerNo, int startX, int startY, int endX, int en
     //Vertical move
     int mov = movementX/abs(movementX);
     for(int i = min(startX,endX); i<=max(endX,startX); i++){
+      // auto it = find(game->allMarkerPosition.begin(),game->allMarkerPosition.end(),mp(i,startY));
+      // if(it!=game->allMarkerPosition.end())
+      //   game->allMarkerPosition.erase(it);
       //Removing marker position from vector
-      if(game->board[i][startY].player==1){
-        auto it = find(game->playerOneMarkerPosition.begin(),game->playerOneMarkerPosition.end(),make_pair(i,startY));
-        if(it!=game->playerOneMarkerPosition.end())
-          game->playerOneMarkerPosition.erase(it);
-      }else{
-        auto it = find(game->playerTwoMarkerPosition.begin(),game->playerTwoMarkerPosition.end(),make_pair(i,startY));
-        if(it!=game->playerTwoMarkerPosition.end())
-          game->playerTwoMarkerPosition.erase(it);
-      }
+      // if(game->board[i][startY].player==1){
+      //   auto it = find(game->playerOneMarkerPosition.begin(),game->playerOneMarkerPosition.end(),make_pair(i,startY));
+      //   if(it!=game->playerOneMarkerPosition.end())
+      //     game->playerOneMarkerPosition.erase(it);
+      // }else{
+      //   auto it = find(game->playerTwoMarkerPosition.begin(),game->playerTwoMarkerPosition.end(),make_pair(i,startY));
+      //   if(it!=game->playerTwoMarkerPosition.end())
+      //     game->playerTwoMarkerPosition.erase(it);
+      // }
       //done removing
       boardCell tempBoardCell;
       tempBoardCell.player = 0;
@@ -240,16 +258,19 @@ void ourPlayer::removeRow(int playerNo, int startX, int startY, int endX, int en
     int mov = movementX/abs(movementX);
     int i,j;
     for(i = min(startX,endX),j=min(endY,startY); i<=max(startX,endX),j<=max(endY,startY); i++,j++){
+      // auto it = find(game->allMarkerPosition.begin(),game->allMarkerPosition.end(),mp(i,j));
+      // if(it!=game->allMarkerPosition.end())
+      //   game->allMarkerPosition.erase(it);
       //Removing marker position from vector
-      if(game->board[i][j].player==1){
-        auto it = find(game->playerOneMarkerPosition.begin(),game->playerOneMarkerPosition.end(),make_pair(i,j));
-        if(it!=game->playerOneMarkerPosition.end())
-          game->playerOneMarkerPosition.erase(it);
-      }else{
-        auto it = find(game->playerTwoMarkerPosition.begin(),game->playerTwoMarkerPosition.end(),make_pair(i,j));
-        if(it!=game->playerTwoMarkerPosition.end())
-          game->playerTwoMarkerPosition.erase(it);
-      }
+      // if(game->board[i][j].player==1){
+      //   auto it = find(game->playerOneMarkerPosition.begin(),game->playerOneMarkerPosition.end(),make_pair(i,j));
+      //   if(it!=game->playerOneMarkerPosition.end())
+      //     game->playerOneMarkerPosition.erase(it);
+      // }else{
+      //   auto it = find(game->playerTwoMarkerPosition.begin(),game->playerTwoMarkerPosition.end(),make_pair(i,j));
+      //   if(it!=game->playerTwoMarkerPosition.end())
+      //     game->playerTwoMarkerPosition.erase(it);
+      // }
       //done removing
       boardCell tempBoardCell;
       tempBoardCell.player = 0;
@@ -284,18 +305,18 @@ void ourPlayer::inverseMarker(int playerNo, int startX, int startY, int endX, in
       if(tempBoardCell.player==1){
         game->playerOneMarkersOnBoard++;
         game->playerTwoMarkersOnBoard--;
-        game->playerOneMarkerPosition.push_back(mp(startX,i));
-        auto it = find(game->playerTwoMarkerPosition.begin(),game->playerTwoMarkerPosition.end(),make_pair(startX,i));
-        if(it!=game->playerTwoMarkerPosition.end())
-          game->playerTwoMarkerPosition.erase(it);
+        // game->playerOneMarkerPosition.push_back(mp(startX,i));
+        // auto it = find(game->playerTwoMarkerPosition.begin(),game->playerTwoMarkerPosition.end(),make_pair(startX,i));
+        // if(it!=game->playerTwoMarkerPosition.end())
+        //   game->playerTwoMarkerPosition.erase(it);
       }
       else{
         game->playerTwoMarkersOnBoard++;
         game->playerOneMarkersOnBoard--;
-        game->playerTwoMarkerPosition.push_back(mp(startX,i));
-        auto it = find(game->playerOneMarkerPosition.begin(),game->playerOneMarkerPosition.end(),make_pair(startX,i));
-        if(it!=game->playerOneMarkerPosition.end())
-          game->playerOneMarkerPosition.erase(it);
+        // game->playerTwoMarkerPosition.push_back(mp(startX,i));
+        // auto it = find(game->playerOneMarkerPosition.begin(),game->playerOneMarkerPosition.end(),make_pair(startX,i));
+        // if(it!=game->playerOneMarkerPosition.end())
+        //   game->playerOneMarkerPosition.erase(it);
       }
       game->board[startX][i] = tempBoardCell;
     }
@@ -311,18 +332,18 @@ void ourPlayer::inverseMarker(int playerNo, int startX, int startY, int endX, in
       if(tempBoardCell.player==1){
         game->playerOneMarkersOnBoard++;
         game->playerTwoMarkersOnBoard--;
-        game->playerOneMarkerPosition.push_back(mp(i,startY));
-        auto it = find(game->playerTwoMarkerPosition.begin(),game->playerTwoMarkerPosition.end(),make_pair(i,startY));
-        if(it!=game->playerTwoMarkerPosition.end())
-          game->playerTwoMarkerPosition.erase(it);
+        // game->playerOneMarkerPosition.push_back(mp(i,startY));
+        // auto it = find(game->playerTwoMarkerPosition.begin(),game->playerTwoMarkerPosition.end(),make_pair(i,startY));
+        // if(it!=game->playerTwoMarkerPosition.end())
+        //   game->playerTwoMarkerPosition.erase(it);
       }
       else{
         game->playerTwoMarkersOnBoard++;
         game->playerOneMarkersOnBoard--;
-        game->playerTwoMarkerPosition.push_back(mp(i,startY));
-        auto it = find(game->playerOneMarkerPosition.begin(),game->playerOneMarkerPosition.end(),make_pair(i,startY));
-        if(it!=game->playerOneMarkerPosition.end())
-          game->playerOneMarkerPosition.erase(it);
+        // game->playerTwoMarkerPosition.push_back(mp(i,startY));
+        // auto it = find(game->playerOneMarkerPosition.begin(),game->playerOneMarkerPosition.end(),make_pair(i,startY));
+        // if(it!=game->playerOneMarkerPosition.end())
+        //   game->playerOneMarkerPosition.erase(it);
       }
       game->board[i][startY] = tempBoardCell;
     }
@@ -338,18 +359,18 @@ void ourPlayer::inverseMarker(int playerNo, int startX, int startY, int endX, in
       if(tempBoardCell.player==1){
         game->playerOneMarkersOnBoard++;
         game->playerTwoMarkersOnBoard--;
-        game->playerOneMarkerPosition.push_back(mp(i,j));
-        auto it = find(game->playerTwoMarkerPosition.begin(),game->playerTwoMarkerPosition.end(),make_pair(i,j));
-        if(it!=game->playerTwoMarkerPosition.end())
-          game->playerTwoMarkerPosition.erase(it);
+        // game->playerOneMarkerPosition.push_back(mp(i,j));
+        // auto it = find(game->playerTwoMarkerPosition.begin(),game->playerTwoMarkerPosition.end(),make_pair(i,j));
+        // if(it!=game->playerTwoMarkerPosition.end())
+        //   game->playerTwoMarkerPosition.erase(it);
       }
       else{
         game->playerTwoMarkersOnBoard++;
         game->playerOneMarkersOnBoard--;
-        game->playerTwoMarkerPosition.push_back(mp(i,j));
-        auto it = find(game->playerOneMarkerPosition.begin(),game->playerOneMarkerPosition.end(),make_pair(i,j));
-        if(it!=game->playerOneMarkerPosition.end())
-          game->playerOneMarkerPosition.erase(it);
+        // game->playerTwoMarkerPosition.push_back(mp(i,j));
+        // auto it = find(game->playerOneMarkerPosition.begin(),game->playerOneMarkerPosition.end(),make_pair(i,j));
+        // if(it!=game->playerOneMarkerPosition.end())
+        //   game->playerOneMarkerPosition.erase(it);
       }
       game->board[i][j] = tempBoardCell;
     }
@@ -647,6 +668,51 @@ vector<string> ourPlayer::markerDeletion(int playerNo, ourGame* game){
   //   return ans;
   // }
 
+  // for(int k=0;k<game->allMarkerPosition.size();k++){
+  //   pair<int,int> tp = game->allMarkerPosition[k];
+  //   int i = tp.first;
+  //   int j = tp.second;
+  //   if(game->board[i][j].containsMarker && game->board[i][j].canBeUsed && game->board[i][j].player ==playerNo){
+  //       // cout << "i=" << i << " j=" << j << endl;
+  //       temp = markerDeletionHelper(playerNo,i,j,0,1,game);//Total 6 directions
+  //       if(temp.length()!=0){
+  //         ans.pb(temp);
+  //       }
+  //       // cout << "a" << endl;
+  //       // cout << ans.size() << " ";
+  //       temp = markerDeletionHelper(playerNo,i,j,0,-1,game);//Total 6 directions
+  //       if(temp.length()!=0){
+  //         ans.pb(temp);
+  //       }
+  //       // cout << "b" << endl;
+  //       // cout << ans.size() << " ";
+
+  //       temp = markerDeletionHelper(playerNo,i,j,1,1,game);//Total 6 directions
+  //       if(temp.length()!=0){
+  //         ans.pb(temp);
+  //       }
+  //       // cout << ans.size() << " ";
+  //       // cout << "c" << endl;
+  //       temp = markerDeletionHelper(playerNo,i,j,-1,-1,game);//Total 6 directions
+  //       if(temp.length()!=0){
+  //         ans.pb(temp);
+  //       }
+  //       // cout << ans.size() << " ";
+
+  //       temp = markerDeletionHelper(playerNo,i,j,1,0,game);//Total 6 directions
+  //       if(temp.length()!=0){
+  //         ans.pb(temp);
+  //       }
+  //       // cout << ans.size() << " ";
+
+  //       temp = markerDeletionHelper(playerNo,i,j,-1,0,game);//Total 6 directions
+  //       if(temp.length()!=0){
+  //         ans.pb(temp);
+  //       }
+  //       // cout << ans.size();
+  //     }
+  // }
+
   for(int i=0; i<rows; i++){
     for(int j=0; j<rows; j++){
       // cout << i << " " << j << " " ;
@@ -887,20 +953,19 @@ vector<string> ourPlayer::moveList(int playerNo, ourGame* game){
       // cout << "NO MOVE LEFT" << endl;
     }
     else{
-      // cout << "frSize: " << frSize << endl;
-
+      // no deletions but move
       for(int i=0; i<frSize; i++){
         string firstMove = fr[i];
-        // cout<<" "<<firstMove<<endl;
         moveDecider(playerNo, firstMove, game);
 
         vector<string> dr = allDeletions(playerNo, game);
         game->moveUndo(playerNo,firstMove);
         if(dr.size()==0){
+          //move and then no deletion
           ans.pb(firstMove);
         }
         else{
-          // cout << "drSize: " << dr.size() << endl;
+          //move and then delete
           for(int j=0; j<dr.size(); j++){
             string temp = firstMove + " " + dr[j];
             ans.pb(temp);
@@ -911,7 +976,6 @@ vector<string> ourPlayer::moveList(int playerNo, ourGame* game){
   }
   else{
     //There are deletions possible
-    // cout << "First Round Size: " << firstRound.size() << endl;
     for(int i=0; i<firstRound.size(); i++){
       string fm = firstRound[i];
       moveDecider(playerNo, fm, game);
@@ -921,25 +985,19 @@ vector<string> ourPlayer::moveList(int playerNo, ourGame* game){
         ans.pb(fm);
       }
       else{
+        //delete then move
         for(int j=0; j<sr.size(); j++){
-          // ourGame*  afterSecondMove = new ourGame();
-          // afterSecondMove->copyTheBoard(afterFirstMove);
           string sm = sr[j];
           moveDecider(playerNo, sm, game);
           vector<string> tr = allDeletions(playerNo, game);
           game->moveUndo(playerNo,sm);
-          //cout << tr.size() << endl;
-          // cout << sm << " " << j << "\n";
           if(tr.size()==0){
             //Nothing to delete
             string temp = fm + " " + sm;
-            //cout << temp << endl;
             ans.pb(temp);
-            // if(j==18)
-            //   cout << "What happens?" << endl;
           }
           else{
-            //Something to delete
+            //delete move and then delete
             for(int k=0; k<tr.size(); k++){
               string temp = fm + " " + sm + " " + tr[k];
               ans.pb(temp);
@@ -960,7 +1018,7 @@ vector<string> ourPlayer::moveList(int playerNo, ourGame* game){
 struct transitionMove ourPlayer::idMinimax(int max_depth,double maxTime){
   int depth = 0;
   double tempTime=0;
-  htMap.clear();
+  // htMap.clear();
   totalNodes=0;
   //start noting time
   struct transitionMove bestMove;
@@ -977,6 +1035,7 @@ struct transitionMove ourPlayer::idMinimax(int max_depth,double maxTime){
     }
     cerr<<"totalNodes: "<<totalNodes<<endl;
     if(totalNodes>5000){
+      return bestMove;
       break;
     }
     // bestScore = max(bestScore,tempMove.value);
@@ -987,8 +1046,8 @@ struct transitionMove ourPlayer::idMinimax(int max_depth,double maxTime){
     //   }
     // }
   }
-  htMap.clear();
-  return tempMove;
+  // htMap.clear();
+  return tempMove;//initially it was tempMove
 }
 
 /*
@@ -1004,8 +1063,6 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
     ans.move="Reached";
     int myRings,opponentRings;
     ans.value=this->game->computeHeuristicValue(this->playerNumber);
-
-
     return ans;
   }
 
@@ -1025,7 +1082,7 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
 
       moveDecider(this->playerNumber,possible_moves[i],this->game);
       transitionMove tempMove = minimax(depth+1,false,alpha,beta,max_depth);
-      htMap[possible_moves[i]]=tempMove.value;
+      // htMap[possible_moves[i]]=tempMove.value;
       if(alpha<=tempMove.value){
         alpha = tempMove.value;
       }
@@ -1055,7 +1112,7 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
     for(int i=0;i<possible_moves.size();i++){
       moveDecider(opponent_player_number,possible_moves[i],this->game);
       transitionMove tempMove= minimax(depth+1,true,alpha,beta,max_depth);
-      htMap[possible_moves[i]]=tempMove.value;
+      // htMap[possible_moves[i]]=tempMove.value;
       // beta = min(beta,value);
       if(beta>=tempMove.value){
         beta = tempMove.value;

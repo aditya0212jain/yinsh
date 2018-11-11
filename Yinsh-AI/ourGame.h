@@ -33,12 +33,14 @@ public:
   vector< pair<int,int> > playerTwoRingPositions;
   vector< pair<int,int> > playerOneMarkerPosition;
   vector< pair<int,int> > playerTwoMarkerPosition;
+  vector< pair<int,int> > allMarkerPosition;
   //vector<pair<int,int>> axialToRadialDatabase; //  index = (0,0)->0, others -> ((h)*(h+1))/2 + pos, dataBaseIndex contains a pair which gives
 
 
   ourGame(int boardSize);
   //ourGame(int n);
   double computeHeuristicValue(int player);
+  double heuristicForSort(int player);
   void printBoard();
   bool ended();
   void copyTheBoard(ourGame* game);

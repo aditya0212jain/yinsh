@@ -181,7 +181,7 @@ double ourGame::computeHeuristicValue(int player){
   int opponentWeight[] = {0,0,-2,-5,-50,-1000,-1000,-1000,-1000,-1000,-1000,-1000, -1000,-1000};
   for(int i=0;i<rows+1;i++){
     score+=weight[i]*valuesForConsecutiveMarkers[i];
-    // score+=opponentWeight[i]*valuesForConsecutiveMarkers2[i];
+    score+=opponentWeight[i]*valuesForConsecutiveMarkers2[i];
   }
 
 
@@ -196,6 +196,25 @@ double ourGame::computeHeuristicValue(int player){
   }
 
 
+  return score;
+
+}
+
+double ourGame::heuristicForSort(int player){
+  lli score=0;
+  int count=0,count2=0;
+  vector<int> valuesForConsecutiveMarkers,valuesForConsecutiveMarkers2;
+  int myRingsInitial=rows/2,opponentRingsInitial=rows/2;
+  int otherPlayer = (player%2)+1;
+  if(player==1){
+    score+=100000*(myRingsInitial-this->playerOneRingsOnBoard);
+    score-=110000*(opponentRingsInitial-this->playerTwoRingsOnBoard);
+    score+=this->playerOneMarkersOnBoard;
+  }else{
+    score+=100000*(myRingsInitial-this->playerTwoRingsOnBoard);
+    score-=110000*(opponentRingsInitial-this->playerOneRingsOnBoard);////teen zeros aur the
+    score+=this->playerTwoMarkersOnBoard;
+  }
   return score;
 
 }
@@ -284,6 +303,7 @@ void ourGame::addRow(int playerNo, int startX, int startY, int endX, int endY){
       tempBoardCell.containsRings = false;
       tempBoardCell.canBeUsed = true;
       board[startX][i] = tempBoardCell;
+      // this->allMarkerPosition.push_back(make_pair(startX,i));
     }
   }
   else if(movementY==0){
@@ -296,6 +316,7 @@ void ourGame::addRow(int playerNo, int startX, int startY, int endX, int endY){
       tempBoardCell.containsRings = false;
       tempBoardCell.canBeUsed = true;
       board[i][startY] = tempBoardCell;
+      // this->allMarkerPosition.push_back(make_pair(i,startY));
     }
   }
   else if(movementX==movementY){
@@ -308,6 +329,7 @@ void ourGame::addRow(int playerNo, int startX, int startY, int endX, int endY){
       tempBoardCell.containsRings = false;
       tempBoardCell.canBeUsed = true;
       board[i][j] = tempBoardCell;
+      // this->allMarkerPosition.push_back(make_pair(i,j));
     }
   }
   else{
@@ -328,6 +350,9 @@ void ourGame::removeMarker(int playerNo, int x, int y){
   tempBoardCell.containsRings = false;
   tempBoardCell.canBeUsed = true;
   board[x][y] = tempBoardCell;
+  // auto it = find(this->allMarkerPosition.begin(),this->allMarkerPosition.end(),make_pair(x,y));
+  // if(it!=this->allMarkerPosition.end())
+  //   this->allMarkerPosition.erase(it);
 }
 
 bool ourGame::equalsTo(ourGame *game){
