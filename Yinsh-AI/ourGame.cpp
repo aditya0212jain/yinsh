@@ -284,6 +284,7 @@ void ourGame::addRow(int playerNo, int startX, int startY, int endX, int endY){
       tempBoardCell.containsRings = false;
       tempBoardCell.canBeUsed = true;
       board[startX][i] = tempBoardCell;
+      // this->allMarkerPosition.push_back(make_pair(startX,i));
     }
   }
   else if(movementY==0){
@@ -296,6 +297,7 @@ void ourGame::addRow(int playerNo, int startX, int startY, int endX, int endY){
       tempBoardCell.containsRings = false;
       tempBoardCell.canBeUsed = true;
       board[i][startY] = tempBoardCell;
+      // this->allMarkerPosition.push_back(make_pair(i,startY));
     }
   }
   else if(movementX==movementY){
@@ -308,6 +310,7 @@ void ourGame::addRow(int playerNo, int startX, int startY, int endX, int endY){
       tempBoardCell.containsRings = false;
       tempBoardCell.canBeUsed = true;
       board[i][j] = tempBoardCell;
+      // this->allMarkerPosition.push_back(make_pair(i,j));
     }
   }
   else{
@@ -328,6 +331,9 @@ void ourGame::removeMarker(int playerNo, int x, int y){
   tempBoardCell.containsRings = false;
   tempBoardCell.canBeUsed = true;
   board[x][y] = tempBoardCell;
+  // auto it = find(this->allMarkerPosition.begin(),this->allMarkerPosition.end(),make_pair(x,y));
+  // if(it!=this->allMarkerPosition.end())
+  //   this->allMarkerPosition.erase(it);
 }
 
 bool ourGame::equalsTo(ourGame *game){

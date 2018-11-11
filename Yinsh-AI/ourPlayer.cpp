@@ -105,13 +105,14 @@ void ourPlayer::addMarker(int playerNo, int hex, int pos, ourGame* game){
   tempboardCell.containsRings = false;
   tempboardCell.canBeUsed = true;
   game->board[x][y]  = tempboardCell;
+  // game->allMarkerPosition.push_back(mp(x,y));
   if(playerNo==1){
     game->playerOneMarkersOnBoard++;
-    game->playerOneMarkerPosition.push_back(mp(x,y));
+    // game->playerOneMarkerPosition.push_back(mp(x,y));
   }
   else{
     game->playerTwoMarkersOnBoard++;
-    game->playerTwoMarkerPosition.push_back(mp(x,y));
+    // game->playerTwoMarkerPosition.push_back(mp(x,y));
   }
 }
 
@@ -143,19 +144,20 @@ void ourPlayer::moveRing(int playerNo,int xStart, int yStart, int x, int y, ourG
 
   game->board[newMarkerPosition.first][newMarkerPosition.second] = tempBoardCellMarker;
   inverseMarker(playerNo,xStart,yStart,x,y,game);
+  // game->allMarkerPosition.push_back(mp(xStart,yStart));
   if(playerNo==1){
     game->playerOneMarkersOnBoard++;
     auto it = find(game->playerOneRingPositions.begin(),game->playerOneRingPositions.end(),mp(xStart,yStart));
     if(it!=game->playerOneRingPositions.end())
       *it = mp(x,y);
-    game->playerOneMarkerPosition.push_back(mp(xStart,yStart));
+    // game->playerOneMarkerPosition.push_back(mp(xStart,yStart));
   }
   else{
     game->playerTwoMarkersOnBoard++;
     auto it = find(game->playerTwoRingPositions.begin(),game->playerTwoRingPositions.end(),mp(xStart,yStart));
     if(it!=game->playerTwoRingPositions.end())
       *it = mp(x,y);
-    game->playerTwoMarkerPosition.push_back(mp(xStart,yStart));
+    // game->playerTwoMarkerPosition.push_back(mp(xStart,yStart));
   }
 }
 
@@ -194,16 +196,19 @@ void ourPlayer::removeRow(int playerNo, int startX, int startY, int endX, int en
     //Vertical move
     int mov = movementY/abs(movementY);
     for(int i = min(startY,endY); i<=max(endY,startY); i++){
+      // auto it = find(game->allMarkerPosition.begin(),game->allMarkerPosition.end(),mp(startX,i));
+      // if(it!=game->allMarkerPosition.end())
+      //   game->allMarkerPosition.erase(it);
       //Removing marker position from vector
-      if(game->board[startX][i].player==1){
-        auto it = find(game->playerOneMarkerPosition.begin(),game->playerOneMarkerPosition.end(),make_pair(startX,i));
-        if(it!=game->playerOneMarkerPosition.end())
-          game->playerOneMarkerPosition.erase(it);
-      }else{
-        auto it = find(game->playerTwoMarkerPosition.begin(),game->playerTwoMarkerPosition.end(),make_pair(startX,i));
-        if(it!=game->playerTwoMarkerPosition.end())
-          game->playerTwoMarkerPosition.erase(it);
-      }
+      // if(game->board[startX][i].player==1){
+      //   auto it = find(game->playerOneMarkerPosition.begin(),game->playerOneMarkerPosition.end(),make_pair(startX,i));
+      //   if(it!=game->playerOneMarkerPosition.end())
+      //     game->playerOneMarkerPosition.erase(it);
+      // }else{
+      //   auto it = find(game->playerTwoMarkerPosition.begin(),game->playerTwoMarkerPosition.end(),make_pair(startX,i));
+      //   if(it!=game->playerTwoMarkerPosition.end())
+      //     game->playerTwoMarkerPosition.erase(it);
+      // }
       //done removing
       boardCell tempBoardCell;
       tempBoardCell.player = 0;
@@ -217,16 +222,19 @@ void ourPlayer::removeRow(int playerNo, int startX, int startY, int endX, int en
     //Vertical move
     int mov = movementX/abs(movementX);
     for(int i = min(startX,endX); i<=max(endX,startX); i++){
+      // auto it = find(game->allMarkerPosition.begin(),game->allMarkerPosition.end(),mp(i,startY));
+      // if(it!=game->allMarkerPosition.end())
+      //   game->allMarkerPosition.erase(it);
       //Removing marker position from vector
-      if(game->board[i][startY].player==1){
-        auto it = find(game->playerOneMarkerPosition.begin(),game->playerOneMarkerPosition.end(),make_pair(i,startY));
-        if(it!=game->playerOneMarkerPosition.end())
-          game->playerOneMarkerPosition.erase(it);
-      }else{
-        auto it = find(game->playerTwoMarkerPosition.begin(),game->playerTwoMarkerPosition.end(),make_pair(i,startY));
-        if(it!=game->playerTwoMarkerPosition.end())
-          game->playerTwoMarkerPosition.erase(it);
-      }
+      // if(game->board[i][startY].player==1){
+      //   auto it = find(game->playerOneMarkerPosition.begin(),game->playerOneMarkerPosition.end(),make_pair(i,startY));
+      //   if(it!=game->playerOneMarkerPosition.end())
+      //     game->playerOneMarkerPosition.erase(it);
+      // }else{
+      //   auto it = find(game->playerTwoMarkerPosition.begin(),game->playerTwoMarkerPosition.end(),make_pair(i,startY));
+      //   if(it!=game->playerTwoMarkerPosition.end())
+      //     game->playerTwoMarkerPosition.erase(it);
+      // }
       //done removing
       boardCell tempBoardCell;
       tempBoardCell.player = 0;
@@ -240,16 +248,19 @@ void ourPlayer::removeRow(int playerNo, int startX, int startY, int endX, int en
     int mov = movementX/abs(movementX);
     int i,j;
     for(i = min(startX,endX),j=min(endY,startY); i<=max(startX,endX),j<=max(endY,startY); i++,j++){
+      // auto it = find(game->allMarkerPosition.begin(),game->allMarkerPosition.end(),mp(i,j));
+      // if(it!=game->allMarkerPosition.end())
+      //   game->allMarkerPosition.erase(it);
       //Removing marker position from vector
-      if(game->board[i][j].player==1){
-        auto it = find(game->playerOneMarkerPosition.begin(),game->playerOneMarkerPosition.end(),make_pair(i,j));
-        if(it!=game->playerOneMarkerPosition.end())
-          game->playerOneMarkerPosition.erase(it);
-      }else{
-        auto it = find(game->playerTwoMarkerPosition.begin(),game->playerTwoMarkerPosition.end(),make_pair(i,j));
-        if(it!=game->playerTwoMarkerPosition.end())
-          game->playerTwoMarkerPosition.erase(it);
-      }
+      // if(game->board[i][j].player==1){
+      //   auto it = find(game->playerOneMarkerPosition.begin(),game->playerOneMarkerPosition.end(),make_pair(i,j));
+      //   if(it!=game->playerOneMarkerPosition.end())
+      //     game->playerOneMarkerPosition.erase(it);
+      // }else{
+      //   auto it = find(game->playerTwoMarkerPosition.begin(),game->playerTwoMarkerPosition.end(),make_pair(i,j));
+      //   if(it!=game->playerTwoMarkerPosition.end())
+      //     game->playerTwoMarkerPosition.erase(it);
+      // }
       //done removing
       boardCell tempBoardCell;
       tempBoardCell.player = 0;
@@ -284,18 +295,18 @@ void ourPlayer::inverseMarker(int playerNo, int startX, int startY, int endX, in
       if(tempBoardCell.player==1){
         game->playerOneMarkersOnBoard++;
         game->playerTwoMarkersOnBoard--;
-        game->playerOneMarkerPosition.push_back(mp(startX,i));
-        auto it = find(game->playerTwoMarkerPosition.begin(),game->playerTwoMarkerPosition.end(),make_pair(startX,i));
-        if(it!=game->playerTwoMarkerPosition.end())
-          game->playerTwoMarkerPosition.erase(it);
+        // game->playerOneMarkerPosition.push_back(mp(startX,i));
+        // auto it = find(game->playerTwoMarkerPosition.begin(),game->playerTwoMarkerPosition.end(),make_pair(startX,i));
+        // if(it!=game->playerTwoMarkerPosition.end())
+        //   game->playerTwoMarkerPosition.erase(it);
       }
       else{
         game->playerTwoMarkersOnBoard++;
         game->playerOneMarkersOnBoard--;
-        game->playerTwoMarkerPosition.push_back(mp(startX,i));
-        auto it = find(game->playerOneMarkerPosition.begin(),game->playerOneMarkerPosition.end(),make_pair(startX,i));
-        if(it!=game->playerOneMarkerPosition.end())
-          game->playerOneMarkerPosition.erase(it);
+        // game->playerTwoMarkerPosition.push_back(mp(startX,i));
+        // auto it = find(game->playerOneMarkerPosition.begin(),game->playerOneMarkerPosition.end(),make_pair(startX,i));
+        // if(it!=game->playerOneMarkerPosition.end())
+        //   game->playerOneMarkerPosition.erase(it);
       }
       game->board[startX][i] = tempBoardCell;
     }
@@ -311,18 +322,18 @@ void ourPlayer::inverseMarker(int playerNo, int startX, int startY, int endX, in
       if(tempBoardCell.player==1){
         game->playerOneMarkersOnBoard++;
         game->playerTwoMarkersOnBoard--;
-        game->playerOneMarkerPosition.push_back(mp(i,startY));
-        auto it = find(game->playerTwoMarkerPosition.begin(),game->playerTwoMarkerPosition.end(),make_pair(i,startY));
-        if(it!=game->playerTwoMarkerPosition.end())
-          game->playerTwoMarkerPosition.erase(it);
+        // game->playerOneMarkerPosition.push_back(mp(i,startY));
+        // auto it = find(game->playerTwoMarkerPosition.begin(),game->playerTwoMarkerPosition.end(),make_pair(i,startY));
+        // if(it!=game->playerTwoMarkerPosition.end())
+        //   game->playerTwoMarkerPosition.erase(it);
       }
       else{
         game->playerTwoMarkersOnBoard++;
         game->playerOneMarkersOnBoard--;
-        game->playerTwoMarkerPosition.push_back(mp(i,startY));
-        auto it = find(game->playerOneMarkerPosition.begin(),game->playerOneMarkerPosition.end(),make_pair(i,startY));
-        if(it!=game->playerOneMarkerPosition.end())
-          game->playerOneMarkerPosition.erase(it);
+        // game->playerTwoMarkerPosition.push_back(mp(i,startY));
+        // auto it = find(game->playerOneMarkerPosition.begin(),game->playerOneMarkerPosition.end(),make_pair(i,startY));
+        // if(it!=game->playerOneMarkerPosition.end())
+        //   game->playerOneMarkerPosition.erase(it);
       }
       game->board[i][startY] = tempBoardCell;
     }
@@ -338,18 +349,18 @@ void ourPlayer::inverseMarker(int playerNo, int startX, int startY, int endX, in
       if(tempBoardCell.player==1){
         game->playerOneMarkersOnBoard++;
         game->playerTwoMarkersOnBoard--;
-        game->playerOneMarkerPosition.push_back(mp(i,j));
-        auto it = find(game->playerTwoMarkerPosition.begin(),game->playerTwoMarkerPosition.end(),make_pair(i,j));
-        if(it!=game->playerTwoMarkerPosition.end())
-          game->playerTwoMarkerPosition.erase(it);
+        // game->playerOneMarkerPosition.push_back(mp(i,j));
+        // auto it = find(game->playerTwoMarkerPosition.begin(),game->playerTwoMarkerPosition.end(),make_pair(i,j));
+        // if(it!=game->playerTwoMarkerPosition.end())
+        //   game->playerTwoMarkerPosition.erase(it);
       }
       else{
         game->playerTwoMarkersOnBoard++;
         game->playerOneMarkersOnBoard--;
-        game->playerTwoMarkerPosition.push_back(mp(i,j));
-        auto it = find(game->playerOneMarkerPosition.begin(),game->playerOneMarkerPosition.end(),make_pair(i,j));
-        if(it!=game->playerOneMarkerPosition.end())
-          game->playerOneMarkerPosition.erase(it);
+        // game->playerTwoMarkerPosition.push_back(mp(i,j));
+        // auto it = find(game->playerOneMarkerPosition.begin(),game->playerOneMarkerPosition.end(),make_pair(i,j));
+        // if(it!=game->playerOneMarkerPosition.end())
+        //   game->playerOneMarkerPosition.erase(it);
       }
       game->board[i][j] = tempBoardCell;
     }
@@ -648,6 +659,51 @@ vector<string> ourPlayer::markerDeletion(int playerNo, ourGame* game){
   //     }
   //   }
   //   return ans;
+  // }
+
+  // for(int k=0;k<game->allMarkerPosition.size();k++){
+  //   pair<int,int> tp = game->allMarkerPosition[k];
+  //   int i = tp.first;
+  //   int j = tp.second;
+  //   if(game->board[i][j].containsMarker && game->board[i][j].canBeUsed && game->board[i][j].player ==playerNo){
+  //       // cout << "i=" << i << " j=" << j << endl;
+  //       temp = markerDeletionHelper(playerNo,i,j,0,1,game);//Total 6 directions
+  //       if(temp.length()!=0){
+  //         ans.pb(temp);
+  //       }
+  //       // cout << "a" << endl;
+  //       // cout << ans.size() << " ";
+  //       temp = markerDeletionHelper(playerNo,i,j,0,-1,game);//Total 6 directions
+  //       if(temp.length()!=0){
+  //         ans.pb(temp);
+  //       }
+  //       // cout << "b" << endl;
+  //       // cout << ans.size() << " ";
+
+  //       temp = markerDeletionHelper(playerNo,i,j,1,1,game);//Total 6 directions
+  //       if(temp.length()!=0){
+  //         ans.pb(temp);
+  //       }
+  //       // cout << ans.size() << " ";
+  //       // cout << "c" << endl;
+  //       temp = markerDeletionHelper(playerNo,i,j,-1,-1,game);//Total 6 directions
+  //       if(temp.length()!=0){
+  //         ans.pb(temp);
+  //       }
+  //       // cout << ans.size() << " ";
+
+  //       temp = markerDeletionHelper(playerNo,i,j,1,0,game);//Total 6 directions
+  //       if(temp.length()!=0){
+  //         ans.pb(temp);
+  //       }
+  //       // cout << ans.size() << " ";
+
+  //       temp = markerDeletionHelper(playerNo,i,j,-1,0,game);//Total 6 directions
+  //       if(temp.length()!=0){
+  //         ans.pb(temp);
+  //       }
+  //       // cout << ans.size();
+  //     }
   // }
 
   for(int i=0; i<rows; i++){
