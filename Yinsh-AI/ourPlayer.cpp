@@ -1026,7 +1026,7 @@ struct transitionMove ourPlayer::idMinimax(int max_depth,double maxTime){
   struct transitionMove tempMove;
   bestMove.value=-INFINITY;
   double timeRemaining= this->timeLeft-maxTime;
-  if(timeRemaining<=5){
+  if(timeRemaining<=15){
     max_depth = 2;
   }
   for(depth=1;depth<=max_depth;depth++){
@@ -1043,11 +1043,11 @@ struct transitionMove ourPlayer::idMinimax(int max_depth,double maxTime){
       }
     }
     cerr<<"totalNodes: "<<totalNodes<<endl;
-    if(depth==4&&totalNodes>4000){
+    if(depth==4&&totalNodes>3000){
       // return bestMove;
       break;
     }
-    if(depth<4&&totalNodes>4000){
+    if(depth<4&&totalNodes>3000){
       break;
     }
     // bestScore = max(bestScore,tempMove.value);
@@ -1170,7 +1170,7 @@ void ourPlayer::initialPlacing(){
 
       // //placing 4th ring
       if(count1==3){
-        int a = 5;
+        int a = totalRings-2;
         bool assigned=false;
         //checking if already opponent ring is there
         for(int b=1;b<(6*a);b++){
