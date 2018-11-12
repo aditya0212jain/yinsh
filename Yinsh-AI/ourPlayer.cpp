@@ -87,6 +87,8 @@ ourPlayer::ourPlayer(int playerNumber,int timeLeft,int numberOfRings,int markers
   this->timeLeft =  timeLeft; //will be initialised with full time
   this->myRingsRemoved = 0;//starting with 0 rings
   this->game = new ourGame(boardSize);
+  this->game->markersNeededToRemove = markersNeededToRemove;
+  this->game->time_limit = timeLeft;
   this->markersNeededToRemove = markersNeededToRemove;
 }
 
@@ -1020,12 +1022,12 @@ struct transitionMove ourPlayer::idMinimax(int max_depth,double maxTime){
   htMap.clear();
   totalNodes=0;
   //start noting time
-  double ourGameValue = this->game->heuristicForSort(this->playerNumber);
+  double ourGameValue = this->game->computeHeuristicValue(this->playerNumber);
   struct transitionMove bestMove;
   struct transitionMove tempMove;
   bestMove.value=-INFINITY;
   double timeRemaining= this->timeLeft-maxTime;
-  if(timeRemaining<=5){
+  if(timeRemaining<=15){
     max_depth = 2;
   }
   for(depth=1;depth<=max_depth;depth++){
@@ -1042,11 +1044,11 @@ struct transitionMove ourPlayer::idMinimax(int max_depth,double maxTime){
       }
     }
     cerr<<"totalNodes: "<<totalNodes<<endl;
-    if(depth==4&&totalNodes>4000){
+    if(depth==4&&totalNodes>2399){
       // return bestMove;
       break;
     }
-    if(depth<4&&totalNodes>4000){
+    if(depth<4&&totalNodes>2399){
       break;
     }
     // bestScore = max(bestScore,tempMove.value);
@@ -1090,10 +1092,20 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
       possible_moves = sortChildren(possible_moves,true);
     // }
     for(int i=0;i<possible_moves.size();i++){
-
+      transitionMove tempMove;
       moveDecider(this->playerNumber,possible_moves[i],this->game);
-      transitionMove tempMove = minimax(depth+1,false,alpha,beta,max_depth);
-      htMap[possible_moves[i]]=tempMove.value;
+      //principle variation added below
+      // if(i==0){
+        tempMove = minimax(depth+1,false,alpha,beta,max_depth);
+        htMap[possible_moves[i]]=tempMove.value;
+      // }else{
+      //   tempMove = minimax(depth+1,false,alpha,alpha+1,max_depth);
+      //   htMap[possible_moves[i]]=tempMove.value;
+      //   if(tempMove.value>alpha&&tempMove.value<beta){
+      //     tempMove = minimax(depth+1,false,tempMove.value,beta,max_depth);
+      //   }
+      // }
+      
       if(alpha<=tempMove.value){
         alpha = tempMove.value;
       }
@@ -1122,9 +1134,19 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
       possible_moves = sortChildren(possible_moves,false);
     // }
     for(int i=0;i<possible_moves.size();i++){
+      transitionMove tempMove;
       moveDecider(opponent_player_number,possible_moves[i],this->game);
-      transitionMove tempMove= minimax(depth+1,true,alpha,beta,max_depth);
-      htMap[possible_moves[i]]=tempMove.value;
+      ///principal variation added below
+      // if(i==0){
+        tempMove = minimax(depth+1,false,alpha,beta,max_depth);
+        htMap[possible_moves[i]]=tempMove.value;
+      // }else{
+      //   tempMove = minimax(depth+1,false,beta-1,beta,max_depth);
+      //   htMap[possible_moves[i]]=tempMove.value;
+      //   if(tempMove.value>alpha&&tempMove.value<beta){
+      //     tempMove = minimax(depth+1,false,alpha,tempMove.value,max_depth);
+      //   }
+      // }
       // beta = min(beta,value);
       if(beta>=tempMove.value){
         beta = tempMove.value;

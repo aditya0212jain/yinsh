@@ -203,6 +203,11 @@ double ourGame::computeHeuristicValue(int player){
     // score+=2*this->playerTwoMarkersOnBoard;
   }
 
+    // ourPlayer tempPlayer(player-1,time_limit,rows/2,markersNeededToRemove);
+    // auto tempV = tempPlayer.selectAndMove(player,this);
+    // score+=tempV.size();
+    // auto tempV = tempPlayer.selectAndMove(3-player,this);
+    // score-=tempV.size();
 
   return score;
 
