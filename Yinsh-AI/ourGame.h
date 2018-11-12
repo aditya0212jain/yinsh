@@ -27,6 +27,7 @@ public:
   int playerOneMarkersOnBoard; //Number of markers of player 1 on boardCell
   int playerTwoMarkersOnBoard; //Number of markers of player 2 on board
   int rows; //Number of Rows in Board = 2*boardSize + 1
+  vector<int> valuesForConsecutiveMarkers,valuesForConsecutiveMarkers2;
   // int boardSize; // For this part, it is 85
   vector< vector<boardCell> > board;// index = (0,0)->0, others -> ((h)*(h+1))/2 + pos
   vector< pair<int,int> > playerOneRingPositions;

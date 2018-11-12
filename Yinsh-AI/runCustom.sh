@@ -1,1 +1,1 @@
-./oldPlayer_pure3Depth
+./newPlayer_3depth
