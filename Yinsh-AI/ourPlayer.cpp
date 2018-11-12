@@ -27,7 +27,7 @@ bool compareForMin(const transitionMove &a,const transitionMove &b){
 }
 
 vector<string> ourPlayer::sortChildren(vector<string> moves,bool forMax){
-  vector<transitionMove> v;
+  vector<transitionMove> v(moves.size());
   int playerNumber;
   if(forMax){
     playerNumber = this->playerNumber;
@@ -42,23 +42,26 @@ vector<string> ourPlayer::sortChildren(vector<string> moves,bool forMax){
     transitionMove temp;
     temp.move = moves[i];
     temp.value = valueTemp;
-    v.push_back(temp);
+    v[i] = temp;
+    // v.push_back(temp);
     htMap[moves[i]]=valueTemp;
     this->game->moveUndo(playerNumber,moves[i]);
     }else{
       transitionMove temp;
       temp.value = htMap[moves[i]];
       temp.move = moves[i];
-      v.push_back(temp);
+      v[i] = temp;
+      // v.push_back(temp);
     }
   }
   // for(int i=0;i<moves.size();i++){
   // moveDecider(playerNumber,moves[i],this->game);
-  //   lli valueTemp = this->game->computeHeuristicValue(this->playerNumber);
+  //   lli valueTemp = this->game->computeHeuristicValue(this->playerNumber);//computeHeuristicValue
   //   transitionMove temp;
   //   temp.move = moves[i];
   //   temp.value = valueTemp;
-  //   v.push_back(temp);
+  //   // v.push_back(temp);
+  //   v[i] = temp;
   //   // htMap[moves[i]]=valueTemp;
   //   this->game->moveUndo(playerNumber,moves[i]);
   // }
@@ -67,9 +70,10 @@ vector<string> ourPlayer::sortChildren(vector<string> moves,bool forMax){
   }else{
     sort(v.begin(),v.end(),compareForMin);
   }
-  vector<string> ans;
+  vector<string> ans(moves.size());
   for(int i=0;i<v.size();i++){
-    ans.push_back(v[i].move);
+    ans[i] = v[i].move;
+    // ans.push_back(v[i].move);
   }
   return ans;
 }
@@ -445,8 +449,6 @@ vector<pair<pair<int,int>,pair<int,int> > > ourPlayer::selectAndMoveHelper(int p
       return ans;
     }
     else if(!(game->board[i][j].canBeUsed)){
-      //cout << ans.size() << endl;
-      //cout << "At this value I came here: " << i << " " << j << endl;
       return ans;
     }
     else if(game->board[i][j].containsRings){
@@ -454,7 +456,6 @@ vector<pair<pair<int,int>,pair<int,int> > > ourPlayer::selectAndMoveHelper(int p
     }
     else if(game->board[i][j].containsMarker && oneMarker==0){
         oneMarker=1;
-        //ans.pb(mp(f,mp(i,j)));
     }
     else if(game->board[i][j].containsMarker && oneMarker==1){
       //Nothing
@@ -465,7 +466,6 @@ vector<pair<pair<int,int>,pair<int,int> > > ourPlayer::selectAndMoveHelper(int p
         return ans;
       }
       else{
-        //cout << i << " " << j << endl;
         ans.pb(mp(f,mp(i,j)));
       }
     }
@@ -493,10 +493,8 @@ vector<pair<pair<int,int>,pair<int,int> > > ourPlayer::selectAndMove(int playerN
            ans.insert(ans.end(), temp.begin(), temp.end());
            temp = selectAndMoveHelper(playerNo,i,j,1,0,game);//Total 6 directions
            ans.insert(ans.end(), temp.begin(), temp.end());
-
            temp = selectAndMoveHelper(playerNo,i,j,-1,0,game);//Total 6 directions
            ans.insert(ans.end(), temp.begin(), temp.end());
-
         }
       }
     }
@@ -518,10 +516,8 @@ vector<pair<pair<int,int>,pair<int,int> > > ourPlayer::selectAndMove(int playerN
            ans.insert(ans.end(), temp.begin(), temp.end());
            temp = selectAndMoveHelper(playerNo,i,j,1,0,game);//Total 6 directions
            ans.insert(ans.end(), temp.begin(), temp.end());
-
            temp = selectAndMoveHelper(playerNo,i,j,-1,0,game);//Total 6 directions
            ans.insert(ans.end(), temp.begin(), temp.end());
-
         }
       }
     }
@@ -552,25 +548,26 @@ string ourPlayer::markerDeletionHelper(int playerNo, int x, int y, int dirX, int
       if(markerCount == markersNeededToRemove){//To edit here for removal of more markers @3Nov
         pair<int,int> initial = cartesianToHex(x,y,rows);
         pair<int,int> finall = cartesianToHex(i,j,rows);
-        string result;
-        ostringstream convert;
-        convert << initial.first;
-        result = convert.str();
 
-        string result1;
-        ostringstream convert1;
-        convert1 << initial.second;
-        result1 = convert1.str();
+        string result = to_string(initial.first);
+    // ostringstream convert;
+    // convert << initial.first;
+    // result = convert.str();
 
-        string result2;
-        ostringstream convert2;
-        convert2 << finall.first;
-        result2 = convert2.str();
+    string result1 = to_string(initial.second);
+    // ostringstream convert1;
+    // convert1 << initial.second;
+    // result1 = convert1.str();
 
-        string result3;
-        ostringstream convert3;
-        convert3 << finall.second;
-        result3 = convert3.str();
+    string result2 = to_string(finall.first);
+    // ostringstream convert2;
+    // convert2 << finall.first;
+    // result2 = convert2.str();
+
+    string result3 = to_string(finall.second);
+    // ostringstream convert3;
+    // convert3 << finall.second;
+    // result3 = convert3.str();
 
         temp = "RS " + result + " " + result1 + " RE " + result2 + " " + result3;
         break;
@@ -780,25 +777,25 @@ vector<string> ourPlayer::selectAndMoveFinal(int playerNo, ourGame* game){
     pair<int,int> initial = cartesianToHex(s1,s2,rows);
     pair<int,int> finall = cartesianToHex(m1,m2,rows);
 
-    string result;
-    ostringstream convert;
-    convert << initial.first;
-    result = convert.str();
+    string result = to_string(initial.first);
+    // ostringstream convert;
+    // convert << initial.first;
+    // result = convert.str();
 
-    string result1;
-    ostringstream convert1;
-    convert1 << initial.second;
-    result1 = convert1.str();
+    string result1 = to_string(initial.second);
+    // ostringstream convert1;
+    // convert1 << initial.second;
+    // result1 = convert1.str();
 
-    string result2;
-    ostringstream convert2;
-    convert2 << finall.first;
-    result2 = convert2.str();
+    string result2 = to_string(finall.first);
+    // ostringstream convert2;
+    // convert2 << finall.first;
+    // result2 = convert2.str();
 
-    string result3;
-    ostringstream convert3;
-    convert3 << finall.second;
-    result3 = convert3.str();
+    string result3 = to_string(finall.second);
+    // ostringstream convert3;
+    // convert3 << finall.second;
+    // result3 = convert3.str();
 
     temp = "S " + result + " " + result1 + " M " + result2 + " " + result3;
     ans.pb(temp);
@@ -814,15 +811,15 @@ vector<string> ourPlayer::removeRingFinal(int playerNo, ourGame* game){
   if(playerNo==1){
     for(int i=0;i<game->playerOneRingPositions.size();i++){
       initial = cartesianToHex(game->playerOneRingPositions[i].first,game->playerOneRingPositions[i].second,rows);
-        string result;
-        ostringstream convert;
-        convert << initial.first;
-        result = convert.str();
+        string result = to_string(initial.first);
+        // ostringstream convert;
+        // convert << initial.first;
+        // result = convert.str();
 
-        string result1;
-        ostringstream convert1;
-        convert1 << initial.second;
-        result1 = convert1.str();
+        string result1 = to_string(initial.second);
+        // ostringstream convert1;
+        // convert1 << initial.second;
+        // result1 = convert1.str();
 
         temp = "X " + result + " " + result1;
         ans.pb(temp);
@@ -830,15 +827,15 @@ vector<string> ourPlayer::removeRingFinal(int playerNo, ourGame* game){
   }else{
     for(int i=0;i<game->playerTwoRingPositions.size();i++){
       initial = cartesianToHex(game->playerTwoRingPositions[i].first,game->playerTwoRingPositions[i].second,rows);
-        string result;
-        ostringstream convert;
-        convert << initial.first;
-        result = convert.str();
+        string result = to_string(initial.first);
+        // ostringstream convert;
+        // convert << initial.first;
+        // result = convert.str();
 
-        string result1;
-        ostringstream convert1;
-        convert1 << initial.second;
-        result1 = convert1.str();
+        string result1 = to_string(initial.second);
+        // ostringstream convert1;
+        // convert1 << initial.second;
+        // result1 = convert1.str();
 
         temp = "X " + result + " " + result1;
         ans.pb(temp);
@@ -895,8 +892,6 @@ vector<string> ourPlayer::allDeletions(int playerNo, ourGame* game){
             for(int j=0; j<secondDeletion.size(); j++){
               flag2=false;
               string secondMove = secondDeletion[j];
-              // ourGame* secondGame = new ourGame();
-              // secondGame->copyTheBoard(firstGame);
               moveDecider(playerNo,secondMove,game);
               if((playerNo==1 && game->playerOneRingsOnBoard==totalRings-3)||(playerNo==2 && game->playerTwoRingsOnBoard==totalRings-3)){
                 string temp = firstMove + " " + secondMove;
@@ -905,7 +900,6 @@ vector<string> ourPlayer::allDeletions(int playerNo, ourGame* game){
                 flag2=true;
               }
               else{
-                // vector<string> thirdDeletion = removeMarkerAndRing(playerNo, secondGame);///<- is this correct @sarthakVishnoi
                 vector<string> thirdDeletion = removeMarkerAndRing(playerNo,game);
                 if(thirdDeletion.size()==0){
                   string temp = firstMove + " " + secondMove;
@@ -916,8 +910,6 @@ vector<string> ourPlayer::allDeletions(int playerNo, ourGame* game){
                 else{
                   for(int k=0; k<thirdDeletion.size(); k++){
                     string thirdMove = thirdDeletion[k];
-                    // ourGame* thirdGame = new ourGame();
-                    // thirdGame-> copyTheBoard(secondGame);
                     moveDecider(playerNo,thirdMove,game);
                     string tempp = firstMove+ " " + secondMove + " " + thirdMove;
                     ans.pb(tempp);
@@ -942,9 +934,12 @@ vector<string> ourPlayer::allDeletions(int playerNo, ourGame* game){
 vector<string> ourPlayer::moveList(int playerNo, ourGame* game){
   //Returns a list of moves
   vector<string> ans;
-  vector<string> firstRound = allDeletions(playerNo, game);
-  // cout << "Do I Reach here?" << endl;
-  // cout << "First Move, first Round: " << firstRound.size() << endl;
+  vector<string> firstRound= allDeletions(playerNo, game);
+  // if(playerNo==1&&this->game->playerOneMarkersOnBoard>this->markersNeededToRemove){
+  //         firstRound = allDeletions(playerNo, game);
+  // }else if(playerNo==2&&this->game->playerTwoMarkersOnBoard>this->markersNeededToRemove){
+  //         firstRound = allDeletions(playerNo, game);
+  // }
   if(firstRound.size()==0){
     //Nothing to delete
     vector<string> fr = selectAndMoveFinal(playerNo, game);
@@ -959,6 +954,11 @@ vector<string> ourPlayer::moveList(int playerNo, ourGame* game){
         moveDecider(playerNo, firstMove, game);
 
         vector<string> dr = allDeletions(playerNo, game);
+        // if(playerNo==1&&this->game->playerOneMarkersOnBoard>this->markersNeededToRemove){
+        //   dr = allDeletions(playerNo, game);
+        // }else if(playerNo==2&&this->game->playerTwoMarkersOnBoard>this->markersNeededToRemove){
+        //   dr = allDeletions(playerNo, game);
+        // }
         game->moveUndo(playerNo,firstMove);
         if(dr.size()==0){
           //move and then no deletion
@@ -1021,6 +1021,7 @@ struct transitionMove ourPlayer::idMinimax(int max_depth,double maxTime){
   htMap.clear();
   totalNodes=0;
   //start noting time
+  double ourGameValue = this->game->heuristicForSort(this->playerNumber);
   struct transitionMove bestMove;
   struct transitionMove tempMove;
   bestMove.value=-INFINITY;
@@ -1033,9 +1034,20 @@ struct transitionMove ourPlayer::idMinimax(int max_depth,double maxTime){
     if(bestMove.value<=tempMove.value){
       bestMove = tempMove;
     }
+    if(tempMove.value-ourGameValue>50000){//50000
+      if(this->playerNumber==1&&((this->game->rows/2) - this->game->playerOneRingsOnBoard==2)){
+        return tempMove;
+      }
+      if(this->playerNumber==2&&((this->game->rows/2) - this->game->playerTwoRingsOnBoard==2)){
+        return tempMove;
+      }
+    }
     cerr<<"totalNodes: "<<totalNodes<<endl;
-    if(totalNodes>5000){
-      return bestMove;
+    if(depth==4&&totalNodes>4000){
+      // return bestMove;
+      break;
+    }
+    if(depth<4&&totalNodes>4000){
       break;
     }
     // bestScore = max(bestScore,tempMove.value);
@@ -1061,7 +1073,6 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
   if(depth==max_depth){
     struct transitionMove ans;
     ans.move="Reached";
-    int myRings,opponentRings;
     ans.value=this->game->computeHeuristicValue(this->playerNumber);
     return ans;
   }
@@ -1076,8 +1087,9 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
     possible_moves = moveList(this->playerNumber,this->game);
 
     //Commenting Sorting for a while
-    possible_moves = sortChildren(possible_moves,true);
-
+    // if(depth<2){
+      possible_moves = sortChildren(possible_moves,true);
+    // }
     for(int i=0;i<possible_moves.size();i++){
 
       moveDecider(this->playerNumber,possible_moves[i],this->game);
@@ -1101,14 +1113,15 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
 
   //if opponent's turn
   if(!isMax){
-    // cout<<"min1"<<endl;
     int opponent_player_number;
     opponent_player_number = (this->playerNumber==1) ? 2 : 1;
     bestMove.value = INFINITY;
     vector<string> possible_moves;
     possible_moves = moveList(opponent_player_number,this->game);
-    possible_moves = sortChildren(possible_moves,false);
-    // cout<<possible_moves[2]<<endl;
+
+    // if(depth<2){
+      possible_moves = sortChildren(possible_moves,false);
+    // }
     for(int i=0;i<possible_moves.size();i++){
       moveDecider(opponent_player_number,possible_moves[i],this->game);
       transitionMove tempMove= minimax(depth+1,true,alpha,beta,max_depth);
@@ -1273,23 +1286,13 @@ void ourPlayer::play(){
   clock_t t1,t2;
   t1 = clock();
   if(this->playerNumber==1){
-    // if(this->game->pla)
     t2 = clock();
     seconds = t2-t1;
     seconds = seconds/CLOCKS_PER_SEC;
-    transitionMove m;
-    if(this->timeLeft > 20 && this->timeLeft < 147){
-      m = idMinimax(3,seconds);
-    }
-    else{
-      m = idMinimax(3,seconds);
-    }
-    // cout<<"o1"<<endl;
+    transitionMove m = idMinimax(5,seconds);//max_depth,time
     cout<<m.move<<endl;
     // this->game->printBoard();
     moveDecider(this->playerNumber,m.move,this->game);
-    // this->game->printBoard();
-    //getline(cin,opponentMove);
   }
   getline(cin,opponentMove);
   opponent_player_number = (this->playerNumber==1) ? 2:1;
@@ -1300,16 +1303,7 @@ void ourPlayer::play(){
     seconds = t2-t1;
     seconds = seconds/CLOCKS_PER_SEC;
     cerr<<"time elapsed: "<<seconds<<endl;
-    transitionMove m;
-    if(this->timeLeft > 20 && this->timeLeft < 147){
-      cerr << "I commmmmm here !!!!" << endl;
-      m = idMinimax(3,seconds);
-    }
-    else{
-      cerr << "I don't want to be hereeeeeeeeeeeeeeeee" << endl ;
-      m = idMinimax(3,seconds);
-    }
-
+    transitionMove m = idMinimax(5,seconds);//minimax(0,true,-INFINITY,INFINITY,depth)
     cout<<m.move<<endl;
     moveDecider(this->playerNumber,m.move,this->game);
     // this->game->printBoard();
