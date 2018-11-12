@@ -82,111 +82,269 @@ void ourGame::printBoard(){
 }
 
 double ourGame::computeHeuristicValue(int player){
+
+  // lli score=0;
+  // int count=0,count2=0;
+  // vector<int> valuesForConsecutiveMarkers,valuesForConsecutiveMarkers2;
+  // int myRingsInitial=rows/2,opponentRingsInitial=rows/2;
+  // int otherPlayer = (player%2)+1;
+  // if(player==1){
+  //   score+=100000*(myRingsInitial-this->playerOneRingsOnBoard);
+  //   score-=110000*(opponentRingsInitial-this->playerTwoRingsOnBoard);
+  //   score+=this->playerOneMarkersOnBoard;
+  // }else{
+  //   score+=100000*(myRingsInitial-this->playerTwoRingsOnBoard);
+  //   score-=110000*(opponentRingsInitial-this->playerOneRingsOnBoard);////teen zeros aur the
+  //   score+=this->playerTwoMarkersOnBoard;
+  // }
+  // return score;
+
+
+
   //This function computes the heuristic for the player according to the current configuration of the boardSize
   lli score=0;
   int count=0,count2=0;
   vector<int> valuesForConsecutiveMarkers,valuesForConsecutiveMarkers2;
   int myRingsInitial=5,opponentRingsInitial=5;
   int otherPlayer = (player%2)+1;
+  bool gotOneRingAlready = false;
+  bool gotOneRingAlready2 = false;
   //
   for(int i=0;i<rows+1;i++){
     valuesForConsecutiveMarkers.push_back(0);
     valuesForConsecutiveMarkers2.push_back(0);
   }
-
+  bool doesMyLineContainRing = false;
+  bool doesMyLineContainRing2 = false;
   for(int i=0;i<rows;i++){
     for(int j=0;j<rows;j++){
       if(!board[i][j].canBeUsed){
+        //if not on board
         if(count!=0){
           valuesForConsecutiveMarkers[count]++;
+          if(doesMyLineContainRing){
+            valuesForConsecutiveMarkers[count]++;
+            doesMyLineContainRing = false;
+          }
           count=0;
+          gotOneRingAlready = false;
         }
         if(count2!=0){
           valuesForConsecutiveMarkers2[count2]++;
+          if(doesMyLineContainRing2){
+            valuesForConsecutiveMarkers2[count2]++;
+            doesMyLineContainRing2 = false;
+          }
           count2=0;
+          gotOneRingAlready2 = false;
         }
       }else{
+        //if usable
+
         if(board[i][j].player!=player){
           if(count!=0){
             valuesForConsecutiveMarkers[count]++;
+            if(doesMyLineContainRing){
+              valuesForConsecutiveMarkers[count]++;
+              doesMyLineContainRing = false;
+            }
+            gotOneRingAlready = false;
             count=0;
           }
         }else{
-          pair<int,int> h = cartesianToHex(i,j,rows);
+          // pair<int,int> h = cartesianToHex(i,j,rows);
 
           if(board[i][j].containsMarker){
             count++;
           }else if(board[i][j].containsRings){
-            count+=0.5;
+            if(gotOneRingAlready){
+
+            // doesMyLineContainRing = true;
+            // count++;//=0.5;
+            }else{
+              gotOneRingAlready = true;
+              doesMyLineContainRing = true;
+              count++;
+            }
           }
         }
 
         if(board[i][j].player!=otherPlayer){
           if(count2!=0){
             valuesForConsecutiveMarkers2[count2]++;
+            if(doesMyLineContainRing2){
+              valuesForConsecutiveMarkers2[count2]++;
+              doesMyLineContainRing2 = false;
+            }
             count2=0;
+            gotOneRingAlready2 = false;
           }
         }else{
-          pair<int,int> h = cartesianToHex(i,j,rows);
+          // pair<int,int> h = cartesianToHex(i,j,rows);
 
           if(board[i][j].containsMarker){
             count2++;
-          }else if(board[i][j].containsRings){
-            count2+=0.5;
+          }else if(board[i][j].containsRings&&!gotOneRingAlready2){
+            doesMyLineContainRing2 = true;
+            count2++;//=0.5;
+            gotOneRingAlready2 = true;
           }
         }
       }
     }
   }
 
+  doesMyLineContainRing = false;
+  doesMyLineContainRing2 = false;
+  count = 0;
+  count2 = 0;
+  gotOneRingAlready = false;
+  gotOneRingAlready2 = false;
   for(int j=0;j<rows;j++){
     for(int i=0;i<rows;i++){
       if(!board[i][j].canBeUsed){
         if(count!=0){
           valuesForConsecutiveMarkers[count]++;
+          if(doesMyLineContainRing){
+            valuesForConsecutiveMarkers[count]++;
+            doesMyLineContainRing = false;
+          }
           count=0;
+          gotOneRingAlready = false;
         }
         if(count2!=0){
           valuesForConsecutiveMarkers2[count2]++;
+          if(doesMyLineContainRing2){
+            valuesForConsecutiveMarkers2[count2]++;
+            doesMyLineContainRing2 = false;
+          }
           count2=0;
+          gotOneRingAlready2 = false;
         }
       }else{
+        //usable index
         if(board[i][j].player!=player){
           if(count!=0){
             valuesForConsecutiveMarkers[count]++;
+            if(doesMyLineContainRing){
+              valuesForConsecutiveMarkers[count]++;
+              doesMyLineContainRing = false;
+            }
             count=0;
+            gotOneRingAlready = false;
           }
         }else{
           if(board[i][j].containsMarker){
             count++;
-          }else if(board[i][j].containsRings){
-            count+=0.5;
+          }else if(board[i][j].containsRings&&!gotOneRingAlready){
+            doesMyLineContainRing = true;
+            count++;//=0.5;
+            gotOneRingAlready = true;
           }
         }
-
         if(board[i][j].player!=otherPlayer){
           if(count2!=0){
             valuesForConsecutiveMarkers2[count2]++;
+            if(doesMyLineContainRing2){
+              valuesForConsecutiveMarkers2[count2]++;
+              doesMyLineContainRing2 = false;
+            }
             count2=0;
+            gotOneRingAlready2 = false;
           }
         }else{
           pair<int,int> h = cartesianToHex(i,j,rows);
-
           if(board[i][j].containsMarker){
             count2++;
-          }else if(board[i][j].containsRings){
-            count2+=0.5;
+          }else if(board[i][j].containsRings&&gotOneRingAlready2==false){
+            doesMyLineContainRing2 = true;
+            count2++;//=0.5;
+            gotOneRingAlready2 = true;
           }
         }
       }
     }
   }
 
+  doesMyLineContainRing = false;
+  doesMyLineContainRing2 = false;
+  count = 0;
+  count2 = 0;
+  gotOneRingAlready = false;
+  gotOneRingAlready2 = false;
+  for(int k=0;k<rows;k++){
+    for(int kk=0;kk<rows;kk++){
+      int i = k + kk;
+      int j = kk;
+      if(i<rows && j <rows){
+        if(!board[i][j].canBeUsed){
+          if(count!=0){
+            valuesForConsecutiveMarkers[count]++;
+            if(doesMyLineContainRing){
+              valuesForConsecutiveMarkers[count]++;
+              doesMyLineContainRing = false;
+            }
+            count=0;
+            gotOneRingAlready = false;
+          }
+          if(count2!=0){
+            valuesForConsecutiveMarkers2[count2]++;
+            if(doesMyLineContainRing2){
+              valuesForConsecutiveMarkers2[count2]++;
+              doesMyLineContainRing2 = false;
+            }
+            count2=0;
+            gotOneRingAlready2 = false;
+          }
+        }else{
+          if(board[i][j].player!=player){
+            if(count!=0){
+              valuesForConsecutiveMarkers[count]++;
+              if(doesMyLineContainRing){
+                valuesForConsecutiveMarkers[count]++;
+                doesMyLineContainRing = false;
+              }
+              count=0;
+              gotOneRingAlready = false;
+            }
+          }else{
+            if(board[i][j].containsMarker){
+              count++;
+            }else if(board[i][j].containsRings&&!gotOneRingAlready){
+              doesMyLineContainRing = true;
+              count++;//=0.5;
+              gotOneRingAlready = true;
+            }
+          }
+          if(board[i][j].player!=otherPlayer){
+            if(count2!=0){
+              valuesForConsecutiveMarkers2[count2]++;
+              if(doesMyLineContainRing2){
+                valuesForConsecutiveMarkers2[count2]++;
+                doesMyLineContainRing2 = false;
+              }
+              count2=0;
+              gotOneRingAlready2 = false;
+            }
+          }else{
+            pair<int,int> h = cartesianToHex(i,j,rows);
+            if(board[i][j].containsMarker){
+              count2++;
+            }else if(board[i][j].containsRings&&!gotOneRingAlready2){
+              doesMyLineContainRing2 = true ;
+              count2++;//=0.5;
+              gotOneRingAlready2 = true;
+            }
+          }
+        }
+      }  
+    }
+  }
 
-  int weight[] = {0,1,3,9,27,81,100,120,140,160,180,81,27,9};
-  int opponentWeight[] = {0,0,-2,-5,-50,-1000,-1000,-1000,-1000,-1000,-1000,-1000, -1000,-1000};
-  // int weight[]={0,1,3,9,27,81,100,100,100,100,100,100,100,100,100};
-  // int opponentWeight[] = {0,0,-1,-2,-10,-80,-80,-80,-80,-80,-80,-80,-80,-80};
+  // int weight[] = {0,0,0,50,100,500,1000,500,500,500,500,500,500,500};
+  int opponentWeight[] = {0,0,0,-5,-50,-1000,-1000,-1000,-1000,-1000,-1000,-1000, -1000,-1000};
+  int weight[]={0,1,3,9,27,100,100,100,100,100,100,100,1876,1876,1876};
+  // int opponentWeight[] = {0,0,-1,-2,-10,-393,-393,-400,-400,-400,-2000,-1123,-1123,-1123};
   for(int i=0;i<rows+1;i++){
     score+=weight[i]*valuesForConsecutiveMarkers[i];
     score+=opponentWeight[i]*valuesForConsecutiveMarkers2[i];
@@ -194,12 +352,12 @@ double ourGame::computeHeuristicValue(int player){
 
 
   if(player==1){
-    score+=100000*(myRingsInitial-this->playerOneRingsOnBoard);//100000
-    score-=200000*(opponentRingsInitial-this->playerTwoRingsOnBoard);//200000
+    score+=1000*(myRingsInitial-this->playerOneRingsOnBoard);//100000
+    score-=1000*(opponentRingsInitial-this->playerTwoRingsOnBoard);//200000
     // score+=2*this->playerOneMarkersOnBoard;
   }else{
-    score+=100000*(myRingsInitial-this->playerTwoRingsOnBoard);
-    score-=200000*(opponentRingsInitial-this->playerOneRingsOnBoard);////teen zeros aur the
+    score+=1000*(myRingsInitial-this->playerTwoRingsOnBoard);
+    score-=1000*(opponentRingsInitial-this->playerOneRingsOnBoard);////teen zeros aur the
     // score+=2*this->playerTwoMarkersOnBoard;
   }
 
@@ -210,7 +368,6 @@ double ourGame::computeHeuristicValue(int player){
     // score-=tempV.size();
 
   return score;
-
 }
 
 double ourGame::heuristicForSort(int player){

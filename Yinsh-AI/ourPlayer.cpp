@@ -550,7 +550,7 @@ string ourPlayer::markerDeletionHelper(int playerNo, int x, int y, int dirX, int
       if(markerCount == markersNeededToRemove){//To edit here for removal of more markers @3Nov
         pair<int,int> initial = cartesianToHex(x,y,rows);
         pair<int,int> finall = cartesianToHex(i,j,rows);
-        
+
         string result = to_string(initial.first);
     // ostringstream convert;
     // convert << initial.first;
@@ -877,7 +877,8 @@ vector<string> ourPlayer::allDeletions(int playerNo, ourGame* game){
         flag1=false;
         string firstMove = firstDeletion[i];
         moveDecider(playerNo,firstMove,game);
-        if((playerNo==1 && game->playerOneRingsOnBoard==2)||(playerNo==2 && game->playerTwoRingsOnBoard==2)){
+        // cout << "Marker 2" << endl;
+        if((playerNo==1 && game->playerOneRingsOnBoard==totalRings-3)||(playerNo==2 && game->playerTwoRingsOnBoard==totalRings-3)){
           ans.pb(firstMove);
           game->moveUndo(playerNo,firstMove);
           flag1 = true;
@@ -894,7 +895,7 @@ vector<string> ourPlayer::allDeletions(int playerNo, ourGame* game){
               flag2=false;
               string secondMove = secondDeletion[j];
               moveDecider(playerNo,secondMove,game);
-              if((playerNo==1 && game->playerOneRingsOnBoard==2)||(playerNo==2 && game->playerTwoRingsOnBoard==2)){
+              if((playerNo==1 && game->playerOneRingsOnBoard==totalRings-3)||(playerNo==2 && game->playerTwoRingsOnBoard==totalRings-3)){
                 string temp = firstMove + " " + secondMove;
                 ans.pb(temp);
                 game->moveUndo(playerNo,secondMove);
@@ -954,7 +955,7 @@ vector<string> ourPlayer::moveList(int playerNo, ourGame* game){
         string firstMove = fr[i];
         moveDecider(playerNo, firstMove, game);
 
-        vector<string> dr = allDeletions(playerNo, game); 
+        vector<string> dr = allDeletions(playerNo, game);
         // if(playerNo==1&&this->game->playerOneMarkersOnBoard>this->markersNeededToRemove){
         //   dr = allDeletions(playerNo, game);
         // }else if(playerNo==2&&this->game->playerTwoMarkersOnBoard>this->markersNeededToRemove){
@@ -1048,7 +1049,7 @@ struct transitionMove ourPlayer::idMinimax(int max_depth,double maxTime){
       // return bestMove;
       break;
     }
-    if(depth<4&&totalNodes>2399){
+    if(depth==3&&totalNodes>3000){
       break;
     }
     // bestScore = max(bestScore,tempMove.value);
@@ -1191,7 +1192,7 @@ void ourPlayer::initialPlacing(){
 
       // //placing 4th ring
       if(count1==3){
-        int a = 5;
+        int a = totalRings-2;
         bool assigned=false;
         //checking if already opponent ring is there
         for(int b=1;b<(6*a);b++){
