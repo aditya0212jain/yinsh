@@ -76,6 +76,25 @@ void ourGame::printBoard(){
 }
 
 double ourGame::computeHeuristicValue(int player){
+
+  // lli score=0;
+  // int count=0,count2=0;
+  // vector<int> valuesForConsecutiveMarkers,valuesForConsecutiveMarkers2;
+  // int myRingsInitial=rows/2,opponentRingsInitial=rows/2;
+  // int otherPlayer = (player%2)+1;
+  // if(player==1){
+  //   score+=100000*(myRingsInitial-this->playerOneRingsOnBoard);
+  //   score-=110000*(opponentRingsInitial-this->playerTwoRingsOnBoard);
+  //   score+=this->playerOneMarkersOnBoard;
+  // }else{
+  //   score+=100000*(myRingsInitial-this->playerTwoRingsOnBoard);
+  //   score-=110000*(opponentRingsInitial-this->playerOneRingsOnBoard);////teen zeros aur the
+  //   score+=this->playerTwoMarkersOnBoard;
+  // }
+  // return score;
+
+
+
   //This function computes the heuristic for the player according to the current configuration of the boardSize
   lli score=0;
   int count=0,count2=0;
@@ -177,8 +196,8 @@ double ourGame::computeHeuristicValue(int player){
   }
 
 
-  int weight[] = {0,1,3,9,27,81,100,120,140,160,180,81,27,9};
-  int opponentWeight[] = {0,0,-2,-5,-50,-1000,-1000,-1000,-1000,-1000,-1000,-1000, -1000,-1000};
+  int weight[] = {0,1,3,9,27,81,243,243,243,243,243,243,243,243};
+  int opponentWeight[] = {0,0,-2,-5,-50,-10000,-10000,-10000,-10000,-10000,-10000,-10000, -10000,-10000};
   for(int i=0;i<rows+1;i++){
     score+=weight[i]*valuesForConsecutiveMarkers[i];
     score+=opponentWeight[i]*valuesForConsecutiveMarkers2[i];

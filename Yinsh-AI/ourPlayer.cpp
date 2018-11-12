@@ -34,34 +34,34 @@ vector<string> ourPlayer::sortChildren(vector<string> moves,bool forMax){
   }else{
     playerNumber = (this->playerNumber==1) ? 2:1;
   }
-  // for(int i=0;i<moves.size();i++){
-  //   if(htMap.find(moves[i])==htMap.end()){
-
-  //   moveDecider(playerNumber,moves[i],this->game);
-  //   lli valueTemp = this->game->computeHeuristicValue(this->playerNumber);
-  //   transitionMove temp;
-  //   temp.move = moves[i];
-  //   temp.value = valueTemp;
-  //   v.push_back(temp);
-  //   htMap[moves[i]]=valueTemp;
-  //   this->game->moveUndo(playerNumber,moves[i]);
-  //   }else{
-  //     transitionMove temp;
-  //     temp.value = htMap[moves[i]];
-  //     temp.move = moves[i];
-  //     v.push_back(temp);
-  //   }
-  // }
   for(int i=0;i<moves.size();i++){
-  moveDecider(playerNumber,moves[i],this->game);
+    if(htMap.find(moves[i])==htMap.end()){
+
+    moveDecider(playerNumber,moves[i],this->game);
     lli valueTemp = this->game->computeHeuristicValue(this->playerNumber);
     transitionMove temp;
     temp.move = moves[i];
     temp.value = valueTemp;
     v.push_back(temp);
-    // htMap[moves[i]]=valueTemp;
+    htMap[moves[i]]=valueTemp;
     this->game->moveUndo(playerNumber,moves[i]);
+    }else{
+      transitionMove temp;
+      temp.value = htMap[moves[i]];
+      temp.move = moves[i];
+      v.push_back(temp);
+    }
   }
+  // for(int i=0;i<moves.size();i++){
+  // moveDecider(playerNumber,moves[i],this->game);
+  //   lli valueTemp = this->game->computeHeuristicValue(this->playerNumber);
+  //   transitionMove temp;
+  //   temp.move = moves[i];
+  //   temp.value = valueTemp;
+  //   v.push_back(temp);
+  //   // htMap[moves[i]]=valueTemp;
+  //   this->game->moveUndo(playerNumber,moves[i]);
+  // }
   if(forMax){
     sort(v.begin(),v.end(),compareForMax);
   }else{
@@ -879,7 +879,7 @@ vector<string> ourPlayer::allDeletions(int playerNo, ourGame* game){
         string firstMove = firstDeletion[i];
         moveDecider(playerNo,firstMove,game);
         // cout << "Marker 2" << endl;
-        if((playerNo==1 && game->playerOneRingsOnBoard==2)||(playerNo==2 && game->playerTwoRingsOnBoard==2)){
+        if((playerNo==1 && game->playerOneRingsOnBoard==totalRings-3)||(playerNo==2 && game->playerTwoRingsOnBoard==totalRings-3)){
           ans.pb(firstMove);
           game->moveUndo(playerNo,firstMove);
           flag1 = true;
@@ -898,7 +898,7 @@ vector<string> ourPlayer::allDeletions(int playerNo, ourGame* game){
               // ourGame* secondGame = new ourGame();
               // secondGame->copyTheBoard(firstGame);
               moveDecider(playerNo,secondMove,game);
-              if((playerNo==1 && game->playerOneRingsOnBoard==2)||(playerNo==2 && game->playerTwoRingsOnBoard==2)){
+              if((playerNo==1 && game->playerOneRingsOnBoard==totalRings-3)||(playerNo==2 && game->playerTwoRingsOnBoard==totalRings-3)){
                 string temp = firstMove + " " + secondMove;
                 ans.pb(temp);
                 game->moveUndo(playerNo,secondMove);
@@ -1018,7 +1018,7 @@ vector<string> ourPlayer::moveList(int playerNo, ourGame* game){
 struct transitionMove ourPlayer::idMinimax(int max_depth,double maxTime){
   int depth = 0;
   double tempTime=0;
-  // htMap.clear();
+  htMap.clear();
   totalNodes=0;
   //start noting time
   struct transitionMove bestMove;
@@ -1046,7 +1046,7 @@ struct transitionMove ourPlayer::idMinimax(int max_depth,double maxTime){
     //   }
     // }
   }
-  // htMap.clear();
+  htMap.clear();
   return tempMove;//initially it was tempMove
 }
 
@@ -1082,7 +1082,7 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
 
       moveDecider(this->playerNumber,possible_moves[i],this->game);
       transitionMove tempMove = minimax(depth+1,false,alpha,beta,max_depth);
-      // htMap[possible_moves[i]]=tempMove.value;
+      htMap[possible_moves[i]]=tempMove.value;
       if(alpha<=tempMove.value){
         alpha = tempMove.value;
       }
@@ -1112,7 +1112,7 @@ struct transitionMove ourPlayer::minimax(int depth,bool isMax,long long int alph
     for(int i=0;i<possible_moves.size();i++){
       moveDecider(opponent_player_number,possible_moves[i],this->game);
       transitionMove tempMove= minimax(depth+1,true,alpha,beta,max_depth);
-      // htMap[possible_moves[i]]=tempMove.value;
+      htMap[possible_moves[i]]=tempMove.value;
       // beta = min(beta,value);
       if(beta>=tempMove.value){
         beta = tempMove.value;
@@ -1277,7 +1277,13 @@ void ourPlayer::play(){
     t2 = clock();
     seconds = t2-t1;
     seconds = seconds/CLOCKS_PER_SEC;
-    transitionMove m = idMinimax(3,seconds);//max_depth,time
+    transitionMove m;
+    if(this->timeLeft > 20 && this->timeLeft < 147){
+      m = idMinimax(3,seconds);
+    }
+    else{
+      m = idMinimax(3,seconds);
+    }
     // cout<<"o1"<<endl;
     cout<<m.move<<endl;
     // this->game->printBoard();
@@ -1294,7 +1300,16 @@ void ourPlayer::play(){
     seconds = t2-t1;
     seconds = seconds/CLOCKS_PER_SEC;
     cerr<<"time elapsed: "<<seconds<<endl;
-    transitionMove m = idMinimax(3,seconds);
+    transitionMove m;
+    if(this->timeLeft > 20 && this->timeLeft < 147){
+      cerr << "I commmmmm here !!!!" << endl;
+      m = idMinimax(3,seconds);
+    }
+    else{
+      cerr << "I don't want to be hereeeeeeeeeeeeeeeee" << endl ;
+      m = idMinimax(3,seconds);
+    }
+
     cout<<m.move<<endl;
     moveDecider(this->playerNumber,m.move,this->game);
     // this->game->printBoard();
